@@ -13,7 +13,9 @@ In order to authenticate as a GitHub App, you need to generate a Private Key
 and use it to sign a JSON Web Token (jwt) and encode it. 
 
 ```js
-const auth = await appAuth({id, privateKey})
+const app = require('@octokit/app.js')
+
+const auth = await app.appAuth({id, privateKey})
 ```
 
 ### Authenticating as an Installation
@@ -23,7 +25,10 @@ in order to request an installation access token. This token is scoped for
 your specific app and expires after an hour.
 
 ```js
-const app = requestToken(auth)
+const app = require('@octokit/app.js')
+
+const auth = await app.appAuth({id, privateKey})
+const installation = await app.requestToken(auth)
 ```
 
 ### Listening on Webhooks
@@ -32,7 +37,7 @@ GitHub Apps give you the ability to listen for webhook events that happen on
 GitHub. We recommend using `@octokit/webhooks`.
 
 ```js
-const webhooks = require(@octokit/webhooks)
+const webhooks = require('@octokit/webhooks')
 
 webhooks.on(app, 'issues.opened', {{id, name, payload, client}} => {
   console.log('An issue was opened!')
@@ -45,7 +50,7 @@ Now that you are recieving webhooks, you can take actions using both GitHub's
 REST and GraphQL APIs via `@octokit/octokit.js`.
 
 ```js
-const octokit = require(@octokit/octokit.js)
+const octokit = require('@octokit/octokit.js')
 
 octokit.rest.issues.createComment(app, {body: 'Hello, World!'})
 
