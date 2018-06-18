@@ -13,9 +13,10 @@ In order to authenticate as a GitHub App, you need to generate a Private Key
 and use it to sign a JSON Web Token (jwt) and encode it. 
 
 ```js
-const app = require('@octokit/app.js')
+const App = require('@octokit/app.js')
 
-const auth = await app.appAuth({id, privateKey})
+const app = new App({id, privateKey})
+const appAuth = await app.appAuth()
 ```
 
 ### Authenticating as an Installation
@@ -27,8 +28,9 @@ your specific app and expires after an hour.
 ```js
 const app = require('@octokit/app.js')
 
-const auth = await app.appAuth({id, privateKey})
-const installation = await app.requestToken(auth)
+const app = new App({id, privateKey})
+const appAuth = await app.appAuth()
+const installation = await app.requestToken(appAuth, installationId)
 ```
 
 ### Listening on Webhooks
