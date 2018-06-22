@@ -42,7 +42,7 @@ your specific app and expires after an hour.
 const app = require('@octokit/app.js')
 
 const app = new App({id, privateKey})
-const installation = await app.requestToken(app.appAuth(), {installationId: 123})
+const installation = await app.requestToken({installationId: 123})
 
 // Example of opening an issue as an installation
 // https://developer.github.com/v3/issues/#create-an-issue
