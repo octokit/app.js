@@ -19,7 +19,7 @@ const app = new App({id, privateKey})
 const appAuth = await app.appAuth()
 
 // Example of using authetincated app to GET an individual installation
-// https://developer.github.com/v3/apps/#find-installations
+// https://developer.github.com/v3/apps/#find-repository-installation
 const installation = await appAuth.request({
   method: 'GET',
   url: '/repos/:owner/:repo/installation',
@@ -34,9 +34,10 @@ const installationId = installation.data.id
 
 ### Authenticating as an Installation
 
-Once you have authenticated as a GitHub App, `auth` here, you can use that
-in order to request an installation access token. This token is scoped for
-your specific app and expires after an hour.
+Once you have authenticated as a GitHub App, you can use that
+in order to request an installation access token. Calling `requestToken()`
+automatically performs the app authentication for you. This token is scoped for
+your specific app and expires after an hour. 
 
 ```js
 const app = require('@octokit/app.js')
