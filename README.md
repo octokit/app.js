@@ -17,6 +17,19 @@ const App = require('@octokit/app.js')
 
 const app = new App({id, privateKey})
 const appAuth = await app.appAuth()
+
+// Example of using authetincated app to GET an individual installation
+// https://developer.github.com/v3/apps/#find-installations
+const installation = await appAuth.request({
+  method: 'GET',
+  url: '/repos/:owner/:repo/installation',
+  headers: { accept: 'application/vnd.github.machine-man-preview+json' },
+  owner: 'hiimbex',
+  repo: 'testing-things'
+})
+
+// contains the installation id necessary to authenticate as an installation
+const installationId = installation.data.id
 ```
 
 ### Authenticating as an Installation
@@ -29,8 +42,7 @@ your specific app and expires after an hour.
 const app = require('@octokit/app.js')
 
 const app = new App({id, privateKey})
-const appAuth = await app.appAuth()
-const installation = await app.requestToken(appAuth, installationId)
+const installation = await app.requestToken(app.appAuth(), {installationId: 123})
 ```
 
 ### Listening on Webhooks
