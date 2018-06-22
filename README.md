@@ -43,6 +43,14 @@ const app = require('@octokit/app.js')
 
 const app = new App({id, privateKey})
 const installation = await app.requestToken(app.appAuth(), {installationId: 123})
+
+// Example of opening an issue as an installation
+// https://developer.github.com/v3/issues/#create-an-issue
+const result = await installation.issues.create({
+  owner: 'hiimbex',
+  repo: 'tetsing-things',
+  title: 'My installation's first issue!'
+})
 ```
 
 ### Listening on Webhooks
