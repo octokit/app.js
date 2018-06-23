@@ -50,7 +50,7 @@ const installation = await app.requestToken({installationId: 123})
 const result = await installation.issues.create({
   owner: 'hiimbex',
   repo: 'tetsing-things',
-  title: 'My installation's first issue!'
+  title: 'My installation’s first issue!'
 })
 ```
 
