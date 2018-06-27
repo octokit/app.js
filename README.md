@@ -4,7 +4,7 @@
 
 ## GitHub Apps
 
-`@octokit/app.js` allows to authenticate as GitHub Apps, installations, listen
+`@octokit/app` allows to authenticate as GitHub Apps, installations, listen
 to webhooks, and respond to them using the GitHub API.
 
 ### Authenticating as an App
@@ -13,7 +13,7 @@ In order to authenticate as a GitHub App, you need to generate a Private Key
 and use it to sign a JSON Web Token (jwt) and encode it. 
 
 ```js
-const App = require('@octokit/app.js')
+const App = require('@octokit/app')
 
 const app = new App({id, privateKey})
 const appAuth = await app.appAuth()
@@ -40,7 +40,7 @@ automatically performs the app authentication for you. This token is scoped for
 your specific app and expires after an hour. 
 
 ```js
-const app = require('@octokit/app.js')
+const app = require('@octokit/app')
 
 const app = new App({id, privateKey})
 const installation = await app.requestToken({installationId: 123})
@@ -70,10 +70,10 @@ webhooks.on(app, 'issues.opened', {{id, name, payload, client}} => {
 ### Accessing API Endpoints
 
 Now that you are recieving webhooks, you can take actions using both GitHub's
-REST and GraphQL APIs via `@octokit/octokit.js`.
+REST and GraphQL APIs via `octokit`.
 
 ```js
-const octokit = require('@octokit/octokit.js')
+const octokit = require('octokit')
 
 octokit.rest.issues.createComment(app, {body: 'Hello, World!'})
 
