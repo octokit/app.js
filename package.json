@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/octokit/app.js#readme",
   "dependencies": {
+    "got": "^8.3.1",
     "mocha": "^5.2.0",
     "nock": "^9.4.0"
   }

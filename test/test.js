@@ -1,4 +1,5 @@
 const nock = require('nock')
+const got = require('got')
 const App = require('/path/to/app')
 
 describe('app.js', function() {
@@ -24,8 +25,8 @@ describe('app.js', function() {
       .get('/repos/hiimbex/testing-things/installation')
       .reply(200, {})
 
-    return got({owner: 'hiimbex', repo: 'testing-things'})
-    // Do I need to use got or another request library here?? or should it be interna;
+    return await got('https://apps-js-test.com/repos/hiimbex/testing-things/installation')
+    // should return => 200, {}
   })
 
   // Create an issue on a repository
@@ -39,7 +40,6 @@ describe('app.js', function() {
       .post('/repos/hiimbex/testing-things/issues')
       .reply(201, {})
 
-    return got({owner: 'hiimbex', repo: 'testing-things'})
-    // Do I need to use got or another request library here?
+    return await got('https://apps-js-test.com/repos/hiimbex/testing-things/issues')
   })
 });
