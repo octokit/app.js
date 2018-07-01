@@ -62,10 +62,24 @@ GitHub Apps give you the ability to listen for webhook events that happen on
 GitHub. We recommend using `@octokit/webhooks`.
 
 ```js
-const App = require('@octokit/app')
 const webhooks = require('@octokit/webhooks')
+const App = require('@octokit/app')
+const app = new App({id, privateKey})
 
 webhooks.on(app, 'issues.opened', {{id, name, payload, client}} => {
+  console.log('An issue was opened!')
+})
+```
+
+You can also use `octokit`'s built in support for Apps and webhooks.
+
+```js
+const Octokit = require('octokit')
+const client = new Octokit()
+
+const app = client.app({id, privateKey})
+
+app.webhooks.on('issues.opened', {{id, name, payload, client}} => {
   console.log('An issue was opened!')
 })
 ```
@@ -74,10 +88,10 @@ webhooks.on(app, 'issues.opened', {{id, name, payload, client}} => {
 
 Now that you are recieving webhooks, you can take actions using both GitHub's
 REST and GraphQL APIs via `octokit`. If you want to access API endpoints as
-a GitHub App, we recommend using `octokit`'s built in app support:
+a GitHub App, we recommend using `octokit`'s built in app support.
 
 ```js
-const octokit = require('octokit')
+const Octokit = require('octokit')
 const client = new Octokit()
 
 const app = client.app({id, privateKey})
