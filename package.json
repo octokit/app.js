@@ -1,0 +1,23 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "GitHub Apps toolset for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octokit/app.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/octokit/app.js/issues"
+  },
+  "homepage": "https://github.com/octokit/app.js#readme",
+  "dependencies": {
+    "mocha": "^5.2.0",
+    "nock": "^9.4.0"
+  }
+}
