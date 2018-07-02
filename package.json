@@ -11,7 +11,7 @@
     "url": "git+https://github.com/octokit/app.js.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/octokit/app.js/issues"
   },
