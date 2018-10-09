@@ -1,0 +1,23 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "GitHub Apps toolset for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": "https://github.com/octokit/rest.js",
+  "author": "Bex Warner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/octokit/app.js/issues"
+  },
+  "homepage": "https://github.com/octokit/app.js#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "lolex": "^2.7.4",
+    "mocha": "^5.2.0",
+    "nock": "^9.4.0"
+  }
+}
