@@ -2,28 +2,25 @@
 
 > Official GitHub Platform for GitHub Apps in Node.js
 
-## GitHub Apps
+`@octokit/app` allows to authenticate as GitHub Apps and installations.
 
-`@octokit/app` allows to authenticate as GitHub Apps, installations, listen
-to webhooks, and respond to them using the GitHub API.
-
-### Authenticating as an App
+## Authenticating as an App
 
 In order to authenticate as a GitHub App, you need to generate a Private Key
-and use it to sign a JSON Web Token (jwt) and encode it. 
+and use it to sign a JSON Web Token (jwt) and encode it.
 
 ```js
 const App = require('@octokit/app')
 const got = require('got') // an example of a request library
 
 const app = new App({id, privateKey})
-const appAuth = await app.appAuth()
+const jwt = await app.getSignedJsonWebToken()
 
-// Example of using authetincated app to GET an individual installation
+// Example of using authenticated app to GET an individual installation
 // https://developer.github.com/v3/apps/#find-repository-installation
 const {body} = await got('https://api.github.com/repos/hiimbex/testing-things/installation', {
   headers: {
-    authorization: `token ${appAuth}`, // your JWT
+    authorization: `token ${jwt}`, // your JWT
     accept: 'application/vnd.github.machine-man-preview+json'
   }
 })
@@ -32,22 +29,22 @@ const {body} = await got('https://api.github.com/repos/hiimbex/testing-things/in
 const installationId = body.data.id
 ```
 
-### Authenticating as an Installation
+## Authenticating as an Installation
 
 Once you have authenticated as a GitHub App, you can use that
 in order to request an installation access token. Calling `requestToken()`
 automatically performs the app authentication for you. This token is scoped for
-your specific app and expires after an hour. 
+your specific app and expires after an hour.
 
 ```js
-const got = require('got') // an example of a request library
 const App = require('@octokit/app')
-const app = new App({id, privateKey})
+const got = require('got') // an example of a request library
 
-const installationAccessToken = await app.requestToken({installationId: 123})
+const app = new App({id, privateKey})
+const installationAccessToken = await app.getInstallationAccesToken({installationId})
 
 // https://developer.github.com/v3/issues/#create-an-issue
-const {data: {total_count}} = await got.post('https://api.github.com/repos/hiimbex/tetsing-things/issues', {
+await got.post('https://api.github.com/repos/hiimbex/tetsing-things/issues', {
   body: {title: 'My installation’s first issue'},
   headers: {
     authorization: `token ${installationAccessToken}`,
@@ -56,27 +53,31 @@ const {data: {total_count}} = await got.post('https://api.github.com/repos/hiimb
 })
 ```
 
-### Listening on Webhooks
+## Listening on Webhooks
 
 GitHub Apps give you the ability to listen for webhook events that happen on
 GitHub. We recommend using `@octokit/webhooks`.
 
 ```js
-const webhooks = require('@octokit/webhooks')
 const App = require('@octokit/app')
+const webhooks = require('@octokit/webhooks')({
+  secret
+})
 const app = new App({id, privateKey})
 
-webhooks.on(app, 'issues.opened', {{id, name, payload, client}} => {
+webhooks.on('issues.opened', {{id, name, payload}} => {
   console.log('An issue was opened!')
 })
+
+// can now receive webhook event requests at port 3000
+require('http').createServer(webhooks.middleware).listen(3000)
 ```
 
-You can also use `octokit`'s built in support for Apps and webhooks.
+You can also use the main `octokit` module which has APIs for both GitHub Apps
+and webhooks.
 
 ```js
-const Octokit = require('octokit')
-const client = new Octokit()
-
+const client = require('octokit')()
 const app = client.app({id, privateKey})
 
 app.webhooks.on('issues.opened', {{id, name, payload, client}} => {
@@ -84,9 +85,9 @@ app.webhooks.on('issues.opened', {{id, name, payload, client}} => {
 })
 ```
 
-### Accessing API Endpoints
+## Accessing API Endpoints
 
-Now that you are recieving webhooks, you can take actions using both GitHub's
+Now that you are receiving webhooks, you can take actions using both GitHub's
 REST and GraphQL APIs via `octokit`. If you want to access API endpoints as
 a GitHub App, we recommend using `octokit`'s built in app support.
 
@@ -96,15 +97,16 @@ const client = new Octokit()
 
 const app = client.app({id, privateKey})
 
-app.rest.issues.createComment({owner: 'hiimbex', repo: 'testing-things', body: 'Hello, World!'})
+client.authenticate({token: await app.getInstallationAccesToken({installationId})})
+client.rest.issues.createComment({owner: 'hiimbex', repo: 'testing-things', body: 'Hello, World!'})
 
-app.graphql(`{
+client.graphql(`{
   viewer {
     login
   }
 }`)
 ```
 
-### Example Workflows
+## License
 
-todo
+[MIT](LICENSE)
