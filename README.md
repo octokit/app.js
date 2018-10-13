@@ -3,9 +3,9 @@
 
 # app.js
 
-> Official GitHub Platform for GitHub Apps in Node.js
+> GitHub App Authentication client for JavaScript
 
-`@octokit/app` allows to authenticate as GitHub Apps and installations.
+Before a your app can interact with the [REST API](https://developer.github.com/v3/) or [GraphQL API](https://developer.github.com/v4/) as a GitHub app it needs to retrieve authentication tokens, see [Authenticating as a GitHub app](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/) and [Authenticating as an installation](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation). `@octokit/app` helps to retrieve these tokens.
 
 ## Authenticating as an App
 
