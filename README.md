@@ -5,7 +5,7 @@
 
 > GitHub App Authentication client for JavaScript
 
-Before a your app can interact with the [REST API](https://developer.github.com/v3/) or [GraphQL API](https://developer.github.com/v4/) as a GitHub app it needs to retrieve authentication tokens, see [Authenticating as a GitHub app](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/) and [Authenticating as an installation](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation). `@octokit/app` helps to retrieve these tokens.
+`@octokit/app` has methods to receive tokens for a GitHub app and its installations. The tokens can then be used to interact with GitHub’s [REST API](https://developer.github.com/v3/) or [GraphQL API](https://developer.github.com/v4/). Note that `@octokit/app` does not have methods to send any requests, you will need to use your own request library such as [`@octokit/request`](https://github.com/octokit/request). Alternatively you can use the [`octokit`](https://github.com/octokit/octokit.js) package which comes with everything you need to integrate with any of GitHub’s APIs.
 
 ## Authenticating as an App
 
@@ -14,16 +14,21 @@ and use it to sign a JSON Web Token (jwt) and encode it.
 
 ```js
 const App = require('@octokit/app')
-const got = require('got') // an example of a request library
+const request = require('@octokit/request')
 
-const app = new App({id, privateKey})
+const APP_ID = 1 // replace with your app ID
+const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...' // replace with contents of your private key. Replace line breaks with \n
+
+const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY })
 const jwt = await app.getSignedJsonWebToken()
 
 // Example of using authenticated app to GET an individual installation
 // https://developer.github.com/v3/apps/#find-repository-installation
-const {body} = await got('https://api.github.com/repos/hiimbex/testing-things/installation', {
+const { data } = await request('GET /repos/:owner/:repo/installation', {
+  owner: 'hiimbex',
+  repo: 'testing-things',
   headers: {
-    authorization: `token ${jwt}`, // your JWT
+    authorization: `Bearer ${jwt}`,
     accept: 'application/vnd.github.machine-man-preview+json'
   }
 })
@@ -41,18 +46,23 @@ your specific app and expires after an hour.
 
 ```js
 const App = require('@octokit/app')
-const got = require('got') // an example of a request library
+const request = require('@octokit/request')
 
-const app = new App({id, privateKey})
-const installationAccessToken = await app.getInstallationAccesToken({installationId})
+const APP_ID = 1 // replace with your app ID
+const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...' // replace with contents of your private key. Replace line breaks with \n
+
+const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY })
+const installationAccessToken = await app.getInstallationAccesToken({ installationId })
 
 // https://developer.github.com/v3/issues/#create-an-issue
-await got.post('https://api.github.com/repos/hiimbex/tetsing-things/issues', {
-  body: {title: 'My installation’s first issue'},
+await request('POST /repos/:owner/:repo/issues', {
+  owner: 'hiimbex',
+  repo: 'testing-things',
   headers: {
     authorization: `token ${installationAccessToken}`,
     accept: 'application/vnd.github.machine-man-preview+json'
-  }
+  },
+  title: 'My installation’s first issue'
 })
 ```
 
