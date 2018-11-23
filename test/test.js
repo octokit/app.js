@@ -1,4 +1,6 @@
-const {expect} = require('chai')
+/* global describe, beforeEach, it */
+
+const { expect } = require('chai')
 const nock = require('nock')
 const lolex = require('lolex')
 
@@ -67,7 +69,7 @@ describe('app.js', function () {
         token: 'foo'
       })
 
-    const token = await app.requestToken({installationId: 123})
+    const token = await app.requestToken({ installationId: 123 })
     expect(token).to.equal('foo')
   })
 })
