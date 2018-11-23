@@ -9,8 +9,7 @@
 
 ## Authenticating as an App
 
-In order to authenticate as a GitHub App, you need to generate a Private Key
-and use it to sign a JSON Web Token (jwt) and encode it.
+In order to authenticate as a GitHub App, you need to generate a Private Key and use it to sign a JSON Web Token (jwt) and encode it. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/).
 
 ```js
 const App = require('@octokit/app')
@@ -39,10 +38,7 @@ const installationId = body.data.id
 
 ## Authenticating as an Installation
 
-Once you have authenticated as a GitHub App, you can use that
-in order to request an installation access token. Calling `requestToken()`
-automatically performs the app authentication for you. This token is scoped for
-your specific app and expires after an hour.
+Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. This token is scoped for your specific app and expires after an hour. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
 
 ```js
 const App = require('@octokit/app')
