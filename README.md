@@ -66,60 +66,6 @@ await request('POST /repos/:owner/:repo/issues', {
 })
 ```
 
-## Listening on Webhooks
-
-GitHub Apps give you the ability to listen for webhook events that happen on
-GitHub. We recommend using `@octokit/webhooks`.
-
-```js
-const App = require('@octokit/app')
-const webhooks = require('@octokit/webhooks')({
-  secret
-})
-const app = new App({id, privateKey})
-
-webhooks.on('issues.opened', {{id, name, payload}} => {
-  console.log('An issue was opened!')
-})
-
-// can now receive webhook event requests at port 3000
-require('http').createServer(webhooks.middleware).listen(3000)
-```
-
-You can also use the main `octokit` module which has APIs for both GitHub Apps
-and webhooks.
-
-```js
-const client = require('octokit')()
-const app = client.app({id, privateKey})
-
-app.webhooks.on('issues.opened', {{id, name, payload, client}} => {
-  console.log('An issue was opened!')
-})
-```
-
-## Accessing API Endpoints
-
-Now that you are receiving webhooks, you can take actions using both GitHub's
-REST and GraphQL APIs via `octokit`. If you want to access API endpoints as
-a GitHub App, we recommend using `octokit`'s built in app support.
-
-```js
-const Octokit = require('octokit')
-const client = new Octokit()
-
-const app = client.app({id, privateKey})
-
-client.authenticate({token: await app.getInstallationAccesToken({installationId})})
-client.rest.issues.createComment({owner: 'hiimbex', repo: 'testing-things', body: 'Hello, World!'})
-
-client.graphql(`{
-  viewer {
-    login
-  }
-}`)
-```
-
 ## License
 
 [MIT](LICENSE)
