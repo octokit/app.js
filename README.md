@@ -3,7 +3,7 @@
 > GitHub App Authentication client for JavaScript
 
 [![@latest](https://img.shields.io/npm/v/@octokit/app.svg)](https://www.npmjs.com/package/@octokit/app)
-[![Build Status](https://travis-ci.org/octokit/app.js.svg?branch=master)](https://travis-ci.org/octokit/app.js)
+[![Build Status](https://travis-ci.com/octokit/app.js.svg?branch=master)](https://travis-ci.com/octokit/app.js)
 [![Coverage Status](https://coveralls.io/repos/github/octokit/app.js/badge.svg)](https://coveralls.io/github/octokit/app.js)
 [![Greenkeeper](https://badges.greenkeeper.io/octokit/app.js.svg)](https://greenkeeper.io/)
 
