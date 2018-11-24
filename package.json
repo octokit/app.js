@@ -1,5 +1,8 @@
 {
   "name": "@octokit/app",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0-development",
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
