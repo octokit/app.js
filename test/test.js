@@ -41,7 +41,7 @@ const BEARER = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjAsImV4cCI6NjAsIml
 // Documentation: https://git.io/fASyr
 lolex.install({ now: 0, toFake: ['Date'] })
 
-describe('app.js', async () => {
+describe('app.js', () => {
   let app
 
   beforeEach(function () {
@@ -58,7 +58,7 @@ describe('app.js', async () => {
   })
 
   // see https://developer.github.com/v3/apps/#create-a-new-installation-token
-  it('gets installation token', async () => {
+  it('gets installation token', () => {
     nock('https://api.github.com', {
       reqheaders: {
         authorization: `bearer ${BEARER}` // installation access token
@@ -69,7 +69,9 @@ describe('app.js', async () => {
         token: 'foo'
       })
 
-    const token = await app.getInstallationAccesToken({ installationId: 123 })
-    expect(token).to.equal('foo')
+    return app.getInstallationAccesToken({ installationId: 123 })
+      .then(token => {
+        expect(token).to.equal('foo')
+      })
   })
 })
