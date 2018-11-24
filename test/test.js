@@ -41,7 +41,7 @@ const BEARER = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjAsImV4cCI6NjAsIml
 // Documentation: https://git.io/fASyr
 lolex.install({ now: 0, toFake: ['Date'] })
 
-describe('app.js', function () {
+describe('app.js', async () => {
   let app
 
   beforeEach(function () {
@@ -52,8 +52,8 @@ describe('app.js', function () {
   })
 
   // see https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
-  it('gets bearer token', async () => {
-    const bearer = await app.appAuth()
+  it('gets bearer token', function () {
+    const bearer = app.getSignedJsonWebToken()
     expect(bearer).to.equal(BEARER)
   })
 
@@ -69,7 +69,7 @@ describe('app.js', function () {
         token: 'foo'
       })
 
-    const token = await app.requestToken({ installationId: 123 })
+    const token = await app.getInstallationAccesToken({ installationId: 123 })
     expect(token).to.equal('foo')
   })
 })
