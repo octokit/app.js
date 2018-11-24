@@ -1,25 +1,39 @@
 {
   "name": "app",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
   "scripts": {
     "pretest": "standard",
-    "test": "mocha"
+    "test": "nyc mocha",
+    "coverage": "nyc report --reporter=html && open coverage/index.html",
+    "coverage:upload": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": "https://github.com/octokit/rest.js",
   "author": "Bex Warner",
+  "contributors": [
+    {
+      "name": "Gregor Martynus",
+      "url": "https://github.com/gr2m"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/octokit/app.js/issues"
   },
   "homepage": "https://github.com/octokit/app.js#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@octokit/request": "^2.1.2",
+    "jsonwebtoken": "^8.3.0"
+  },
   "devDependencies": {
     "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "lolex": "^2.7.4",
     "mocha": "^5.2.0",
     "nock": "^9.4.0",
-    "standard": "^12.0.1"
+    "nyc": "^13.1.0",
+    "standard": "^12.0.1",
+    "semantic-release": "^15.12.1"
   }
 }
