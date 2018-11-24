@@ -40,7 +40,7 @@ const installationId = body.data.id
 
 ## Authenticating as an Installation
 
-Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. This token is scoped for your specific app and expires after an hour. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
+Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
 
 ```js
 const App = require('@octokit/app')
@@ -61,6 +61,31 @@ await request('POST /repos/:owner/:repo/issues', {
     accept: 'application/vnd.github.machine-man-preview+json'
   },
   title: 'My installation’s first issue'
+})
+```
+
+## Caching installation tokens
+
+Installation tokens expire after an hour. By default, `@octokit/app` is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
+
+```js
+const App = require('@octokit/app')
+const APP_ID = 1
+const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...'
+
+const CACHE = {}
+
+const app = new App({
+  id: APP_ID,
+  privateKey: PRIVATE_KEY,
+  cache: {
+    get (key) {
+      return CACHE[key]
+    },
+    set (key, value) {
+      CACHE[key] = value
+    }
+  }
 })
 ```
 
