@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "@octokit/app",
   "version": "0.0.0-development",
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "coverage": "nyc report --reporter=html && open coverage/index.html",
     "coverage:upload": "nyc report --reporter=text-lcov | coveralls"
   },
-  "repository": "https://github.com/octokit/rest.js",
+  "repository": "https://github.com/octokit/app.js",
   "author": "Bex Warner",
   "contributors": [
     {
