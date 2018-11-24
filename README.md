@@ -1,9 +1,11 @@
-## 🚧 This project is under construction and not yet ready for use! 🚧
-
-
 # app.js
 
 > GitHub App Authentication client for JavaScript
+
+[![@latest](https://img.shields.io/npm/v/@octokit/app.svg)](https://www.npmjs.com/package/@octokit/app)
+[![Build Status](https://travis-ci.org/octokit/app.js.svg?branch=master)](https://travis-ci.org/octokit/app.js)
+[![Coverage Status](https://coveralls.io/repos/github/octokit/app.js/badge.svg)](https://coveralls.io/github/octokit/app.js)
+[![Greenkeeper](https://badges.greenkeeper.io/octokit/app.js.svg)](https://greenkeeper.io/)
 
 `@octokit/app` has methods to receive tokens for a GitHub app and its installations. The tokens can then be used to interact with GitHub’s [REST API](https://developer.github.com/v3/) or [GraphQL API](https://developer.github.com/v4/). Note that `@octokit/app` does not have methods to send any requests, you will need to use your own request library such as [`@octokit/request`](https://github.com/octokit/request). Alternatively you can use the [`octokit`](https://github.com/octokit/octokit.js) package which comes with everything you need to integrate with any of GitHub’s APIs.
 
