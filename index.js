@@ -1,7 +1,7 @@
 module.exports = App
 
 const getCache = require('./lib/get-cache')
-const getInstallationAccesToken = require('./lib/get-installation-access-token')
+const getInstallationAccessToken = require('./lib/get-installation-access-token')
 const getSignedJsonWebToken = require('./lib/get-signed-json-web-token')
 
 function App ({ id, privateKey, cache }) {
@@ -12,7 +12,7 @@ function App ({ id, privateKey, cache }) {
   }
   const api = {
     getSignedJsonWebToken: getSignedJsonWebToken.bind(null, state),
-    getInstallationAccesToken: getInstallationAccesToken.bind(null, state)
+    getInstallationAccessToken: getInstallationAccessToken.bind(null, state)
   }
 
   return api

@@ -70,7 +70,7 @@ describe('app.js', () => {
         token: 'foo'
       })
 
-    return app.getInstallationAccesToken({ installationId: 123 })
+    return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
         expect(token).to.equal('foo')
       })
@@ -83,11 +83,11 @@ describe('app.js', () => {
         token: 'foo'
       })
 
-    return app.getInstallationAccesToken({ installationId: 123 })
+    return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
         expect(token).to.equal('foo')
 
-        return app.getInstallationAccesToken({ installationId: 123 })
+        return app.getInstallationAccessToken({ installationId: 123 })
       })
       .then(token => {
         expect(token).to.equal('foo')
@@ -105,11 +105,11 @@ describe('app.js', () => {
         token: 'bar'
       })
 
-    return app.getInstallationAccesToken({ installationId: 123 })
+    return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
         expect(token).to.equal('foo')
 
-        return app.getInstallationAccesToken({ installationId: 456 })
+        return app.getInstallationAccessToken({ installationId: 456 })
       })
       .then(token => {
         expect(token).to.equal('bar')
@@ -128,7 +128,7 @@ describe('app.js', () => {
         token: 'bar'
       })
 
-    return app.getInstallationAccesToken({ installationId: 123 })
+    return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
         expect(token).to.equal('foo')
 
@@ -138,7 +138,7 @@ describe('app.js', () => {
         })
       })
       .then(() => {
-        return app.getInstallationAccesToken({ installationId: 123 })
+        return app.getInstallationAccessToken({ installationId: 123 })
       })
       .then(token => {
         expect(token).to.equal('bar')
@@ -163,7 +163,7 @@ describe('app.js', () => {
     }
     const appWithCustomCache = new App(options)
 
-    return appWithCustomCache.getInstallationAccesToken({ installationId: 123 })
+    return appWithCustomCache.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
         expect(options.cache.get.callCount).to.equal(1)
         expect(options.cache.set.callCount).to.equal(1)
