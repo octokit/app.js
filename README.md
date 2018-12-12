@@ -50,7 +50,7 @@ const APP_ID = 1 // replace with your app ID
 const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...' // replace with contents of your private key. Replace line breaks with \n
 
 const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY })
-const installationAccessToken = await app.getInstallationAccesToken({ installationId })
+const installationAccessToken = await app.getInstallationAccessToken({ installationId })
 
 // https://developer.github.com/v3/issues/#create-an-issue
 await request('POST /repos/:owner/:repo/issues', {
