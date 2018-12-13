@@ -1,5 +1,7 @@
 module.exports = App
 
+const request = require('@octokit/request')
+
 const getCache = require('./lib/get-cache')
 const getInstallationAccessToken = require('./lib/get-installation-access-token')
 const getSignedJsonWebToken = require('./lib/get-signed-json-web-token')
@@ -8,6 +10,7 @@ function App ({ id, privateKey, cache }) {
   const state = {
     id,
     privateKey,
+    request,
     cache: cache || getCache()
   }
   const api = {
