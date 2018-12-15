@@ -169,4 +169,24 @@ describe('app.js', () => {
         expect(options.cache.set.callCount).to.equal(1)
       })
   })
+
+  it('supports custom base url', () => {
+    nock('https://github-enterprise.com/api/v3')
+      .post('/app/installations/123/access_tokens')
+      .reply(201, {
+        token: 'foo'
+      })
+
+    const options = {
+      id: APP_ID,
+      privateKey: PRIVATE_KEY,
+      baseUrl: 'https://github-enterprise.com/api/v3'
+    }
+    const appWithCustomEndpointDefaults = new App(options)
+
+    return appWithCustomEndpointDefaults.getInstallationAccessToken({ installationId: 123 })
+      .then(token => {
+        expect(token).to.equal('foo')
+      })
+  })
 })

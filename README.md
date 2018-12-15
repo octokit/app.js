@@ -89,6 +89,18 @@ const app = new App({
 })
 ```
 
+## Using with GitHub Enterprise
+
+The `baseUrl` option can be used to override default GitHub's `https://api.github.com`:
+
+```js
+const app = new App({
+  id: APP_ID,
+  privateKey: PRIVATE_KEY,
+  baseUrl: 'https://github-enterprise.com/api/v3'
+}) 
+```
+
 ## License
 
 [MIT](LICENSE)

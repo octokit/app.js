@@ -6,11 +6,11 @@ const getCache = require('./lib/get-cache')
 const getInstallationAccessToken = require('./lib/get-installation-access-token')
 const getSignedJsonWebToken = require('./lib/get-signed-json-web-token')
 
-function App ({ id, privateKey, cache }) {
+function App ({ id, privateKey, baseUrl, cache }) {
   const state = {
     id,
     privateKey,
-    request,
+    request: baseUrl ? request.defaults({ baseUrl }) : request,
     cache: cache || getCache()
   }
   const api = {
