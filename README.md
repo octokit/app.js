@@ -21,7 +21,7 @@ const APP_ID = 1 // replace with your app ID
 const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...' // replace with contents of your private key. Replace line breaks with \n
 
 const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY })
-const jwt = await app.getSignedJsonWebToken()
+const jwt = app.getSignedJsonWebToken()
 
 // Example of using authenticated app to GET an individual installation
 // https://developer.github.com/v3/apps/#find-repository-installation
