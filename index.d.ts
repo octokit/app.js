@@ -18,7 +18,7 @@ declare interface getInstallationAccessTokenOptions {
 // In TypeScript, you cannot use the `new` keyword on functions (excluding old-style classes using functions and prototype), only on classes
 declare class App {
   constructor(options: AppOptions)
-  getSignedJsonWebToken(options?: getJWTOptions): string
+  getSignedJsonWebToken(): string
   getInstallationAccessToken(options?: getInstallationAccessTokenOptions): Promise<string>
 }
 
