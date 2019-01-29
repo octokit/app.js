@@ -11,7 +11,7 @@ declare interface getJWTOptions {
 }
 
 declare interface getInstallationAccessTokenOptions {
-  installation_id: string
+  installation_id: number
 }
 
 // Not really a class, but it is how they say it should be used in the readme.
