@@ -8,7 +8,7 @@ declare interface AppOptions {
 }
 
 declare interface getInstallationAccessTokenOptions {
-  installation_id: number
+  installationId: number
 }
 
 // Not really a class, but it is how they say it should be used in the readme.
