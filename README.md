@@ -35,7 +35,7 @@ const { data } = await request('GET /repos/:owner/:repo/installation', {
 })
 
 // contains the installation id necessary to authenticate as an installation
-const installationId = body.data.id
+const installationId = data.id
 ```
 
 ## Authenticating as an Installation
