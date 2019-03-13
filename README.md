@@ -68,9 +68,6 @@ await request('POST /repos/:owner/:repo/issues', {
 
 Installation tokens expire after an hour. By default, `@octokit/app` is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
 
-> an optional `expiry` parameter is passed to `cache.set`, useful for further automation of your cache mechanism
-> _e.g. auto purge values after expiry is elapsed._
-
 ```js
 const App = require('@octokit/app')
 const APP_ID = 1
@@ -85,8 +82,30 @@ const app = new App({
     get (key) {
       return CACHE[key]
     },
+    set (key, value) {
+      CACHE[key] = value
+    }
+  }
+})
+```
+
+> **NOTE**: an optional `expiry` parameter is passed to `cache.set`, useful for further automation of your cache mechanism
+> _e.g. auto purge values after expiry is elapsed._
+
+```js
+const app = new App({
+  id: APP_ID,
+  privateKey: PRIVATE_KEY,
+  cache: {
+    get (key) {
+      return CACHE[key]
+    },
     set (key, value, expiry) {
       CACHE[key] = value
+      
+      const timeout = (new Date(expiry)).getTime() - (new Date()).getTime();
+
+      setTimeout(() => delete CACHE[key], timeout)
     }
   }
 })
