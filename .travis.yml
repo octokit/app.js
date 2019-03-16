@@ -23,9 +23,10 @@ jobs:
     - node_js: 8
       script: npm run test
     - node_js: 10
-      env: Node 10, coverage upload
+      env: Node 10, validate Typescript, coverage upload
       script:
         - npm run test
+        - npm run validate:ts
         - npm run coverage:upload
 
     - stage: release
