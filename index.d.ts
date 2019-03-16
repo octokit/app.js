@@ -1,10 +1,10 @@
-import LRU = require("lru-cache");
+import LRUCache = require("lru-cache");
 
 declare interface AppOptions {
   id: string
   privateKey: string
   baseUrl?: string
-  cache?: LRU.Cache<string, string>
+  cache?: LRUCache<string, string>
 }
 
 declare interface getInstallationAccessTokenOptions {
