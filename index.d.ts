@@ -1,7 +1,7 @@
 import LRUCache = require("lru-cache");
 
 declare interface AppOptions {
-  id: string
+  id: number
   privateKey: string
   baseUrl?: string
   cache?: LRUCache<string, string>
