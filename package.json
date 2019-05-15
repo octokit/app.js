@@ -28,7 +28,7 @@
   "homepage": "https://github.com/octokit/app.js#readme",
   "types": "index.d.ts",
   "dependencies": {
-    "@octokit/request": "^3.0.0",
+    "@octokit/request": "^4.0.0",
     "@types/lru-cache": "^5.1.0",
     "jsonwebtoken": "^8.3.0",
     "lru-cache": "^5.1.1"
