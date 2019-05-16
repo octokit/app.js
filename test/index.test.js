@@ -1,6 +1,3 @@
-/* global describe, beforeEach, it */
-
-import { expect } from 'chai';
 import { install } from 'lolex';
 import nock from 'nock';
 import { stub } from 'simple-mock';
@@ -55,7 +52,7 @@ describe('app.js', () => {
   // see https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
   it('gets bearer token', function () {
     const bearer = app.getSignedJsonWebToken()
-    expect(bearer).to.equal(BEARER)
+    expect(bearer).toEqual(BEARER)
   })
 
   // see https://developer.github.com/v3/apps/#create-a-new-installation-token
@@ -72,7 +69,7 @@ describe('app.js', () => {
 
     return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
-        expect(token).to.equal('foo')
+        expect(token).toEqual('foo')
       })
   })
 
@@ -85,12 +82,12 @@ describe('app.js', () => {
 
     return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
-        expect(token).to.equal('foo')
+        expect(token).toEqual('foo')
 
         return app.getInstallationAccessToken({ installationId: 123 })
       })
       .then(token => {
-        expect(token).to.equal('foo')
+        expect(token).toEqual('foo')
       })
   })
 
@@ -107,12 +104,12 @@ describe('app.js', () => {
 
     return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
-        expect(token).to.equal('foo')
+        expect(token).toEqual('foo')
 
         return app.getInstallationAccessToken({ installationId: 456 })
       })
       .then(token => {
-        expect(token).to.equal('bar')
+        expect(token).toEqual('bar')
       })
   })
 
@@ -130,7 +127,7 @@ describe('app.js', () => {
 
     return app.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
-        expect(token).to.equal('foo')
+        expect(token).toEqual('foo')
 
         return new Promise(resolve => {
           setTimeout(resolve, oneHourInMs)
@@ -141,8 +138,8 @@ describe('app.js', () => {
         return app.getInstallationAccessToken({ installationId: 123 })
       })
       .then(token => {
-        expect(token).to.equal('bar')
-        expect(mock.pendingMocks()).to.deep.equal([])
+        expect(token).toEqual('bar')
+        expect(mock.pendingMocks()).toStrictEqual([])
       })
   }).timeout(oneHourInMs + 2000)
 
@@ -165,8 +162,8 @@ describe('app.js', () => {
 
     return appWithCustomCache.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
-        expect(options.cache.get.callCount).to.equal(1)
-        expect(options.cache.set.callCount).to.equal(1)
+        expect(options.cache.get.callCount).toEqual(1)
+        expect(options.cache.set.callCount).toEqual(1)
       })
   })
 
@@ -186,7 +183,7 @@ describe('app.js', () => {
 
     return appWithCustomEndpointDefaults.getInstallationAccessToken({ installationId: 123 })
       .then(token => {
-        expect(token).to.equal('foo')
+        expect(token).toEqual('foo')
       })
   })
 })
