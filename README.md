@@ -14,28 +14,28 @@
 In order to authenticate as a GitHub App, you need to generate a Private Key and use it to sign a JSON Web Token (jwt) and encode it. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/).
 
 ```js
-const App = require('@octokit/app')
-const request = require('@octokit/request')
+const App = require("@octokit/app");
+const request = require("@octokit/request");
 
-const APP_ID = 1 // replace with your app ID
-const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...' // replace with contents of your private key. Replace line breaks with \n
+const APP_ID = 1; // replace with your app ID
+const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n..."; // replace with contents of your private key. Replace line breaks with \n
 
-const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY })
-const jwt = app.getSignedJsonWebToken()
+const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY });
+const jwt = app.getSignedJsonWebToken();
 
 // Example of using authenticated app to GET an individual installation
 // https://developer.github.com/v3/apps/#find-repository-installation
-const { data } = await request('GET /repos/:owner/:repo/installation', {
-  owner: 'hiimbex',
-  repo: 'testing-things',
+const { data } = await request("GET /repos/:owner/:repo/installation", {
+  owner: "hiimbex",
+  repo: "testing-things",
   headers: {
     authorization: `Bearer ${jwt}`,
-    accept: 'application/vnd.github.machine-man-preview+json'
+    accept: "application/vnd.github.machine-man-preview+json"
   }
-})
+});
 
 // contains the installation id necessary to authenticate as an installation
-const installationId = data.id
+const installationId = data.id;
 ```
 
 ## Authenticating as an Installation
@@ -43,25 +43,27 @@ const installationId = data.id
 Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
 
 ```js
-const App = require('@octokit/app')
-const request = require('@octokit/request')
+const App = require("@octokit/app");
+const request = require("@octokit/request");
 
-const APP_ID = 1 // replace with your app ID
-const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...' // replace with contents of your private key. Replace line breaks with \n
+const APP_ID = 1; // replace with your app ID
+const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n..."; // replace with contents of your private key. Replace line breaks with \n
 
-const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY })
-const installationAccessToken = await app.getInstallationAccessToken({ installationId })
+const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY });
+const installationAccessToken = await app.getInstallationAccessToken({
+  installationId
+});
 
 // https://developer.github.com/v3/issues/#create-an-issue
-await request('POST /repos/:owner/:repo/issues', {
-  owner: 'hiimbex',
-  repo: 'testing-things',
+await request("POST /repos/:owner/:repo/issues", {
+  owner: "hiimbex",
+  repo: "testing-things",
   headers: {
     authorization: `token ${installationAccessToken}`,
-    accept: 'application/vnd.github.machine-man-preview+json'
+    accept: "application/vnd.github.machine-man-preview+json"
   },
-  title: 'My installation’s first issue'
-})
+  title: "My installation’s first issue"
+});
 ```
 
 ## Caching installation tokens
@@ -69,24 +71,24 @@ await request('POST /repos/:owner/:repo/issues', {
 Installation tokens expire after an hour. By default, `@octokit/app` is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
 
 ```js
-const App = require('@octokit/app')
-const APP_ID = 1
-const PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----\n...'
+const App = require("@octokit/app");
+const APP_ID = 1;
+const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n...";
 
-const CACHE = {}
+const CACHE = {};
 
 const app = new App({
   id: APP_ID,
   privateKey: PRIVATE_KEY,
   cache: {
-    get (key) {
-      return CACHE[key]
+    get(key) {
+      return CACHE[key];
     },
-    set (key, value) {
-      CACHE[key] = value
+    set(key, value) {
+      CACHE[key] = value;
     }
   }
-})
+});
 ```
 
 ## Using with GitHub Enterprise
@@ -97,8 +99,8 @@ The `baseUrl` option can be used to override default GitHub's `https://api.githu
 const app = new App({
   id: APP_ID,
   privateKey: PRIVATE_KEY,
-  baseUrl: 'https://github-enterprise.com/api/v3'
-}) 
+  baseUrl: "https://github-enterprise.com/api/v3"
+});
 ```
 
 ## License
