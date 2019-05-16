@@ -1,11 +1,11 @@
 /* global describe, beforeEach, it */
 
-const { expect } = require('chai')
-const lolex = require('lolex')
-const nock = require('nock')
-const simple = require('simple-mock')
+import { expect } from 'chai';
+import { install } from 'lolex';
+import nock from 'nock';
+import { stub } from 'simple-mock';
 
-const { App } = require('..')
+import { App } from '..';
 const APP_ID = 1
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH
@@ -40,7 +40,7 @@ const BEARER = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjAsImV4cCI6NjAwLCJ
 // simulate the beginning of unix time so that Date.now() returns 0
 // that way the signed token is always the same
 // Documentation: https://git.io/fASyr
-const clock = lolex.install({ now: 0, toFake: ['Date', 'setTimeout'] })
+const clock = install({ now: 0, toFake: ['Date', 'setTimeout'] })
 
 describe('app.js', () => {
   let app
@@ -157,8 +157,8 @@ describe('app.js', () => {
       id: APP_ID,
       privateKey: PRIVATE_KEY,
       cache: {
-        get: simple.stub(),
-        set: simple.stub()
+        get: stub(),
+        set: stub()
       }
     }
     const appWithCustomCache = new App(options)
