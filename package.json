@@ -29,11 +29,12 @@
   "types": "index.d.ts",
   "dependencies": {
     "@octokit/request": "^3.0.0",
-    "@types/lru-cache": "^5.1.0",
     "jsonwebtoken": "^8.3.0",
     "lru-cache": "^5.1.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.3.0",
+    "@types/lru-cache": "^5.1.0",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
     "lolex": "^4.0.1",
