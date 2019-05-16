@@ -5,7 +5,7 @@ const lolex = require('lolex')
 const nock = require('nock')
 const simple = require('simple-mock')
 
-const App = require('..')
+const { App } = require('..')
 const APP_ID = 1
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH

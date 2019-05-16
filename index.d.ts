@@ -13,10 +13,8 @@ declare interface getInstallationAccessTokenOptions {
 
 // Not really a class, but it is how they say it should be used in the readme.
 // In TypeScript, you cannot use the `new` keyword on functions (excluding old-style classes using functions and prototype), only on classes
-declare class App {
+export declare class App {
   constructor(options: AppOptions)
   public getSignedJsonWebToken(): string
   public getInstallationAccessToken(options?: getInstallationAccessTokenOptions): Promise<string>
 }
-
-export = App;

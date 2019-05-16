@@ -1,12 +1,10 @@
-module.exports = App
+import { request } from '@octokit/request'
 
-const request = require('@octokit/request')
+import { getCache } from './lib/get-cache'
+import { getInstallationAccessToken } from './lib/get-installation-access-token'
+import { getSignedJsonWebToken } from './lib/get-signed-json-web-token'
 
-const getCache = require('./lib/get-cache')
-const getInstallationAccessToken = require('./lib/get-installation-access-token')
-const getSignedJsonWebToken = require('./lib/get-signed-json-web-token')
-
-function App ({ id, privateKey, baseUrl, cache }) {
+export function App ({ id, privateKey, baseUrl, cache }) {
   const state = {
     id,
     privateKey,
