@@ -14,8 +14,8 @@
 In order to authenticate as a GitHub App, you need to generate a Private Key and use it to sign a JSON Web Token (jwt) and encode it. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/).
 
 ```js
-const App = require("@octokit/app");
-const request = require("@octokit/request");
+const { App } = require("@octokit/app");
+const { request } = require("@octokit/request");
 
 const APP_ID = 1; // replace with your app ID
 const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n..."; // replace with contents of your private key. Replace line breaks with \n
@@ -43,8 +43,8 @@ const installationId = data.id;
 Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
 
 ```js
-const App = require("@octokit/app");
-const request = require("@octokit/request");
+const { App } = require("@octokit/app");
+const { request } = require("@octokit/request");
 
 const APP_ID = 1; // replace with your app ID
 const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n..."; // replace with contents of your private key. Replace line breaks with \n
@@ -71,7 +71,7 @@ await request("POST /repos/:owner/:repo/issues", {
 Installation tokens expire after an hour. By default, `@octokit/app` is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
 
 ```js
-const App = require("@octokit/app");
+const { App } = require("@octokit/app");
 const APP_ID = 1;
 const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n...";
 
