@@ -32,7 +32,7 @@ export class App {
     return getSignedJsonWebToken.bind(null, this.state)();
   }
 
-  getInstallationAccessToken(options: { installationId: number }) {
+  getInstallationAccessToken(options: { installationId: number }): Promise<string> {
     return getInstallationAccessToken.bind(null, this.state)(options)
   }
 }
