@@ -14,23 +14,31 @@ interface AppOptions {
 }
 
 export class App {
-  private state: State;
-
+  private api: {
+    getSignedJsonWebToken: () => string;
+    getInstallationAccessToken: (options: {
+      installationId: number
+    }) => Promise<string>
+  }
   constructor({ id, privateKey, baseUrl, cache }: AppOptions) {
-    this.state = {
+    const state: State = {
       id,
       privateKey,
       request: baseUrl ? request.defaults({ baseUrl }) : request,
       cache: cache || getCache()
     };
+    this.api = {
+      getSignedJsonWebToken: getSignedJsonWebToken.bind(null, state),
+      getInstallationAccessToken: getInstallationAccessToken.bind(null, state)
+    }
   }
   getSignedJsonWebToken(): string {
-    return getSignedJsonWebToken.bind(null, this.state)();
+    return this.api.getSignedJsonWebToken();
   }
 
   getInstallationAccessToken(options: {
     installationId: number;
   }): Promise<string> {
-    return getInstallationAccessToken.bind(null, this.state)(options);
+    return this.api.getInstallationAccessToken(options);
   }
 }
