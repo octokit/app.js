@@ -168,7 +168,7 @@ describe("app.js", () => {
 
     return appWithCustomCache
       .getInstallationAccessToken({ installationId: 123 })
-      .then(token => {
+      .then(() => {
         expect(options.cache.get.callCount).toEqual(1);
         expect(options.cache.set.callCount).toEqual(1);
       });
