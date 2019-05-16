@@ -1,4 +1,3 @@
-.DS_Store
-.env
+coverage/
 node_modules/
 pkg/
