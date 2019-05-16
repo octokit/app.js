@@ -1,7 +1,8 @@
 import { getSignedJsonWebToken } from './get-signed-json-web-token'
+import { State } from './types';
 
 // https://developer.github.com/v3/apps/#create-a-new-installation-token
-export function getInstallationAccessToken (state, { installationId }) {
+export function getInstallationAccessToken (state: State, { installationId }) {
   const token = state.cache.get(installationId)
   if (token) {
     return Promise.resolve(token)

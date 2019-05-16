@@ -1,6 +1,11 @@
 import jsonwebtoken from 'jsonwebtoken'
 
-export function getSignedJsonWebToken ({ id, privateKey }) {
+interface getSignedJWTOptions {
+  id: number
+  privateKey: string
+}
+
+export function getSignedJsonWebToken ({ id, privateKey }: getSignedJWTOptions) {
   const now = Math.floor(Date.now() / 1000)
   const payload = {
     iat: now, // Issued at time
