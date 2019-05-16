@@ -12,7 +12,7 @@
     "lint:fix": "prettier --write {src,test}/* README.md package.json",
     "pretest": "npm run -s lint",
     "test": "jest --coverage",
-    "validate:ts": "tsc --target es6 --noImplicitAny index.d.ts"
+    "validate:ts": "tsc -p tsconfig.json --noEmit"
   },
   "repository": "https://github.com/octokit/app.js",
   "author": "Bex Warner",
