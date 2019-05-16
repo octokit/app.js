@@ -11,7 +11,6 @@
     "lint:fix": "prettier --write {src,test}/* README.md package.json",
     "pretest": "npm run -s lint",
     "test": "jest --coverage",
-    "coverage:upload": "cat ./coverage/lcov.info | coveralls",
     "validate:ts": "tsc --target es6 --noImplicitAny index.d.ts"
   },
   "repository": "https://github.com/octokit/app.js",
@@ -51,6 +50,14 @@
     "typescript": "^3.4.5"
   },
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "coverageThreshold": {
+      "global": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      }
+    }
   }
 }

@@ -27,7 +27,6 @@ jobs:
       script:
         - npm run test
         - npm run validate:ts
-        - npm run coverage:upload
 
     - stage: release
       node_js: lts/*
