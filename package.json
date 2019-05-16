@@ -45,7 +45,6 @@
     "@types/lru-cache": "^5.1.0",
     "@types/nock": "^10.0.3",
     "@types/simple-mock": "^0.8.1",
-    "coveralls": "^3.0.2",
     "jest": "^24.8.0",
     "lolex": "^4.0.1",
     "nock": "^10.0.2",
