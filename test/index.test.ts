@@ -2,7 +2,7 @@ import { install } from 'lolex';
 import nock from 'nock';
 import { stub } from 'simple-mock';
 
-import { App } from '..';
+import { App } from '../src';
 const APP_ID = 1
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH
@@ -40,7 +40,7 @@ const BEARER = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjAsImV4cCI6NjAwLCJ
 const clock = install({ now: 0, toFake: ['Date', 'setTimeout'] })
 
 describe('app.js', () => {
-  let app
+  let app: App
 
   beforeEach(function () {
     // set up stuff
