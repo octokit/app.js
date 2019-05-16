@@ -7,7 +7,9 @@
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
   "scripts": {
-    "pretest": "standard",
+    "lint": "prettier --check {src,test}/* README.md package.json",
+    "lint:fix": "prettier --write {src,test}/* README.md package.json",
+    "pretest": "npm run -s lint",
     "test": "jest --coverage",
     "coverage:upload": "cat ./coverage/lcov.info | coveralls",
     "validate:ts": "tsc --target es6 --noImplicitAny index.d.ts"
@@ -42,9 +44,9 @@
     "jest": "^24.8.0",
     "lolex": "^4.0.1",
     "nock": "^10.0.2",
+    "prettier": "^1.17.1",
     "semantic-release": "^15.12.1",
     "simple-mock": "^0.8.0",
-    "standard": "^12.0.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.5"
   },
