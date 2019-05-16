@@ -7,6 +7,7 @@
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
   "scripts": {
+    "build": "pack build",
     "lint": "prettier --check {src,test}/* README.md package.json",
     "lint:fix": "prettier --write {src,test}/* README.md package.json",
     "pretest": "npm run -s lint",
@@ -33,6 +34,11 @@
     "lru-cache": "^5.1.1"
   },
   "devDependencies": {
+    "@gr2m/pika-plugin-bundle-web": "^0.3.16-patch-issue-46-6",
+    "@pika/pack": "^0.3.7",
+    "@pika/plugin-build-node": "^0.3.16",
+    "@pika/plugin-build-web": "^0.3.16",
+    "@pika/plugin-ts-standard-pkg": "^0.3.16",
     "@types/jest": "^24.0.13",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/lolex": "^3.1.1",
@@ -43,6 +49,7 @@
     "jest": "^24.8.0",
     "lolex": "^4.0.1",
     "nock": "^10.0.2",
+    "pika-plugin-unpkg-field": "^1.1.0",
     "prettier": "^1.17.1",
     "semantic-release": "^15.12.1",
     "simple-mock": "^0.8.0",
@@ -59,5 +66,27 @@
         "lines": 100
       }
     }
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg"
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@gr2m/pika-plugin-bundle-web",
+        {
+          "browser": true
+        }
+      ],
+      [
+        "pika-plugin-unpkg-field"
+      ]
+    ]
   }
 }
