@@ -1,8 +1,8 @@
 import { request } from '@octokit/request'
 
-import { getCache } from './lib/get-cache'
-import { getInstallationAccessToken } from './lib/get-installation-access-token'
-import { getSignedJsonWebToken } from './lib/get-signed-json-web-token'
+import { getCache } from './get-cache'
+import { getInstallationAccessToken } from './get-installation-access-token'
+import { getSignedJsonWebToken } from './get-signed-json-web-token'
 
 export function App ({ id, privateKey, baseUrl, cache }) {
   const state = {
