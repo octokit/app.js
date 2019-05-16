@@ -4,6 +4,7 @@ import { getCache } from "./get-cache";
 import { getInstallationAccessToken } from "./get-installation-access-token";
 import { getSignedJsonWebToken } from "./get-signed-json-web-token";
 import LRUCache from "lru-cache";
+import { State } from "./types";
 
 interface AppOptions {
   id: number;
@@ -13,12 +14,7 @@ interface AppOptions {
 }
 
 export class App {
-  private state: {
-    id: number;
-    privateKey: string;
-    cache: LRUCache<string, string>;
-    request: typeof request;
-  };
+  private state: State;
 
   constructor({ id, privateKey, baseUrl, cache }: AppOptions) {
     this.state = {
