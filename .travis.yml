@@ -32,4 +32,5 @@ jobs:
       node_js: lts/*
       env: semantic-release
       script:
-        - npx semantic-release
+        - npm run build
+        - cd pkg && ../node_modules/.bin/semantic-release
