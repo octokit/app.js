@@ -5,5 +5,5 @@ export interface State {
   id: number;
   privateKey: string;
   request: typeof request;
-  cache: LRUCache<string, string>;
+  cache: LRUCache<number, string>;
 }

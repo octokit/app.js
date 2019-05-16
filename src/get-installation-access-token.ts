@@ -4,7 +4,7 @@ import { State } from "./types";
 // https://developer.github.com/v3/apps/#create-a-new-installation-token
 export function getInstallationAccessToken(
   state: State,
-  { installationId }
+  { installationId }: { installationId: number }
 ): Promise<string> {
   const token = state.cache.get(installationId);
   if (token) {
