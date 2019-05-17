@@ -22,9 +22,9 @@ export class App {
   private api: {
     getSignedJsonWebToken: () => string;
     getInstallationAccessToken: (options: {
-      installationId: number
-    }) => Promise<string>
-  }
+      installationId: number;
+    }) => Promise<string>;
+  };
   constructor({ id, privateKey, baseUrl, cache }: AppOptions) {
     const state: State = {
       id,
@@ -35,7 +35,7 @@ export class App {
     this.api = {
       getSignedJsonWebToken: getSignedJsonWebToken.bind(null, state),
       getInstallationAccessToken: getInstallationAccessToken.bind(null, state)
-    }
+    };
   }
   getSignedJsonWebToken(): string {
     return this.api.getSignedJsonWebToken();
