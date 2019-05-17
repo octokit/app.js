@@ -10,7 +10,12 @@ interface AppOptions {
   id: number;
   privateKey: string;
   baseUrl?: string;
-  cache?: LRUCache<number, string>;
+  cache?:
+    | LRUCache<number, string>
+    | {
+        get: (key: number) => string;
+        set: (key: number, value: string) => any;
+      };
 }
 
 export class App {
