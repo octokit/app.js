@@ -147,7 +147,7 @@ describe("app.js", () => {
         expect(token).toEqual("bar");
         expect(mock.pendingMocks()).toStrictEqual([]);
       });
-  }); //.timeout(oneHourInMs + 2000);
+  });
 
   it("supports custom cache", () => {
     nock("https://api.github.com")
