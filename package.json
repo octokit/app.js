@@ -7,11 +7,12 @@
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
   "scripts": {
-    "pretest": "standard",
-    "test": "nyc mocha",
-    "coverage": "nyc report --reporter=html && open coverage/index.html",
-    "coverage:upload": "nyc report --reporter=text-lcov | coveralls",
-    "validate:ts": "tsc --target es6 --noImplicitAny index.d.ts"
+    "build": "pack build",
+    "lint": "prettier --check {src,test}/* README.md package.json",
+    "lint:fix": "prettier --write {src,test}/* README.md package.json",
+    "pretest": "npm run -s lint",
+    "test": "jest --coverage",
+    "validate:ts": "tsc -p tsconfig.json --noEmit"
   },
   "repository": "https://github.com/octokit/app.js",
   "author": "Bex Warner",
@@ -28,21 +29,63 @@
   "homepage": "https://github.com/octokit/app.js#readme",
   "types": "index.d.ts",
   "dependencies": {
-    "@octokit/request": "^3.0.0",
-    "@types/lru-cache": "^5.1.0",
+    "@octokit/request": "^4.1.0",
     "jsonwebtoken": "^8.3.0",
     "lru-cache": "^5.1.1"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "coveralls": "^3.0.2",
+    "@pika/pack": "^0.3.7",
+    "@pika/plugin-build-node": "^0.4.0",
+    "@pika/plugin-build-web": "^0.4.0",
+    "@pika/plugin-bundle-web": "^0.4.0",
+    "@pika/plugin-ts-standard-pkg": "^0.4.0",
+    "@types/jest": "^24.0.13",
+    "@types/jsonwebtoken": "^8.3.0",
+    "@types/lolex": "^3.1.1",
+    "@types/lru-cache": "^5.1.0",
+    "@types/nock": "^10.0.3",
+    "@types/simple-mock": "^0.8.1",
+    "jest": "^24.8.0",
     "lolex": "^4.0.1",
-    "mocha": "^6.1.1",
     "nock": "^10.0.2",
-    "nyc": "^14.0.0",
+    "pika-plugin-unpkg-field": "^1.1.0",
+    "prettier": "^1.17.1",
     "semantic-release": "^15.12.1",
     "simple-mock": "^0.8.0",
-    "standard": "^12.0.1",
-    "typescript": "^3.3.3333"
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.5"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "coverageThreshold": {
+      "global": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      }
+    }
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg"
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@pika/plugin-bundle-web",
+        {
+          "browser": true
+        }
+      ],
+      [
+        "pika-plugin-unpkg-field"
+      ]
+    ]
   }
 }
