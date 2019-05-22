@@ -4,27 +4,9 @@ import { getCache } from "./get-cache";
 import { getInstallationAccessToken } from "./get-installation-access-token";
 import { getSignedJsonWebToken } from "./get-signed-json-web-token";
 import LRUCache from "lru-cache";
-import { State } from "./types";
-
-interface AppOptions {
-  id: number;
-  privateKey: string;
-  baseUrl?: string;
-  cache?:
-    | LRUCache<number, string>
-    | {
-        get: (key: number) => string;
-        set: (key: number, value: string) => any;
-      };
-}
+import { State, AppOptions, InstallationAccessTokenOptions } from "./types";
 
 export class App {
-  private api: {
-    getSignedJsonWebToken: () => string;
-    getInstallationAccessToken: (options: {
-      installationId: number;
-    }) => Promise<string>;
-  };
   constructor({ id, privateKey, baseUrl, cache }: AppOptions) {
     const state: State = {
       id,
@@ -32,18 +14,23 @@ export class App {
       request: baseUrl ? request.defaults({ baseUrl }) : request,
       cache: cache || getCache()
     };
-    this.api = {
-      getSignedJsonWebToken: getSignedJsonWebToken.bind(null, state),
-      getInstallationAccessToken: getInstallationAccessToken.bind(null, state)
-    };
-  }
-  getSignedJsonWebToken(): string {
-    return this.api.getSignedJsonWebToken();
+
+    this.getSignedJsonWebToken = getSignedJsonWebToken.bind(null, state);
+    this.getInstallationAccessToken = getInstallationAccessToken.bind(
+      null,
+      state
+    );
   }
 
-  getInstallationAccessToken(options: {
-    installationId: number;
-  }): Promise<string> {
-    return this.api.getInstallationAccessToken(options);
-  }
+  /**
+   * In order to authenticate as a GitHub App, you need to generate a Private Key and use it to sign a JSON Web Token (jwt) and encode it. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/).
+   */
+  getSignedJsonWebToken: () => string;
+
+  /**
+   * Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
+   */
+  getInstallationAccessToken: (
+    options: InstallationAccessTokenOptions
+  ) => Promise<string>;
 }
