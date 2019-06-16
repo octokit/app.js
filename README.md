@@ -98,7 +98,7 @@ await request("POST /repos/:owner/:repo/issues", {
 
 ## Caching installation tokens
 
-Installation tokens expire after an hour. By default, `@octokit/app` is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
+Installation tokens expire after an hour. By default, each `App` instance is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
 
 ```js
 const { App } = require("@octokit/app");
