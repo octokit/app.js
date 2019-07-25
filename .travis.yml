@@ -26,12 +26,6 @@ jobs:
         - npm run test
         - npm run validate:ts
 
-    - node_js: lts/*
-      env: bundle size
-      script:
-        - npm run build
-        - npx terser pkg/dist-web/index.bundled.js --output pkg/dist-web/index.bundled.min.js --compress --mangle
-        - npx bundlesize --files pkg/dist-web/index.bundled.min.js --max-size 15KB
     - stage: release
       node_js: lts/*
       env: semantic-release
