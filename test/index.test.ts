@@ -75,6 +75,52 @@ describe("app.js", () => {
         expect(token).toEqual("foo");
       });
   });
+  it("gets installation token with repository_ids", () => {
+    let repositoryIds = [1];
+    nock("https://api.github.com", {
+      reqheaders: {
+        authorization: `bearer ${BEARER}` // installation access token
+      }
+    })
+      .post("/app/installations/123/access_tokens", body => {
+        expect(body.repository_ids).toEqual(repositoryIds);
+        return true;
+      })
+      .reply(201, {
+        token: "foo"
+      });
+
+    return app
+      .getInstallationAccessToken({ installationId: 123, repositoryIds })
+      .then(token => {
+        expect(token).toEqual("foo");
+      });
+  });
+
+  it("gets installation token with permissions", () => {
+    let permissions = { single_file: "read" };
+    nock("https://api.github.com", {
+      reqheaders: {
+        authorization: `bearer ${BEARER}` // installation access token
+      }
+    })
+      .post("/app/installations/123/access_tokens", body => {
+        expect(body.permissions).toEqual(permissions);
+        return true;
+      })
+      .reply(201, {
+        token: "foo"
+      });
+
+    return app
+      .getInstallationAccessToken({
+        installationId: 123,
+        permissions
+      })
+      .then(token => {
+        expect(token).toEqual("foo");
+      });
+  });
 
   it("gets installation token from cache", () => {
     nock("https://api.github.com")

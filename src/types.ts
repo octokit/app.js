@@ -47,4 +47,6 @@ export type InstallationAccessTokenOptions = {
    * Find the app’s installation token at https://github.com/apps/<app name>/installations/new. Select the account then copy the number from the end of the URL
    */
   installationId: number;
+  repositoryIds?: number[];
+  permissions?: { [permission: string]: string };
 };
