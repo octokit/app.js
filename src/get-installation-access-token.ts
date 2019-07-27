@@ -1,10 +1,10 @@
 import { getSignedJsonWebToken } from "./get-signed-json-web-token";
-import { State } from "./types";
+import { State, InstallationAccessTokenOptions } from "./types";
 
 // https://developer.github.com/v3/apps/#create-a-new-installation-token
 export function getInstallationAccessToken(
   state: State,
-  { installationId }: { installationId: number }
+  { installationId, repositoryIds, permissions }: InstallationAccessTokenOptions
 ): Promise<string> {
   const token = state.cache.get(installationId);
   if (token) {
@@ -20,7 +20,9 @@ export function getInstallationAccessToken(
         accept: "application/vnd.github.machine-man-preview+json",
         // TODO: cache the installation token if it's been less than 60 minutes
         authorization: `bearer ${getSignedJsonWebToken(state)}`
-      }
+      },
+      repository_ids: repositoryIds,
+      permissions
     })
     .then(response => {
       state.cache.set(installationId, response.data.token);

@@ -3,6 +3,7 @@ import nock from "nock";
 import { stub } from "simple-mock";
 
 import { App } from "../src";
+import { InstallationAccessTokenPermissions } from "../src/types";
 const APP_ID = 1;
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH
@@ -71,6 +72,54 @@ describe("app.js", () => {
 
     return app
       .getInstallationAccessToken({ installationId: 123 })
+      .then(token => {
+        expect(token).toEqual("foo");
+      });
+  });
+  it("gets installation token with repository_ids", () => {
+    let repositoryIds = [1];
+    nock("https://api.github.com", {
+      reqheaders: {
+        authorization: `bearer ${BEARER}` // installation access token
+      }
+    })
+      .post("/app/installations/123/access_tokens", body => {
+        expect(body.repository_ids).toEqual(repositoryIds);
+        return true;
+      })
+      .reply(201, {
+        token: "foo"
+      });
+
+    return app
+      .getInstallationAccessToken({ installationId: 123, repositoryIds })
+      .then(token => {
+        expect(token).toEqual("foo");
+      });
+  });
+
+  it("gets installation token with permissions", () => {
+    let permissions: InstallationAccessTokenPermissions = {
+      single_file: "read"
+    };
+    nock("https://api.github.com", {
+      reqheaders: {
+        authorization: `bearer ${BEARER}` // installation access token
+      }
+    })
+      .post("/app/installations/123/access_tokens", body => {
+        expect(body.permissions).toEqual(permissions);
+        return true;
+      })
+      .reply(201, {
+        token: "foo"
+      });
+
+    return app
+      .getInstallationAccessToken({
+        installationId: 123,
+        permissions
+      })
       .then(token => {
         expect(token).toEqual("foo");
       });
