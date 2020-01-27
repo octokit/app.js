@@ -47,7 +47,7 @@
     "lolex": "^5.0.0",
     "nock": "^11.1.0",
     "prettier": "^1.17.1",
-    "semantic-release": "^16.0.0",
+    "semantic-release": "^17.0.0",
     "simple-mock": "^0.8.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.5"
