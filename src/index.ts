@@ -3,10 +3,12 @@ import { request } from "@octokit/request";
 import { getCache } from "./get-cache";
 import { getInstallationAccessToken } from "./get-installation-access-token";
 import { getSignedJsonWebToken } from "./get-signed-json-web-token";
-import LRUCache from "lru-cache";
 import { State, AppOptions, InstallationAccessTokenOptions } from "./types";
+import { VERSION } from "./version";
 
 export class App {
+  static VERSION = VERSION;
+
   constructor({ id, privateKey, baseUrl, cache }: AppOptions) {
     const state: State = {
       id,
