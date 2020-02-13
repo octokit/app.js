@@ -53,6 +53,11 @@ describe("app.js", () => {
   });
 
   // see https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
+  it("App.VERSION", function() {
+    expect(App.VERSION).toEqual("0.0.0-development");
+  });
+
+  // see https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
   it("gets bearer token", function() {
     const bearer = app.getSignedJsonWebToken();
     expect(bearer).toEqual(BEARER);
