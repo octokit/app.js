@@ -43,7 +43,7 @@
     "@types/lru-cache": "^5.1.0",
     "@types/nock": "^11.1.0",
     "@types/simple-mock": "^0.8.1",
-    "jest": "^24.8.0",
+    "jest": "^25.1.0",
     "lolex": "^6.0.0",
     "nock": "^11.1.0",
     "prettier": "^1.17.1",
