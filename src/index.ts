@@ -6,6 +6,13 @@ import { getSignedJsonWebToken } from "./get-signed-json-web-token";
 import { State, AppOptions, InstallationAccessTokenOptions } from "./types";
 import { VERSION } from "./version";
 
+let deprecateOnce = () => {
+  console.warn(
+    "[@octokit/app] Deprecated. Use @octokit/app-auth instead. See https://github.com/octokit/app.js/#deprecated"
+  );
+  deprecateOnce = () => {};
+};
+
 export class App {
   static VERSION = VERSION;
 
@@ -22,6 +29,8 @@ export class App {
       null,
       state
     );
+
+    deprecateOnce();
   }
 
   /**
