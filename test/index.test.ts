@@ -4,6 +4,7 @@ import { stub } from "simple-mock";
 
 import { App } from "../src";
 import { InstallationAccessTokenPermissions } from "../src/types";
+import { NotBeforeError } from "jsonwebtoken";
 const APP_ID = 1;
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH
@@ -44,7 +45,26 @@ const clock = install({ now: 0, toFake: ["Date", "setTimeout"] });
 describe("app.js", () => {
   let app: App;
 
+<<<<<<< HEAD
   beforeEach(function () {
+=======
+  beforeAll(() => {
+    global.console.warn = jest.fn();
+  });
+
+  afterAll(() => {
+    // @ts-ignore
+    expect(console.warn.mock.calls.length).toEqual(1);
+
+    // @ts-ignore
+    const [[deprecationMessage]] = console.warn.mock.calls;
+    expect(deprecationMessage).toEqual(
+      "[@octokit/app] Deprecated. Use @octokit/app-auth instead. See https://github.com/octokit/app.js/#deprecated"
+    );
+  });
+
+  beforeEach(function() {
+>>>>>>> test: deprecation message
     // set up stuff
     app = new App({
       id: APP_ID,
