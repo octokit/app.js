@@ -60,8 +60,8 @@ const { data } = await request("GET /repos/:owner/:repo/installation", {
   repo: "testing-things",
   headers: {
     authorization: `Bearer ${jwt}`,
-    accept: "application/vnd.github.machine-man-preview+json"
-  }
+    accept: "application/vnd.github.machine-man-preview+json",
+  },
 });
 
 // contains the installation id necessary to authenticate as an installation
@@ -81,7 +81,7 @@ const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n..."; // replace with cont
 
 const app = new App({ id: APP_ID, privateKey: PRIVATE_KEY });
 const installationAccessToken = await app.getInstallationAccessToken({
-  installationId
+  installationId,
 });
 
 // https://developer.github.com/v3/issues/#create-an-issue
@@ -90,9 +90,9 @@ await request("POST /repos/:owner/:repo/issues", {
   repo: "testing-things",
   headers: {
     authorization: `token ${installationAccessToken}`,
-    accept: "application/vnd.github.machine-man-preview+json"
+    accept: "application/vnd.github.machine-man-preview+json",
   },
-  title: "My installation’s first issue"
+  title: "My installation’s first issue",
 });
 ```
 
@@ -116,8 +116,8 @@ const app = new App({
     },
     set(key, value) {
       CACHE[key] = value;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -129,7 +129,7 @@ The `baseUrl` option can be used to override default GitHub's `https://api.githu
 const app = new App({
   id: APP_ID,
   privateKey: PRIVATE_KEY,
-  baseUrl: "https://github-enterprise.com/api/v3"
+  baseUrl: "https://github-enterprise.com/api/v3",
 });
 ```
 
