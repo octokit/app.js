@@ -6,6 +6,6 @@ export function getCache() {
     // cache max. 15000 tokens, that will use less than 10mb memory
     max: 15000,
     // Cache for 59 minutes (1 minute less than GitHub expiry)
-    maxAge: 1000 * 60 * 59,
+    maxAge: 1000 * 60 * 59
   });
 }

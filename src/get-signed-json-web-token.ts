@@ -10,7 +10,7 @@ export function getSignedJsonWebToken({ id, privateKey }: getSignedJWTOptions) {
   const payload = {
     iat: now, // Issued at time
     exp: now + 60 * 10 - 30, // JWT expiration time (10 minute maximum, 30 second safeguard)
-    iss: id,
+    iss: id
   };
   const token = jsonwebtoken.sign(payload, privateKey, { algorithm: "RS256" });
   return token;

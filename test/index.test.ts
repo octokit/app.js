@@ -45,9 +45,6 @@ const clock = install({ now: 0, toFake: ["Date", "setTimeout"] });
 describe("app.js", () => {
   let app: App;
 
-<<<<<<< HEAD
-  beforeEach(function () {
-=======
   beforeAll(() => {
     global.console.warn = jest.fn();
   });
@@ -64,21 +61,20 @@ describe("app.js", () => {
   });
 
   beforeEach(function() {
->>>>>>> test: deprecation message
     // set up stuff
     app = new App({
       id: APP_ID,
-      privateKey: PRIVATE_KEY,
+      privateKey: PRIVATE_KEY
     });
   });
 
   // see https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
-  it("App.VERSION", function () {
+  it("App.VERSION", function() {
     expect(App.VERSION).toEqual("0.0.0-development");
   });
 
   // see https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
-  it("gets bearer token", function () {
+  it("gets bearer token", function() {
     const bearer = app.getSignedJsonWebToken();
     expect(bearer).toEqual(BEARER);
   });
@@ -87,17 +83,17 @@ describe("app.js", () => {
   it("gets installation token", () => {
     nock("https://api.github.com", {
       reqheaders: {
-        authorization: `bearer ${BEARER}`, // installation access token
-      },
+        authorization: `bearer ${BEARER}` // installation access token
+      }
     })
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "foo",
+        token: "foo"
       });
 
     return app
       .getInstallationAccessToken({ installationId: 123 })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
       });
   });
@@ -105,47 +101,47 @@ describe("app.js", () => {
     let repositoryIds = [1];
     nock("https://api.github.com", {
       reqheaders: {
-        authorization: `bearer ${BEARER}`, // installation access token
-      },
+        authorization: `bearer ${BEARER}` // installation access token
+      }
     })
-      .post("/app/installations/123/access_tokens", (body) => {
+      .post("/app/installations/123/access_tokens", body => {
         expect(body.repository_ids).toEqual(repositoryIds);
         return true;
       })
       .reply(201, {
-        token: "foo",
+        token: "foo"
       });
 
     return app
       .getInstallationAccessToken({ installationId: 123, repositoryIds })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
       });
   });
 
   it("gets installation token with permissions", () => {
     let permissions: InstallationAccessTokenPermissions = {
-      single_file: "read",
+      single_file: "read"
     };
     nock("https://api.github.com", {
       reqheaders: {
-        authorization: `bearer ${BEARER}`, // installation access token
-      },
+        authorization: `bearer ${BEARER}` // installation access token
+      }
     })
-      .post("/app/installations/123/access_tokens", (body) => {
+      .post("/app/installations/123/access_tokens", body => {
         expect(body.permissions).toEqual(permissions);
         return true;
       })
       .reply(201, {
-        token: "foo",
+        token: "foo"
       });
 
     return app
       .getInstallationAccessToken({
         installationId: 123,
-        permissions,
+        permissions
       })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
       });
   });
@@ -154,17 +150,17 @@ describe("app.js", () => {
     nock("https://api.github.com")
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "foo",
+        token: "foo"
       });
 
     return app
       .getInstallationAccessToken({ installationId: 123 })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
 
         return app.getInstallationAccessToken({ installationId: 123 });
       })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
       });
   });
@@ -173,21 +169,21 @@ describe("app.js", () => {
     nock("https://api.github.com")
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "foo",
+        token: "foo"
       })
       .post("/app/installations/456/access_tokens")
       .reply(201, {
-        token: "bar",
+        token: "bar"
       });
 
     return app
       .getInstallationAccessToken({ installationId: 123 })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
 
         return app.getInstallationAccessToken({ installationId: 456 });
       })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("bar");
       });
   });
@@ -197,19 +193,19 @@ describe("app.js", () => {
     const mock = nock("https://api.github.com")
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "foo",
+        token: "foo"
       })
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "bar",
+        token: "bar"
       });
 
     return app
       .getInstallationAccessToken({ installationId: 123 })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           setTimeout(resolve, oneHourInMs);
           clock.tick(oneHourInMs);
         });
@@ -217,7 +213,7 @@ describe("app.js", () => {
       .then(() => {
         return app.getInstallationAccessToken({ installationId: 123 });
       })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("bar");
         expect(mock.pendingMocks()).toStrictEqual([]);
       });
@@ -227,7 +223,7 @@ describe("app.js", () => {
     nock("https://api.github.com")
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "foo",
+        token: "foo"
       });
 
     const options = {
@@ -235,8 +231,8 @@ describe("app.js", () => {
       privateKey: PRIVATE_KEY,
       cache: {
         get: stub(),
-        set: stub(),
-      },
+        set: stub()
+      }
     };
     const appWithCustomCache = new App(options);
 
@@ -252,19 +248,19 @@ describe("app.js", () => {
     nock("https://github-enterprise.com/api/v3")
       .post("/app/installations/123/access_tokens")
       .reply(201, {
-        token: "foo",
+        token: "foo"
       });
 
     const options = {
       id: APP_ID,
       privateKey: PRIVATE_KEY,
-      baseUrl: "https://github-enterprise.com/api/v3",
+      baseUrl: "https://github-enterprise.com/api/v3"
     };
     const appWithCustomEndpointDefaults = new App(options);
 
     return appWithCustomEndpointDefaults
       .getInstallationAccessToken({ installationId: 123 })
-      .then((token) => {
+      .then(token => {
         expect(token).toEqual("foo");
       });
   });

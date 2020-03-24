@@ -19,12 +19,12 @@ export function getInstallationAccessToken(
       headers: {
         accept: "application/vnd.github.machine-man-preview+json",
         // TODO: cache the installation token if it's been less than 60 minutes
-        authorization: `bearer ${getSignedJsonWebToken(state)}`,
+        authorization: `bearer ${getSignedJsonWebToken(state)}`
       },
       repository_ids: repositoryIds,
-      permissions,
+      permissions
     })
-    .then((response) => {
+    .then(response => {
       state.cache.set(installationId, response.data.token);
       return response.data.token;
     });

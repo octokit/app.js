@@ -21,7 +21,7 @@ export class App {
       id,
       privateKey,
       request: baseUrl ? request.defaults({ baseUrl }) : request,
-      cache: cache || getCache(),
+      cache: cache || getCache()
     };
 
     this.getSignedJsonWebToken = getSignedJsonWebToken.bind(null, state);
