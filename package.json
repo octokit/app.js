@@ -50,7 +50,7 @@
     "semantic-release": "^17.0.0",
     "semantic-release-plugin-update-version-in-files": "^1.0.0",
     "simple-mock": "^0.8.0",
-    "ts-jest": "^25.1.0",
+    "ts-jest": "^25.3.0",
     "typescript": "^3.4.5"
   },
   "jest": {
