@@ -57,7 +57,7 @@ const { App } = require("@octokit/app");
 
 const app = new App({
   id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY
+  privateKey: process.env.PRIVATE_KEY,
 });
 const jwt = app.getSignedJsonWebToken();
 ```
@@ -70,9 +70,9 @@ const { request } = require("@octokit/request");
 
 const auth = createAppAuth({
   id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY
+  privateKey: process.env.PRIVATE_KEY,
 });
-auth({ type: "app" }).then(authentication => {
+auth({ type: "app" }).then((authentication) => {
   const jwt = authentication.token;
 });
 ```
@@ -151,23 +151,23 @@ const { request } = require("@octokit/request");
 const auth = createAppAuth({
   id: process.env.APP_ID,
   privateKey: process.env.PRIVATE_KEY,
-  installationId: process.env.INSTALLATION_ID
+  installationId: process.env.INSTALLATION_ID,
 });
 
 const requestWithAuth = request.defaults({
   request: {
-    hook: auth.hook
+    hook: auth.hook,
   },
   mediaType: {
-    previews: ["machine-man"]
-  }
+    previews: ["machine-man"],
+  },
 });
 
 // https://developer.github.com/v3/issues/#create-an-issue
 await requestWithAuth("POST /repos/:owner/:repo/issues", {
   owner: "hiimbex",
   repo: "testing-things",
-  title: "My installation’s first issue"
+  title: "My installation’s first issue",
 });
 ```
 
@@ -191,8 +191,8 @@ const app = new App({
     },
     set(key, value) {
       CACHE[key] = value;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -212,8 +212,8 @@ const auth = createAppAuth({
     },
     set(key, value) {
       CACHE[key] = value;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -225,7 +225,7 @@ The `baseUrl` option can be used to override default GitHub's `https://api.githu
 const app = new App({
   id: process.env.APP_ID,
   privateKey: process.env.PRIVATE_KEY,
-  baseUrl: "https://github-enterprise.com/api/v3"
+  baseUrl: "https://github-enterprise.com/api/v3",
 });
 ```
 
@@ -241,8 +241,8 @@ const auth = createAppAuth({
     },
     set(key, value) {
       CACHE[key] = value;
-    }
-  }
+    },
+  },
 });
 ```
 
