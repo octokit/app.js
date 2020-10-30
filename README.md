@@ -13,7 +13,7 @@
 - [API](#api)
   - [`app.octokit`](#appoctokit)
   - [`app.log`](#applog)
-  - [`app.asInstallation()`](#appasinstallation)
+  - [`app.asInstallation`](#appasinstallation)
   - [`app.eachInstallation`](#appeachinstallation)
   - [`app.eachRepository`](#appeachrepository)
   - [`app.webhooks`](#appwebhooks)
@@ -60,6 +60,17 @@ const app = new App({
     secret: "secret",
   },
 });
+
+const { data } = await app.request("/app");
+console.log("authenticated as %s", response.data.name);
+
+for await (const { octokit, repository } of app.eachRepository.iterator()) {
+  await octokit.request("POST /repos/{owner}/{repo}/dispatches", {
+    owner: repository.owner.login,
+    repo: repository.name,
+    event_type: "my_event",
+  });
+}
 
 app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
   await octokit.request(
@@ -254,7 +265,7 @@ Octokit instance. Uses the [`Octokit` constructor option](#constructor-option-oc
 
 See https://github.com/octokit/core.js#logging. Customize using the [`log` constructor option](#constructor-option-log).
 
-### `app.asInstallation()`
+### `app.asInstallation`
 
 ```js
 const { octokit, installation } = await app.asInstallation(123)
