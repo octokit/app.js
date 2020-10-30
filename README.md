@@ -61,7 +61,7 @@ const app = new App({
   },
 });
 
-const { data } = await app.request("/app");
+const { data } = await app.octokit.request("/app");
 console.log("authenticated as %s", response.data.name);
 
 for await (const { octokit, repository } of app.eachRepository.iterator()) {
@@ -149,7 +149,7 @@ TBD
       </th>
       <td>
 
-You can pass in your own Octokit constructor with custom defaults and plugins. The Octokit Constructor must use the [`@octokit/auth-app` authentication strategy](https://github.com/octokit/auth-app.js) (or a compatible one).
+You can pass in your own Octokit constructor with custom defaults and plugins. Note that `authStrategy` will be always be set to `createAppAuth` from [`@octokit/auth-app`](https://github.com/octokit/auth-app.js).
 
 For usage with enterprise, set `baseUrl` to the hostname + `/api/v3`. Example:
 
@@ -259,7 +259,7 @@ Sets the default <code>scopes</code> value for <code>app.oauth.getAuthorizationU
 
 ### `app.octokit`
 
-Octokit instance. Uses the [`Octokit` constructor option](#constructor-option-octokit) if passed, which must be authenticated using [Octokit's App authentication](https://github.com/octokit/auth-app.js/#readme) or a compatible strategy.
+Octokit instance. Uses the [`Octokit` constructor option](#constructor-option-octokit) if passed.
 
 ### `app.log`
 
