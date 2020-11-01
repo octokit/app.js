@@ -1,15 +1,40 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
+// import { composePaginateRest } from "@octokit/plugin-paginate-rest";
+import { composePaginateRest } from "@octokit/plugin-paginate-rest";
+
+// import { PaginatingEndpoints } from "../../plugin-paginate-rest.js/src/generated/paginating-endpoints";
+import { Endpoints } from "@octokit/types";
 
 import { Options } from "./types";
 import { VERSION } from "./version";
 
+type EachInstallationIterator = AsyncIterable<{
+  octokit: OctokitCore;
+  installation: Endpoints["GET /app/installations"]["response"]["data"][0];
+}>;
+
+type EachRepositoryIterator = AsyncIterable<{
+  octokit: OctokitCore;
+  repository: Endpoints["GET /installation/repositories"]["response"]["data"]["repositories"][0];
+}>;
+
 export class App {
   static VERSION = VERSION;
 
+  /**
+   * Octokit instance
+   */
   octokit: OctokitCore;
 
-  constructor(options: Options = { oauth: {} } as Options) {
+  eachRepository: {
+    iterator: () => EachRepositoryIterator;
+  };
+  eachInstallation: {
+    iterator: () => EachInstallationIterator;
+  };
+
+  constructor(options: Options) {
     const Octokit = options.Octokit || OctokitCore;
     this.octokit = new Octokit({
       authStrategy: createAppAuth,
@@ -20,6 +45,63 @@ export class App {
         clientSecret: options.oauth.clientSecret,
       },
     });
+
+    const app = this;
+    this.eachInstallation = {
+      iterator: () => {
+        // return composePaginateRest.iterator(
+        //   this.octokit,
+        //   "GET /app/installations"
+        // );
+        return {
+          async *[Symbol.asyncIterator]() {
+            const iterator = composePaginateRest.iterator(
+              app.octokit,
+              "GET /app/installations"
+            );
+
+            for await (const { data: installations } of iterator) {
+              for (const installation of installations) {
+                const installationOctokit = (await app.octokit.auth({
+                  type: "installation",
+                  installationId: installation.id,
+                  factory: (auth: any) => {
+                    return new auth.octokit.constructor({
+                      ...auth.octokitOptions,
+                      authStrategy: createAppAuth,
+                      ...{ auth: { ...auth, installationId: installation.id } },
+                    });
+                  },
+                })) as OctokitCore;
+
+                yield { octokit: installationOctokit, installation };
+              }
+            }
+          },
+        };
+      },
+    };
+
+    this.eachRepository = {
+      iterator: () => {
+        return {
+          async *[Symbol.asyncIterator]() {
+            for await (const { octokit } of app.eachInstallation.iterator()) {
+              const repositoriesIterator = composePaginateRest.iterator(
+                octokit,
+                "GET /installation/repositories"
+              );
+
+              for await (const { data: repositories } of repositoriesIterator) {
+                for (const repository of repositories) {
+                  yield { octokit: octokit, repository };
+                }
+              }
+            }
+          },
+        };
+      },
+    };
   }
 }
 

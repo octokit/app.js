@@ -37,7 +37,7 @@ const WEBHOOK_SECRET = "secret";
 const BEARER =
   "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOi0zMCwiZXhwIjo1NzAsImlzcyI6MX0.q3foRa78U3WegM5PrWLEh5N0bH1SD62OqW66ZYzArp95JBNiCbo8KAlGtiRENCIfBZT9ibDUWy82cI4g3F09mdTq3bD1xLavIfmTksIQCz5EymTWR5v6gL14LSmQdWY9lSqkgUG0XCFljWUglEP39H4yeHbFgdjvAYg3ifDS12z9oQz2ACdSpvxPiTuCC804HkPVw8Qoy0OSXvCkFU70l7VXCVUxnuhHnk8-oCGcKUspmeP6UdDnXk-Aus-eGwDfJbU2WritxxaXw6B4a3flTPojkYLSkPBr6Pi0H2-mBsW_Nvs0aLPVLKobQd4gqTkosX3967DoAG8luUMhrnxe8Q";
 
-import { App, getNodeMiddleware } from "../src";
+import { App } from "../src";
 
 describe("README examples", () => {
   let app: InstanceType<typeof App>;
@@ -80,5 +80,68 @@ describe("README examples", () => {
 
     const { data } = await app.octokit.request("/app");
     expect(data.name).toEqual("My App");
+  });
+
+  test("app.eachRepository.iterator", async () => {
+    mock
+      .getOnce(
+        "path:/app/installations",
+        [
+          {
+            id: "123",
+          },
+        ],
+        {
+          headers: {
+            authorization: `bearer ${BEARER}`,
+          },
+        }
+      )
+      .postOnce(
+        "path:/app/installations/123/access_tokens",
+        {
+          token: "secret123",
+          expires_at: "1970-01-01T01:00:00.000Z",
+          permissions: {
+            metadata: "read",
+          },
+          repository_selection: "all",
+        },
+        {
+          headers: {
+            authorization: `bearer ${BEARER}`,
+          },
+        }
+      )
+      .getOnce("path:/installation/repositories", {
+        total_count: 1,
+        repositories: [
+          {
+            owner: {
+              login: "octokit",
+            },
+            name: "app.js",
+          },
+        ],
+      })
+      .postOnce(
+        "path:/repos/octokit/app.js/dispatches",
+        {
+          ok: true,
+        },
+        {
+          body: {
+            event_type: "my_event",
+          },
+        }
+      );
+
+    for await (const { octokit, repository } of app.eachRepository.iterator()) {
+      await octokit.request("POST /repos/{owner}/{repo}/dispatches", {
+        owner: repository.owner.login,
+        repo: repository.name,
+        event_type: "my_event",
+      });
+    }
   });
 });
