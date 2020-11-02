@@ -1,6 +1,10 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
+import {
+  OAuthApp,
+  getNodeMiddleware as oauthNodeMiddleware,
+} from "@octokit/oauth-app";
 
 import { Endpoints } from "@octokit/types";
 
@@ -31,6 +35,11 @@ export class App {
    */
   webhooks: ReturnType<typeof webhooks>;
 
+  /**
+   * oauth app instance
+   */
+  oauth: OAuthApp;
+
   eachRepository: {
     iterator: () => EachRepositoryIterator;
   };
@@ -51,6 +60,11 @@ export class App {
     });
 
     this.webhooks = webhooks(this.octokit, options.webhooks);
+
+    this.oauth = new OAuthApp({
+      ...options.oauth,
+      Octokit,
+    });
 
     const app = this;
     this.eachInstallation = {
@@ -108,5 +122,9 @@ export class App {
 }
 
 export function getNodeMiddleware(app: App) {
-  return app.webhooks.middleware;
+  return oauthNodeMiddleware(app.oauth, {
+    onUnhandledRequest: (request, response) => {
+      return app.webhooks.middleware(request, response);
+    },
+  });
 }

@@ -1,7 +1,3 @@
-/**
- * @jest-environment node
- */
-
 import { createServer } from "http";
 
 import { Octokit } from "@octokit/core";
@@ -196,7 +192,7 @@ describe("README examples", () => {
 
     const middleware = getNodeMiddleware(app);
 
-    const server = createServer(middleware).listen();
+    const server = createServer(middleware).listen().unref();
 
     // @ts-ignore
     const { port } = server.address();
@@ -226,6 +222,58 @@ describe("README examples", () => {
         "x-hub-signature": app.webhooks.sign(data),
       },
       data,
+    }).catch(console.error);
+
+    server.close();
+
+    expect(mock.done()).toBe(true);
+  });
+
+  test('app.oauth.on("token", handler)', async () => {
+    expect.assertions(2);
+
+    mock
+      .postOnce(
+        "https://github.com/login/oauth/access_token",
+        {
+          access_token: "secret123",
+          scope: "",
+          token_type: "bearer",
+        },
+        {
+          body: {
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            code: "code123",
+            state: "state123",
+          },
+        }
+      )
+      .getOnce(
+        "path:/user",
+        { ok: true },
+        {
+          headers: {
+            authorization: `token secret123`,
+          },
+        }
+      );
+
+    app.oauth.on("token", async ({ octokit }) => {
+      const { data } = await octokit.request("GET /user");
+      expect(data).toStrictEqual({ ok: true });
+    });
+
+    const middleware = getNodeMiddleware(app);
+
+    const server = createServer(middleware).listen().unref();
+
+    // @ts-ignore
+    const { port } = server.address();
+
+    await request(`http://localhost:${port}/api/github/oauth/callback`, {
+      code: "code123",
+      state: "state123",
     }).catch(console.error);
 
     server.close();
