@@ -1,4 +1,11 @@
+/**
+ * @jest-environment node
+ */
+
+import { createServer } from "http";
+
 import { Octokit } from "@octokit/core";
+import { request } from "@octokit/request";
 import fetchMock from "fetch-mock";
 import MockDate from "mockdate";
 
@@ -37,7 +44,7 @@ const WEBHOOK_SECRET = "secret";
 const BEARER =
   "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOi0zMCwiZXhwIjo1NzAsImlzcyI6MX0.q3foRa78U3WegM5PrWLEh5N0bH1SD62OqW66ZYzArp95JBNiCbo8KAlGtiRENCIfBZT9ibDUWy82cI4g3F09mdTq3bD1xLavIfmTksIQCz5EymTWR5v6gL14LSmQdWY9lSqkgUG0XCFljWUglEP39H4yeHbFgdjvAYg3ifDS12z9oQz2ACdSpvxPiTuCC804HkPVw8Qoy0OSXvCkFU70l7VXCVUxnuhHnk8-oCGcKUspmeP6UdDnXk-Aus-eGwDfJbU2WritxxaXw6B4a3flTPojkYLSkPBr6Pi0H2-mBsW_Nvs0aLPVLKobQd4gqTkosX3967DoAG8luUMhrnxe8Q";
 
-import { App } from "../src";
+import { App, getNodeMiddleware } from "../src";
 
 describe("README examples", () => {
   let app: InstanceType<typeof App>;
@@ -143,5 +150,86 @@ describe("README examples", () => {
         event_type: "my_event",
       });
     }
+  });
+
+  test('app.webhooks.on("issues.opened", handler)', async () => {
+    mock
+      .postOnce(
+        "path:/app/installations/123/access_tokens",
+        {
+          token: "secret123",
+          expires_at: "1970-01-01T01:00:00.000Z",
+          permissions: {
+            metadata: "read",
+          },
+          repository_selection: "all",
+        },
+        {
+          headers: {
+            authorization: `bearer ${BEARER}`,
+          },
+        }
+      )
+      .postOnce(
+        "path:/repos/octokit/app.js/issues/456/comments",
+        {
+          ok: true,
+        },
+        {
+          body: {
+            body: "Hello World!",
+          },
+        }
+      );
+
+    app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
+      await octokit.request(
+        "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+        {
+          owner: payload.repository.owner.login,
+          repo: payload.repository.name,
+          issue_number: payload.issue.number,
+          body: "Hello World!",
+        }
+      );
+    });
+
+    const middleware = getNodeMiddleware(app);
+
+    const server = createServer(middleware).listen();
+
+    // @ts-ignore
+    const { port } = server.address();
+    const url = `http://localhost:${port}/api/github/webhooks`;
+    const data = {
+      action: "opened",
+      installation: {
+        id: 123,
+      },
+      repository: {
+        owner: {
+          login: "octokit",
+        },
+        name: "app.js",
+      },
+      issue: {
+        number: 456,
+      },
+    };
+
+    await request({
+      method: "POST",
+      url,
+      headers: {
+        "x-github-event": "issues",
+        "x-github-delivery": "event-id-123",
+        "x-hub-signature": app.webhooks.sign(data),
+      },
+      data,
+    }).catch(console.error);
+
+    server.close();
+
+    expect(mock.done()).toBe(true);
   });
 });

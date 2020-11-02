@@ -1,13 +1,12 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
-// import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 
-// import { PaginatingEndpoints } from "../../plugin-paginate-rest.js/src/generated/paginating-endpoints";
 import { Endpoints } from "@octokit/types";
 
 import { Options } from "./types";
 import { VERSION } from "./version";
+import { webhooks } from "./webhooks";
 
 type EachInstallationIterator = AsyncIterable<{
   octokit: OctokitCore;
@@ -26,6 +25,11 @@ export class App {
    * Octokit instance
    */
   octokit: OctokitCore;
+
+  /**
+   * Webhooks instance
+   */
+  webhooks: ReturnType<typeof webhooks>;
 
   eachRepository: {
     iterator: () => EachRepositoryIterator;
@@ -46,13 +50,11 @@ export class App {
       },
     });
 
+    this.webhooks = webhooks(this.octokit, options.webhooks);
+
     const app = this;
     this.eachInstallation = {
       iterator: () => {
-        // return composePaginateRest.iterator(
-        //   this.octokit,
-        //   "GET /app/installations"
-        // );
         return {
           async *[Symbol.asyncIterator]() {
             const iterator = composePaginateRest.iterator(
@@ -105,4 +107,6 @@ export class App {
   }
 }
 
-export function getNodeMiddleware() {}
+export function getNodeMiddleware(app: App) {
+  return app.webhooks.middleware;
+}
