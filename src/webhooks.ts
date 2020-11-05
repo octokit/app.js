@@ -4,7 +4,10 @@ import { Webhooks, WebhookEvent } from "@octokit/webhooks";
 
 import { Options } from "./types";
 
-export function webhooks(appOctokit: Octokit, options: Options["webhooks"]) {
+export function webhooks(
+  appOctokit: Octokit,
+  options: Required<Options>["webhooks"]
+) {
   return new Webhooks<WebhookEvent, { octokit: InstanceType<typeof Octokit> }>({
     secret: options.secret,
     path: "/api/github/webhooks",

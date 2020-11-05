@@ -1,5 +1,6 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
+import { Webhooks } from "@octokit/webhooks";
 import {
   OAuthApp,
   getNodeMiddleware as oauthNodeMiddleware,
@@ -69,7 +70,7 @@ export class App<O extends Options = Options> {
     );
 
     // set app.webhooks depending on whether "webhooks" option has been passed
-    if ("webhooks" in options) {
+    if (options.webhooks) {
       this.webhooks = webhooks(this.octokit, options.webhooks);
     } else {
       Object.defineProperty(this, "webhooks", {
@@ -80,12 +81,11 @@ export class App<O extends Options = Options> {
     }
 
     // set app.oauth depending on whether "oauth" option has been passed
-    if ("oauth" in options) {
-      const oAuthAppOptions = {
+    if (options.oauth) {
+      this.oauth = new OAuthApp({
         ...options.oauth,
         Octokit,
-      } as ConstructorParameters<typeof OAuthApp>[0];
-      this.oauth = new OAuthApp(oAuthAppOptions);
+      });
     } else {
       Object.defineProperty(this, "oauth", {
         get() {
