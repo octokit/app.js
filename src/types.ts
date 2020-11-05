@@ -12,6 +12,12 @@ export type Options = {
     secret: string;
   };
   Octokit?: typeof Octokit;
+  log?: {
+    debug: (message: string) => unknown;
+    info: (message: string) => unknown;
+    warn: (message: string) => unknown;
+    error: (message: string) => unknown;
+  };
 };
 
 export type InstallationFunctionOptions = {

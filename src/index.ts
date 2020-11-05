@@ -26,9 +26,17 @@ export class App {
   getInstallationOctokit: GetInstallationOctokitInterface;
   eachInstallation: EachInstallationInterface;
   eachRepository: EachRepositoryInterface;
+  log: {
+    debug: (message: string, additionalInfo?: object) => void;
+    info: (message: string, additionalInfo?: object) => void;
+    warn: (message: string, additionalInfo?: object) => void;
+    error: (message: string, additionalInfo?: object) => void;
+    [key: string]: unknown;
+  };
 
   constructor(options: Options) {
     const Octokit = options.Octokit || OctokitCore;
+
     this.octokit = new Octokit({
       authStrategy: createAppAuth,
       auth: {
@@ -38,6 +46,16 @@ export class App {
         clientSecret: options.oauth.clientSecret,
       },
     });
+
+    this.log = Object.assign(
+      {
+        debug: () => {},
+        info: () => {},
+        warn: console.warn.bind(console),
+        error: console.error.bind(console),
+      },
+      options.log
+    );
 
     this.webhooks = webhooks(this.octokit, options.webhooks);
 
