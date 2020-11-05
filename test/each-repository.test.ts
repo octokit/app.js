@@ -39,7 +39,7 @@ const BEARER =
 
 import { App } from "../src";
 
-describe("octokit.eachInstallation", () => {
+describe("octokit.eachRepository", () => {
   let app: InstanceType<typeof App>;
   let mock: typeof fetchMock;
 
@@ -95,15 +95,31 @@ describe("octokit.eachInstallation", () => {
             authorization: `bearer ${BEARER}`,
           },
         }
-      );
+      )
+      .getOnce("path:/installation/repositories", {
+        total_count: 1,
+        repositories: [
+          {
+            owner: {
+              login: "octokit",
+            },
+            name: "app.js",
+          },
+        ],
+      });
 
     let counter = 0;
-    await app.eachInstallation(async ({ octokit, installation }) => {
+    await app.eachRepository(async ({ octokit, repository }) => {
       const { token } = (await octokit.auth({ type: "installation" })) as {
         token: string;
       };
       expect(token).toEqual("secret123");
-      expect(installation).toStrictEqual({ id: "123" });
+      expect(repository).toStrictEqual({
+        owner: {
+          login: "octokit",
+        },
+        name: "app.js",
+      });
       counter++;
     });
     expect(counter).toEqual(1);

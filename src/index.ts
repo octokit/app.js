@@ -1,22 +1,19 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
-import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 import {
   OAuthApp,
   getNodeMiddleware as oauthNodeMiddleware,
 } from "@octokit/oauth-app";
 
-import { Endpoints } from "@octokit/types";
-
-import { Options, EachInstallationInterface } from "./types";
+import {
+  Options,
+  EachInstallationInterface,
+  EachRepositoryInterface,
+} from "./types";
 import { VERSION } from "./version";
 import { webhooks } from "./webhooks";
 import { eachInstallationFactory } from "./each-installation";
-
-type EachRepositoryIterator = AsyncIterable<{
-  octokit: OctokitCore;
-  repository: Endpoints["GET /installation/repositories"]["response"]["data"]["repositories"][0];
-}>;
+import { eachRepositoryFactory } from "./each-repository";
 
 export class App {
   static VERSION = VERSION;
@@ -36,9 +33,7 @@ export class App {
    */
   oauth: OAuthApp;
 
-  eachRepository: {
-    iterator: () => EachRepositoryIterator;
-  };
+  eachRepository: EachRepositoryInterface;
   eachInstallation: EachInstallationInterface;
 
   constructor(options: Options) {
@@ -60,29 +55,8 @@ export class App {
       Octokit,
     });
 
-    const app = this;
-    this.eachInstallation = eachInstallationFactory(app);
-
-    this.eachRepository = {
-      iterator: () => {
-        return {
-          async *[Symbol.asyncIterator]() {
-            for await (const { octokit } of app.eachInstallation.iterator()) {
-              const repositoriesIterator = composePaginateRest.iterator(
-                octokit,
-                "GET /installation/repositories"
-              );
-
-              for await (const { data: repositories } of repositoriesIterator) {
-                for (const repository of repositories) {
-                  yield { octokit: octokit, repository };
-                }
-              }
-            }
-          },
-        };
-      },
-    };
+    this.eachInstallation = eachInstallationFactory(this);
+    this.eachRepository = eachRepositoryFactory(this);
   }
 }
 

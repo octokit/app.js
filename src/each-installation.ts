@@ -7,12 +7,15 @@ import { EachInstallationFunction, EachInstallationInterface } from "./types";
 
 export function eachInstallationFactory(app: App) {
   return Object.assign(eachInstallation.bind(null, app), {
-    iterator: iterator.bind(null, app),
+    iterator: eachInstallationIterator.bind(null, app),
   }) as EachInstallationInterface;
 }
 
-async function eachInstallation(app: App, callback: EachInstallationFunction) {
-  const i = iterator(app)[Symbol.asyncIterator]();
+export async function eachInstallation(
+  app: App,
+  callback: EachInstallationFunction
+) {
+  const i = eachInstallationIterator(app)[Symbol.asyncIterator]();
   let result = await i.next();
   while (!result.done) {
     await callback(result.value);
@@ -21,7 +24,7 @@ async function eachInstallation(app: App, callback: EachInstallationFunction) {
   }
 }
 
-function iterator(app: App) {
+export function eachInstallationIterator(app: App) {
   return {
     async *[Symbol.asyncIterator]() {
       const iterator = composePaginateRest.iterator(
