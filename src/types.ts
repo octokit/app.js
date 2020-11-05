@@ -4,7 +4,7 @@ import { Endpoints } from "@octokit/types";
 export type Options = {
   appId: number | string;
   privateKey: string;
-  webhooks: {
+  webhooks?: {
     secret: string;
   };
   oauth?: {

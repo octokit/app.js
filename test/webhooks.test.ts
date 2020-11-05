@@ -1,5 +1,3 @@
-import { Octokit } from "@octokit/core";
-
 const APP_ID = 1;
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH
@@ -28,25 +26,25 @@ ZcJjRIt8w8g/s4X6MhKasBYm9s3owALzCuJjGzUKcDHiO2DKu1xXAb0SzRcTzUCn
 9/49J6WTD++EajN7FhktUSYxukdWaCocAQJTDNYP0K88G4rtC2IYy5JFn9SWz5oh
 x//0u+zd/R/QRUzLOw4N72/Hu+UG6MNt5iDZFCtapRaKt6OvSBwy8w==
 -----END RSA PRIVATE KEY-----`;
-const WEBHOOK_SECRET = "secret";
+const CLIENT_ID = "0123";
+const CLIENT_SECRET = "0123secret";
 
 import { App } from "../src";
 
 describe("app.oauth", () => {
-  test("options.oauth is optional", async () => {
+  test("options.webhooks is optional", async () => {
     const options = {
       appId: APP_ID,
       privateKey: PRIVATE_KEY,
-      webhooks: {
-        secret: WEBHOOK_SECRET,
+      oauth: {
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
       },
     };
     const app = new App(options);
 
     expect(() => {
-      app.oauth.checkToken({ token: "token123" });
-    }).toThrow(
-      "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set"
-    );
+      app.webhooks.on("issues", () => {});
+    }).toThrow("[@octokit/app] webhooks option not set");
   });
 });

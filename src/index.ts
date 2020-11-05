@@ -21,6 +21,7 @@ export class App<O extends Options = Options> {
   static VERSION = VERSION;
 
   octokit: OctokitCore;
+  // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
   webhooks: ReturnType<typeof webhooks>;
   // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
   oauth: OAuthApp;
@@ -67,9 +68,18 @@ export class App<O extends Options = Options> {
       options.log
     );
 
-    this.webhooks = webhooks(this.octokit, options.webhooks);
+    // set app.webhooks depending on whether "webhooks" option has been passed
+    if ("webhooks" in options) {
+      this.webhooks = webhooks(this.octokit, options.webhooks);
+    } else {
+      Object.defineProperty(this, "webhooks", {
+        get() {
+          throw new Error("[@octokit/app] webhooks option not set");
+        },
+      });
+    }
 
-    // set app.oauth depending on whether "oauth" options have been passed
+    // set app.oauth depending on whether "oauth" option has been passed
     if ("oauth" in options) {
       const oAuthAppOptions = {
         ...options.oauth,
