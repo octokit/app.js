@@ -17,11 +17,12 @@ import { eachInstallationFactory } from "./each-installation";
 import { eachRepositoryFactory } from "./each-repository";
 import { getInstallationOctokit } from "./get-installation-octokit";
 
-export class App {
+export class App<O extends Options = Options> {
   static VERSION = VERSION;
 
   octokit: OctokitCore;
   webhooks: ReturnType<typeof webhooks>;
+  // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
   oauth: OAuthApp;
   getInstallationOctokit: GetInstallationOctokitInterface;
   eachInstallation: EachInstallationInterface;
@@ -34,17 +35,25 @@ export class App {
     [key: string]: unknown;
   };
 
-  constructor(options: Options) {
+  constructor(options: O) {
     const Octokit = options.Octokit || OctokitCore;
+
+    const authOptions = Object.assign(
+      {
+        appId: options.appId,
+        privateKey: options.privateKey,
+      },
+      options.oauth
+        ? {
+            clientId: options.oauth.clientId,
+            clientSecret: options.oauth.clientSecret,
+          }
+        : {}
+    );
 
     this.octokit = new Octokit({
       authStrategy: createAppAuth,
-      auth: {
-        appId: options.appId,
-        privateKey: options.privateKey,
-        clientId: options.oauth.clientId,
-        clientSecret: options.oauth.clientSecret,
-      },
+      auth: authOptions,
       log: options.log,
     });
 
@@ -60,10 +69,22 @@ export class App {
 
     this.webhooks = webhooks(this.octokit, options.webhooks);
 
-    this.oauth = new OAuthApp({
-      ...options.oauth,
-      Octokit,
-    });
+    // set app.oauth depending on whether "oauth" options have been passed
+    if ("oauth" in options) {
+      const oAuthAppOptions = {
+        ...options.oauth,
+        Octokit,
+      } as ConstructorParameters<typeof OAuthApp>[0];
+      this.oauth = new OAuthApp(oAuthAppOptions);
+    } else {
+      Object.defineProperty(this, "oauth", {
+        get() {
+          throw new Error(
+            "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set"
+          );
+        },
+      });
+    }
 
     this.getInstallationOctokit = getInstallationOctokit.bind(null, this);
     this.eachInstallation = eachInstallationFactory(this);

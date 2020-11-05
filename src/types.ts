@@ -4,12 +4,12 @@ import { Endpoints } from "@octokit/types";
 export type Options = {
   appId: number | string;
   privateKey: string;
-  oauth: {
-    clientId: string;
-    clientSecret: string;
-  };
   webhooks: {
     secret: string;
+  };
+  oauth?: {
+    clientId: string;
+    clientSecret: string;
   };
   Octokit?: typeof Octokit;
   log?: {
