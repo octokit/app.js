@@ -39,7 +39,7 @@ const BEARER =
 
 import { App } from "../src";
 
-describe("octokit.getInstallationOctokit", () => {
+describe("app.getInstallationOctokit", () => {
   let app: InstanceType<typeof App>;
   let mock: typeof fetchMock;
 
@@ -65,7 +65,7 @@ describe("octokit.getInstallationOctokit", () => {
     });
   });
 
-  test("octokit.getInstallationOctokit(123)", async () => {
+  test("app.getInstallationOctokit(123)", async () => {
     mock
       .postOnce(
         "path:/app/installations/123/access_tokens",

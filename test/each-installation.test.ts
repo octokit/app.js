@@ -39,7 +39,7 @@ const BEARER =
 
 import { App } from "../src";
 
-describe("octokit.eachInstallation", () => {
+describe("app.eachInstallation", () => {
   let app: InstanceType<typeof App>;
   let mock: typeof fetchMock;
 
@@ -65,7 +65,7 @@ describe("octokit.eachInstallation", () => {
     });
   });
 
-  test("(callback)", async () => {
+  test("app.eachInstallation(callback)", async () => {
     mock
       .getOnce(
         "path:/app/installations",

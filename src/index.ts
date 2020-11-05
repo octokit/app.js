@@ -45,6 +45,7 @@ export class App {
         clientId: options.oauth.clientId,
         clientSecret: options.oauth.clientSecret,
       },
+      log: options.log,
     });
 
     this.log = Object.assign(

@@ -1,3 +1,7 @@
+import { Octokit } from "@octokit/core";
+import fetchMock from "fetch-mock";
+import MockDate from "mockdate";
+
 const APP_ID = 1;
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1c7+9z5Pad7OejecsQ0bu3aozN3tihPmljnnudb9G3HECdnH
@@ -29,11 +33,15 @@ x//0u+zd/R/QRUzLOw4N72/Hu+UG6MNt5iDZFCtapRaKt6OvSBwy8w==
 const CLIENT_ID = "0123";
 const CLIENT_SECRET = "0123secret";
 const WEBHOOK_SECRET = "secret";
+// see https://runkit.com/gr2m/reproducable-jwt
+const BEARER =
+  "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOi0zMCwiZXhwIjo1NzAsImlzcyI6MX0.q3foRa78U3WegM5PrWLEh5N0bH1SD62OqW66ZYzArp95JBNiCbo8KAlGtiRENCIfBZT9ibDUWy82cI4g3F09mdTq3bD1xLavIfmTksIQCz5EymTWR5v6gL14LSmQdWY9lSqkgUG0XCFljWUglEP39H4yeHbFgdjvAYg3ifDS12z9oQz2ACdSpvxPiTuCC804HkPVw8Qoy0OSXvCkFU70l7VXCVUxnuhHnk8-oCGcKUspmeP6UdDnXk-Aus-eGwDfJbU2WritxxaXw6B4a3flTPojkYLSkPBr6Pi0H2-mBsW_Nvs0aLPVLKobQd4gqTkosX3967DoAG8luUMhrnxe8Q";
 
 import { App } from "../src";
 
-describe("app.log", () => {
+describe("app.octokit", () => {
   let app: InstanceType<typeof App>;
+  let mock: typeof fetchMock;
   const options = {
     appId: APP_ID,
     privateKey: PRIVATE_KEY,
@@ -47,35 +55,45 @@ describe("app.log", () => {
   };
 
   beforeEach(() => {
-    console.debug = jest.fn();
-    console.info = jest.fn();
-    console.warn = jest.fn();
-    console.error = jest.fn();
+    MockDate.set(0);
+    mock = fetchMock.sandbox();
 
-    app = new App(options);
+    app = new App(
+      Object.assign(
+        {
+          Octokit: Octokit.defaults({
+            request: {
+              fetch: mock,
+            },
+          }),
+        },
+        options
+      )
+    );
   });
 
-  test("app.log.error", async () => {
-    app.log.error("test");
-    expect(console.error).toHaveBeenCalledWith("test");
+  test("app.octokit is an Octokit instance", async () => {
+    expect(app.octokit).toBeInstanceOf(Octokit);
   });
 
-  test("app.log.warn", async () => {
-    app.log.warn("test");
-    expect(console.warn).toHaveBeenCalledWith("test");
+  test("app.octokit is authenticated as app", async () => {
+    mock.getOnce(
+      "path:/app",
+      {
+        ok: true,
+      },
+      {
+        headers: {
+          authorization: `bearer ${BEARER}`,
+        },
+      }
+    );
+
+    const octokit = await app.getInstallationOctokit(123);
+    await octokit.request("GET /app");
   });
 
-  test("app.log.info", async () => {
-    app.log.info("test");
-    expect(console.info).not.toHaveBeenCalled();
-  });
-
-  test("app.log.debug", async () => {
-    app.log.debug("test");
-    expect(console.debug).not.toHaveBeenCalled();
-  });
-
-  test("custom log", () => {
+  test("app.octokit.log inherits from log option", async () => {
     const logOption = {
       debug: jest.fn(),
       info: jest.fn(),
@@ -91,7 +109,7 @@ describe("app.log", () => {
       )
     );
 
-    app.log.debug("test");
+    app.octokit.log.debug("test");
     expect(logOption.debug).toHaveBeenCalledWith("test");
   });
 });
