@@ -14,17 +14,17 @@ export type Options = {
   Octokit?: typeof Octokit;
 };
 
-type EachInstallationFunctionOptions = {
+export type InstallationFunctionOptions = {
   octokit: Octokit;
   installation: Endpoints["GET /app/installations"]["response"]["data"][0];
 };
 export type EachInstallationFunction = (
-  options: EachInstallationFunctionOptions
+  options: InstallationFunctionOptions
 ) => unknown | Promise<unknown>;
 
 export interface EachInstallationInterface {
   (callback: EachInstallationFunction): Promise<void>;
-  iterator: () => AsyncIterable<EachInstallationFunctionOptions>;
+  iterator: () => AsyncIterable<InstallationFunctionOptions>;
 }
 
 type EachRepositoryFunctionOptions = {
@@ -38,4 +38,8 @@ export type EachRepositoryFunction = (
 export interface EachRepositoryInterface {
   (callback: EachRepositoryFunction): Promise<void>;
   iterator: () => AsyncIterable<EachRepositoryFunctionOptions>;
+}
+
+export interface GetInstallationOctokitInterface {
+  (installationId: number): Promise<Octokit>;
 }

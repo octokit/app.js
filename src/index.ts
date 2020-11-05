@@ -9,32 +9,23 @@ import {
   Options,
   EachInstallationInterface,
   EachRepositoryInterface,
+  GetInstallationOctokitInterface,
 } from "./types";
 import { VERSION } from "./version";
 import { webhooks } from "./webhooks";
 import { eachInstallationFactory } from "./each-installation";
 import { eachRepositoryFactory } from "./each-repository";
+import { getInstallationOctokit } from "./get-installation-octokit";
 
 export class App {
   static VERSION = VERSION;
 
-  /**
-   * Octokit instance
-   */
   octokit: OctokitCore;
-
-  /**
-   * Webhooks instance
-   */
   webhooks: ReturnType<typeof webhooks>;
-
-  /**
-   * oauth app instance
-   */
   oauth: OAuthApp;
-
-  eachRepository: EachRepositoryInterface;
+  getInstallationOctokit: GetInstallationOctokitInterface;
   eachInstallation: EachInstallationInterface;
+  eachRepository: EachRepositoryInterface;
 
   constructor(options: Options) {
     const Octokit = options.Octokit || OctokitCore;
@@ -55,6 +46,7 @@ export class App {
       Octokit,
     });
 
+    this.getInstallationOctokit = getInstallationOctokit.bind(null, this);
     this.eachInstallation = eachInstallationFactory(this);
     this.eachRepository = eachRepositoryFactory(this);
   }

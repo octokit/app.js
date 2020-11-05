@@ -4,6 +4,7 @@ import { createAppAuth } from "@octokit/auth-app";
 
 import { App } from "./index";
 import { EachInstallationFunction, EachInstallationInterface } from "./types";
+import { getInstallationOctokit } from "./get-installation-octokit";
 
 export function eachInstallationFactory(app: App) {
   return Object.assign(eachInstallation.bind(null, app), {
@@ -34,19 +35,10 @@ export function eachInstallationIterator(app: App) {
 
       for await (const { data: installations } of iterator) {
         for (const installation of installations) {
-          const installationOctokit = (await app.octokit.auth({
-            type: "installation",
-            installationId: installation.id,
-            factory: (auth: any) => {
-              const options = {
-                ...auth.octokitOptions,
-                authStrategy: createAppAuth,
-                ...{ auth: { ...auth, installationId: installation.id } },
-              };
-
-              return new auth.octokit.constructor(options);
-            },
-          })) as OctokitCore;
+          const installationOctokit = await getInstallationOctokit(
+            app,
+            installation.id
+          );
 
           yield { octokit: installationOctokit, installation };
         }

@@ -13,7 +13,7 @@
 - [API](#api)
   - [`app.octokit`](#appoctokit)
   - [`app.log`](#applog)
-  - [`app.asInstallation`](#appasinstallation)
+  - [`app.getInstallationOctokit`](#appgetinstallationoctokit)
   - [`app.eachInstallation`](#appeachinstallation)
   - [`app.eachRepository`](#appeachrepository)
   - [`app.webhooks`](#appwebhooks)
@@ -265,11 +265,10 @@ Octokit instance. Uses the [`Octokit` constructor option](#constructor-option-oc
 
 See https://github.com/octokit/core.js#logging. Customize using the [`log` constructor option](#constructor-option-log).
 
-### `app.asInstallation`
+### `app.getInstallationOctokit`
 
 ```js
-const { octokit, installation } = await app.asInstallation(123)
-await app.asInstallation(123, ({ octokit, installation }) => /* ... */)
+const octokit } = await app.getInstallationOctokit(123)
 ```
 
 ### `app.eachInstallation`
