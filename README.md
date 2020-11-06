@@ -1,250 +1,416 @@
-<a name="deprecated"></a>
-
-# ⚠️ Deprecated
-
-`@octokit/app` is being deprecated in favor of [`@octokit/auth-app`](https://github.com/octokit/auth-app.js/#readme). The `@octokit/app` package will be repurposed, starting with version 10.0.0.
-
-See usage examples for `@octokit/auth-app` below the examples for `@octokit/app`.
-
 # app.js
 
-> GitHub App Authentication client for JavaScript
+> GitHub App toolset for Node.js
 
 [![@latest](https://img.shields.io/npm/v/@octokit/app.svg)](https://www.npmjs.com/package/@octokit/app)
-[![Test](https://github.com/octokit/app.js/workflows/Test/badge.svg)](https://github.com/octokit/app.js/actions?query=workflow%3ATest)
+[![Build Status](https://github.com/octokit/app.js/workflows/Test/badge.svg)](https://github.com/octokit/app.js/actions?workflow=Test)
 
-`@octokit/app` has methods to receive tokens for a GitHub app and its installations. The tokens can then be used to interact with GitHub’s [REST API](https://developer.github.com/v3/) or [GraphQL API](https://developer.github.com/v4/). Note that `@octokit/app` does not have methods to send any requests, you will need to use your own request library such as [`@octokit/request`](https://github.com/octokit/request). Alternatively you can use the [`octokit`](https://github.com/octokit/octokit.js) package which comes with everything you need to integrate with any of GitHub’s APIs.
+<!-- toc -->
+
+- [Usage](#usage)
+- [Examples](#examples)
+- [Constructor](#constructor)
+- [API](#api)
+  - [`app.octokit`](#appoctokit)
+  - [`app.log`](#applog)
+  - [`app.getInstallationOctokit`](#appgetinstallationoctokit)
+  - [`app.eachInstallation`](#appeachinstallation)
+  - [`app.eachRepository`](#appeachrepository)
+  - [`app.webhooks`](#appwebhooks)
+  - [`app.oauth`](#appoauth)
+- [Middlewares](#middlewares)
+  - [`getNodeMiddleware(app, options)`](#getnodemiddlewareapp-options)
+- [Contributing](#contributing)
+- [License](#license)
+
+<!-- tocstop -->
 
 ## Usage
 
 <table>
 <tbody valign=top align=left>
 <tr><th>
+
 Browsers
+
 </th><td width=100%>
-Load <code>@octokit/app</code> directly from <a href="https://unpkg.com">unpkg.com</a>
-        
-```html
-<script type="module">
-import { App } from "https://unpkg.com/@octokit/app";
-</script>
-```
+
+`@octokit/app` is not meant for browser usage.
 
 </td></tr>
 <tr><th>
+
 Node
+
 </th><td>
 
-Install with <code>npm install @octokit/app</code>
+Install with `npm install @octokit/app`
 
 ```js
-const { App } = require("@octokit/app");
-// or: import { App } from "@octokit/app";
+const { App, getNodeMiddleware } = require("@octokit/app");
+
+const app = new App({
+  appId: 123,
+  privateKey: "-----BEGIN PRIVATE KEY-----\n...",
+  oauth: {
+    clientId: "0123",
+    clientSecret: "0123secret",
+  },
+  webhooks: {
+    secret: "secret",
+  },
+});
+
+const { data } = await app.octokit.request("/app");
+console.log("authenticated as %s", response.data.name);
+
+for await (const { octokit, repository } of app.eachRepository.iterator()) {
+  await octokit.request("POST /repos/{owner}/{repo}/dispatches", {
+    owner: repository.owner.login,
+    repo: repository.name,
+    event_type: "my_event",
+  });
+}
+
+app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
+  await octokit.request(
+    "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+    {
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      body: "Hello World!",
+    }
+  );
+});
+
+app.oauth.on("token", async ({ token, octokit }) => {
+  const { data } = await octokit.request("GET /user");
+  console.log(`Token retrieved for ${data.login}`);
+});
+
+require("http").createServer(getNodeMiddleware(app)).listen(3000);
+// can now receive requests at /api/github/*
 ```
 
 </td></tr>
 </tbody>
 </table>
 
-## Authenticating as an App
+## Examples
 
-In order to authenticate as a GitHub App, you need to generate a Private Key and use it to sign a JSON Web Token (jwt) and encode it. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/).
+TBD
 
-Here is how the code looks like with the deprecated `@octokit/app` package.
+## Constructor
+
+<table width="100%">
+  <thead align=left>
+    <tr>
+      <th width=150>
+        name
+      </th>
+      <th width=70>
+        type
+      </th>
+      <th>
+        description
+      </th>
+    </tr>
+  </thead>
+  <tbody align=left valign=top>
+    <tr>
+      <th>
+        <code>appId</code>
+      </th>
+      <th>
+        <code>number</code>
+      </th>
+      <td>
+        <strong>Required</strong>. Find the <strong>App ID</strong> on the app’s about page in settings.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>privateKey</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <strong>Required</strong>. Content of the <code>*.pem</code> file you downloaded from the app’s about page. You can generate a new private key if needed.
+      </td>
+    </tr>
+    <tr id="constructor-option-octokit">
+      <th>
+        <code>Octokit</code>
+      </th>
+      <th>
+        <code>Constructor</code>
+      </th>
+      <td>
+
+You can pass in your own Octokit constructor with custom defaults and plugins. Note that `authStrategy` will be always be set to `createAppAuth` from [`@octokit/auth-app`](https://github.com/octokit/auth-app.js).
+
+For usage with enterprise, set `baseUrl` to the hostname + `/api/v3`. Example:
 
 ```js
-const { App } = require("@octokit/app");
-
-const app = new App({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
+const { Octokit } = require("@octokit/core");
+new App({
+  appId: 123,
+  privateKey: "-----BEGIN PRIVATE KEY-----\n...",
+  oauth: {
+    clientId: 123,
+    clientSecret: "secret",
+  },
+  webhooks: {
+    secret: "secret",
+  },
+  Octokit: Octokit.defaults({
+    baseUrl: "https://ghe.my-company.com/api/v3",
+  }),
 });
-const jwt = app.getSignedJsonWebToken();
 ```
 
-To achive the same with [`@octokit/auth-app`](https://github.com/octokit/auth-app.js/#readme), do the following
+Defaults to [`@octokit/core`](https://github.com/octokit/core.js).
+
+</td></tr>
+    <tr id="constructor-option-log">
+      <th>
+        <code>log</code>
+      </th>
+      <th>
+        <code>object</code>
+      </th>
+      <td>
+        Used for internal logging. Defaults to <a href="https://developer.mozilla.org/en-US/docs/Web/API/console"><code>console</code></a>.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>webhooks.secret</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <strong>Required.</strong> Secret as configured in the GitHub App's settings.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>webhooks.transform</code>
+      </th>
+      <th>
+        <code>function</code>
+      </th>
+      <td>
+        Only relevant for `app.webhooks.on`. Transform emitted event before calling handlers. Can be asynchronous. 
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>oauth.clientId</code>
+      </th>
+      <th>
+        <code>number</code>
+      </th>
+      <td>
+        Find the OAuth <strong>Client ID</strong> on the app’s about page in settings.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>oauth.clientSecret</code>
+      </th>
+      <th>
+        <code>number</code>
+      </th>
+      <td>
+        Find the OAuth  <strong>Client Secret</strong> on the app’s about page in settings.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>oauth.allowSignup</code>
+      </th>
+      <th>
+        <code>boolean</code>
+      </th>
+      <td>
+        Sets the default value for <code>app.oauth.getAuthorizationUrl(options)</code>.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>oauth.defaultScopes</code>
+      </th>
+      <th>
+        <code>Array of strings</code>
+      </th>
+      <td>
+
+Sets the default <code>scopes</code> value for <code>app.oauth.getAuthorizationUrl(options)</code>. See [available scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes)
+
+</td></tr>
+  </tbody>
+</table>
+
+## API
+
+### `app.octokit`
+
+Octokit instance. Uses the [`Octokit` constructor option](#constructor-option-octokit) if passed.
+
+### `app.log`
+
+See https://github.com/octokit/core.js#logging. Customize using the [`log` constructor option](#constructor-option-log).
+
+### `app.getInstallationOctokit`
 
 ```js
-const { createAppAuth } = require("@octokit/auth-app");
-const { request } = require("@octokit/request");
-
-const auth = createAppAuth({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-});
-auth({ type: "app" }).then((authentication) => {
-  const jwt = authentication.token;
-});
+const octokit } = await app.getInstallationOctokit(123)
 ```
 
-## Authenticating as an Installation
-
-Once you have authenticated as a GitHub App, you can use that in order to request an installation access token. Calling `requestToken()` automatically performs the app authentication for you. See also the [GitHub Developer Docs](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation).
-
-Here is how the code looks like with the deprecated `@octokit/app` package.
+### `app.eachInstallation`
 
 ```js
-const { App } = require("@octokit/app");
-const { request } = require("@octokit/request");
+for await (const { octokit, installation } of app.eachInstallation.iterator()) { /* ... */ }
+await app.eachInstallation(({ octokit, installation }) => /* ... */)
+```
 
-const APP_ID = 1; // replace with your app ID
-const PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n..."; // replace with contents of your private key. Replace line breaks with \n
+### `app.eachRepository`
 
+```js
+for await (const { octokit, repository } of app.eachRepository.iterator()) { /* ... */ }
+await app.eachRepository(({ octokit, repository }) => /* ... */)
+```
+
+Optionally pass installation ID to iterate through all repositories in one installation
+
+```js
+for await (const { octokit, repository } of app.eachRepository.iterator({ installationId })) { /* ... */ }
+await app.eachRepository({ installationId }, ({ octokit, repository }) => /* ... */)
+```
+
+### `app.webhooks`
+
+An [`@octokit/webhooks` instance](https://github.com/octokit/webhooks.js/#readme)
+
+### `app.oauth`
+
+An [`@octokit/oauth-app` instance](https://github.com/octokit/oauth-app.js/#readme)
+
+## Middlewares
+
+A middleware is a method or set of methods to handle requests for common environments.
+
+By default, all middlewares expose the following routes
+
+| Route                            | Route Description                                                                                                                                                                                                                                                                         |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/github/webhooks`      | Endpoint to receive GitHub Webhook Event requests                                                                                                                                                                                                                                         |
+| `GET /api/github/oauth/login`    | Redirects to GitHub's authorization endpoint. Accepts optional `?state` and `?scopes` query parameters. `?scopes` is a comma-separated list of [supported OAuth scope names](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
+| `GET /api/github/oauth/callback` | The client's redirect endpoint. This is where the `token` event gets triggered                                                                                                                                                                                                            |
+| `POST /api/github/oauth/token`   | Exchange an authorization code for an OAuth Access token. If successful, the `token` event gets triggered.                                                                                                                                                                                |
+| `GET /api/github/oauth/token`    | Check if token is valid. Must authenticate using token in `Authorization` header. Uses GitHub's [`POST /applications/:client_id/token`](https://developer.github.com/v3/apps/oauth_applications/#check-a-token) endpoint                                                                  |
+| `PATCH /api/github/oauth/token`  | Resets a token (invalidates current one, returns new token). Must authenticate using token in `Authorization` header. Uses GitHub's [`PATCH /applications/:client_id/token`](https://developer.github.com/v3/apps/oauth_applications/#reset-a-token) endpoint.                            |
+| `DELETE /api/github/oauth/token` | Invalidates current token, basically the equivalent of a logout. Must authenticate using token in `Authorization` header.                                                                                                                                                                 |
+| `DELETE /api/github/oauth/grant` | Revokes the user's grant, basically the equivalent of an uninstall. must authenticate using token in `Authorization` header.                                                                                                                                                              |
+
+### `getNodeMiddleware(app, options)`
+
+Native http server middleware for Node.js
+
+```js
+const { App, getNodeMiddleware } = require("@octokit/app");
 const app = new App({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY
+  appId: 123,
+  privateKey: "-----BEGIN PRIVATE KEY-----\n...",
+  oauth: {
+    clientId: "0123",
+    clientSecret: "0123secret",
+  },
+  webhooks: {
+    secret: "secret",
+  },
 });
-await app.getInstallationAccessToken({
-  installationId: process.env.INSTALLATION_ID
-}).then(installationAccessToken => {
-  // https://developer.github.com/v3/issues/#create-an-issue
-  await request("POST /repos/:owner/:repo/issues", {
-    headers: {
-      authorization: `token ${installationAccessToken}`,
-    },
-    mediaType: {
-      previews: ["machine-man"]
-    },
-    owner: "hiimbex",
-    repo: "testing-things",
-    title: "My installation’s first issue"
+
+const middleware = getNodeMiddleware(app);
+
+require("http").createServer(middleware).listen(3000);
+// can now receive user authorization callbacks at /api/github/*
+```
+
+<table width="100%">
+  <thead align=left>
+    <tr>
+      <th width=150>
+        name
+      </th>
+      <th width=70>
+        type
+      </th>
+      <th>
+        description
+      </th>
+    </tr>
+  </thead>
+  <tbody align=left valign=top>
+    <tr>
+      <th>
+        <code>app</code>
+      </th>
+      <th>
+        <code>App instance</code>
+      </th>
+      <td>
+        <strong>Required</strong>.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>options.pathPrefix</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+
+All exposed paths will be prefixed with the provided prefix. Defaults to `"/api/github"`
+
+</td>
+    </tr>
+    <tr>
+      <th>
+        <code>options.onUnhandledRequest</code>
+      </th>
+      <th>
+        <code>function</code>
+      </th>
+      <td>
+
+Defaults to
+
+```js
+function onUnhandledRequest(request, response) {
+  response.writeHead(400, {
+    "content-type": "application/json",
   });
-})
+  response.end(
+    JSON.stringify({
+      error: error.message,
+    })
+  );
+}
 ```
 
-To achive the same with [`@octokit/auth-app`](https://github.com/octokit/auth-app.js/#readme), do the following
+</td></tr>
+  </tbody>
+</table>
 
-```js
-const { createAppAuth } = require("@octokit/auth-app");
-const { request } = require("@octokit/request");
+## Contributing
 
-const auth = createAppAuth({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-  installationId: process.env.INSTALLATION_ID
-})
-
-auth({ type: "installation" }).then(authentication => {
-  const installationAccessToken = authentication.token
-
-  // https://developer.github.com/v3/issues/#create-an-issue
-  await request("POST /repos/:owner/:repo/issues", {
-    headers: {
-      authorization: `token ${installationAccessToken}`
-    },
-    mediaType: {
-      previews: ["machine-man"]
-    }
-    owner: "hiimbex",
-    repo: "testing-things",
-    title: "My installation’s first issue"
-  });
-})
-```
-
-Or utilizing the [request hook API](https://github.com/octokit/request.js#authentication)
-
-```js
-const { createAppAuth } = require("@octokit/auth-app");
-const { request } = require("@octokit/request");
-
-const auth = createAppAuth({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-  installationId: process.env.INSTALLATION_ID,
-});
-
-const requestWithAuth = request.defaults({
-  request: {
-    hook: auth.hook,
-  },
-  mediaType: {
-    previews: ["machine-man"],
-  },
-});
-
-// https://developer.github.com/v3/issues/#create-an-issue
-await requestWithAuth("POST /repos/:owner/:repo/issues", {
-  owner: "hiimbex",
-  repo: "testing-things",
-  title: "My installation’s first issue",
-});
-```
-
-## Caching installation tokens
-
-Installation tokens expire after an hour. By default, each `App` instance is caching up to 15000 tokens simultaneously using [`lru-cache`](https://github.com/isaacs/node-lru-cache). You can pass your own cache implementation by passing `options.cache.{get,set}` to the constructor.
-
-Here is how the code looks like with the deprecated `@octokit/app` package.
-
-```js
-const { App } = require("@octokit/app");
-
-const CACHE = {};
-
-const app = new App({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-  cache: {
-    get(key) {
-      return CACHE[key];
-    },
-    set(key, value) {
-      CACHE[key] = value;
-    },
-  },
-});
-```
-
-`options.cache` is the same for [`@octokit/auth-app`](https://github.com/octokit/auth-app.js/#readme)'s `createAppAuth(options)`
-
-```js
-const { createAppAuth } = require("@octokit/auth-app");
-
-const CACHE = {};
-
-const auth = createAppAuth({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-  cache: {
-    get(key) {
-      return CACHE[key];
-    },
-    set(key, value) {
-      CACHE[key] = value;
-    },
-  },
-});
-```
-
-## Using with GitHub Enterprise
-
-The `baseUrl` option can be used to override default GitHub's `https://api.github.com`:
-
-```js
-const app = new App({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-  baseUrl: "https://github-enterprise.com/api/v3",
-});
-```
-
-The same option exist for [`@octokit/auth-app`](https://github.com/octokit/auth-app.js/#readme)'s `createAppAuth(options)`
-
-```js
-const auth = createAppAuth({
-  id: process.env.APP_ID,
-  privateKey: process.env.PRIVATE_KEY,
-  cache: {
-    get(key) {
-      return CACHE[key];
-    },
-    set(key, value) {
-      CACHE[key] = value;
-    },
-  },
-});
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
