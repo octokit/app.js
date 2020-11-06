@@ -8,7 +8,6 @@
 <!-- toc -->
 
 - [Usage](#usage)
-- [Examples](#examples)
 - [Constructor](#constructor)
 - [API](#api)
   - [`app.octokit`](#appoctokit)
@@ -48,7 +47,13 @@ Install with `npm install @octokit/app`
 
 ```js
 const { App, getNodeMiddleware } = require("@octokit/app");
+```
 
+</td></tr>
+</tbody>
+</table>
+
+```js
 const app = new App({
   appId: 123,
   privateKey: "-----BEGIN PRIVATE KEY-----\n...",
@@ -92,14 +97,6 @@ app.oauth.on("token", async ({ token, octokit }) => {
 require("http").createServer(getNodeMiddleware(app)).listen(3000);
 // can now receive requests at /api/github/*
 ```
-
-</td></tr>
-</tbody>
-</table>
-
-## Examples
-
-TBD
 
 ## Constructor
 
