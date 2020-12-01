@@ -1,6 +1,4 @@
-import { Octokit as OctokitCore } from "@octokit/core";
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
-import { createAppAuth } from "@octokit/auth-app";
 
 import { App } from "./index";
 import { EachInstallationFunction, EachInstallationInterface } from "./types";
