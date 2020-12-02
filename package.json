@@ -22,7 +22,7 @@
     "@octokit/core": "^3.2.2",
     "@octokit/oauth-app": "^2.0.1",
     "@octokit/plugin-paginate-rest": "^2.6.1",
-    "@octokit/types": "^6.0.1",
+    "@octokit/types": "^6.0.3",
     "@octokit/webhooks": "^7.15.1"
   },
   "devDependencies": {
