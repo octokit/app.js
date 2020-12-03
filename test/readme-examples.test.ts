@@ -251,7 +251,7 @@ describe("README examples", () => {
       )
       .getOnce(
         "path:/user",
-        { ok: true },
+        { id: 1 },
         {
           headers: {
             authorization: `token secret123`,
@@ -261,7 +261,7 @@ describe("README examples", () => {
 
     app.oauth.on("token", async ({ octokit }) => {
       const { data } = await octokit.request("GET /user");
-      expect(data).toStrictEqual({ ok: true });
+      expect(data.id).toStrictEqual(1);
     });
 
     const middleware = getNodeMiddleware(app);

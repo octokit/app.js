@@ -94,7 +94,7 @@ describe("app.getInstallationOctokit", () => {
       );
 
     const octokit = await app.getInstallationOctokit(123);
-    await octokit.request("GET /repos/:owner/:repo", {
+    await octokit.request("GET /repos/{owner}/{repo}", {
       owner: "octokit",
       repo: "app.js",
     });

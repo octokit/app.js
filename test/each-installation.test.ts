@@ -71,7 +71,7 @@ describe("app.eachInstallation", () => {
         "path:/app/installations",
         [
           {
-            id: "123",
+            id: 123,
           },
         ],
         {
@@ -103,7 +103,7 @@ describe("app.eachInstallation", () => {
         token: string;
       };
       expect(token).toEqual("secret123");
-      expect(installation).toStrictEqual({ id: "123" });
+      expect(installation.id).toEqual(123);
       counter++;
     });
     expect(counter).toEqual(1);

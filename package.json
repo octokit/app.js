@@ -21,15 +21,15 @@
     "@octokit/auth-app": "^2.10.0",
     "@octokit/core": "^3.2.0",
     "@octokit/oauth-app": "^2.0.1",
-    "@octokit/plugin-paginate-rest": "^2.6.0",
-    "@octokit/types": "^5.5.0",
+    "@octokit/plugin-paginate-rest": "^2.6.1",
+    "@octokit/types": "^6.0.3",
     "@octokit/webhooks": "^7.15.1"
   },
   "devDependencies": {
     "@pika/pack": "^0.5.0",
     "@pika/plugin-build-node": "^0.9.1",
     "@pika/plugin-ts-standard-pkg": "^0.9.1",
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^26.0.16",
     "@types/node": "^14.14.6",
     "fetch-mock": "^9.10.7",
     "jest": "^26.6.1",
