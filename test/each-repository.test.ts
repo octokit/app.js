@@ -114,12 +114,14 @@ describe("app.eachRepository", () => {
         token: string;
       };
       expect(token).toEqual("secret123");
-      expect(repository).toStrictEqual({
-        owner: {
-          login: "octokit",
-        },
-        name: "app.js",
-      });
+      expect(repository).toStrictEqual(
+        expect.objectContaining({
+          owner: {
+            login: "octokit",
+          },
+          name: "app.js",
+        })
+      );
       counter++;
     });
     expect(counter).toEqual(1);
