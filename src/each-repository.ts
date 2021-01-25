@@ -1,7 +1,11 @@
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 
 import { App } from "./index";
-import { EachRepositoryFunction, EachRepositoryInterface } from "./types";
+import {
+  EachRepositoryFunction,
+  EachRepositoryInterface,
+  EachRepositoryQuery,
+} from "./types";
 
 export function eachRepositoryFactory(app: App) {
   return Object.assign(eachRepository.bind(null, app), {
@@ -11,21 +15,42 @@ export function eachRepositoryFactory(app: App) {
 
 export async function eachRepository(
   app: App,
-  callback: EachRepositoryFunction
+  queryOrCallback: EachRepositoryQuery | EachRepositoryFunction,
+  callback?: EachRepositoryFunction
 ) {
-  const i = eachRepositoryIterator(app)[Symbol.asyncIterator]();
+  const i = eachRepositoryIterator(
+    app,
+    callback ? (queryOrCallback as EachRepositoryQuery) : undefined
+  )[Symbol.asyncIterator]();
   let result = await i.next();
   while (!result.done) {
-    await callback(result.value);
+    if (callback) {
+      await callback(result.value);
+    } else {
+      await (queryOrCallback as EachRepositoryFunction)(result.value);
+    }
 
     result = await i.next();
   }
 }
 
-export function eachRepositoryIterator(app: App) {
+function singleInstallationIterator(app: App, installationId: number) {
   return {
     async *[Symbol.asyncIterator]() {
-      for await (const { octokit } of app.eachInstallation.iterator()) {
+      yield {
+        octokit: await app.getInstallationOctokit(installationId),
+      };
+    },
+  };
+}
+
+export function eachRepositoryIterator(app: App, query?: EachRepositoryQuery) {
+  return {
+    async *[Symbol.asyncIterator]() {
+      const iterator = query
+        ? singleInstallationIterator(app, query.installationId)
+        : app.eachInstallation.iterator();
+      for await (const { octokit } of iterator) {
         const repositoriesIterator = composePaginateRest.iterator(
           octokit,
           "GET /installation/repositories"

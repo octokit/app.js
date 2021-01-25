@@ -126,4 +126,56 @@ describe("app.eachRepository", () => {
     });
     expect(counter).toEqual(1);
   });
+
+  test("app.eachRepository({ installationId }, callback)", async () => {
+    mock
+      .postOnce(
+        "path:/app/installations/123/access_tokens",
+        {
+          token: "secret123",
+          expires_at: "1970-01-01T01:00:00.000Z",
+          permissions: {
+            metadata: "read",
+          },
+          repository_selection: "all",
+        },
+        {
+          headers: {
+            authorization: `bearer ${BEARER}`,
+          },
+        }
+      )
+      .getOnce("path:/installation/repositories", {
+        total_count: 1,
+        repositories: [
+          {
+            owner: {
+              login: "octokit",
+            },
+            name: "app.js",
+          },
+        ],
+      });
+
+    let counter = 0;
+    await app.eachRepository(
+      { installationId: 123 },
+      async ({ octokit, repository }) => {
+        const { token } = (await octokit.auth({ type: "installation" })) as {
+          token: string;
+        };
+        expect(token).toEqual("secret123");
+        expect(repository).toStrictEqual(
+          expect.objectContaining({
+            owner: {
+              login: "octokit",
+            },
+            name: "app.js",
+          })
+        );
+        counter++;
+      }
+    );
+    expect(counter).toEqual(1);
+  });
 });

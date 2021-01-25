@@ -40,10 +40,16 @@ type EachRepositoryFunctionOptions = {
 export type EachRepositoryFunction = (
   options: EachRepositoryFunctionOptions
 ) => unknown | Promise<unknown>;
+export type EachRepositoryQuery = {
+  installationId: number;
+};
 
 export interface EachRepositoryInterface {
   (callback: EachRepositoryFunction): Promise<void>;
-  iterator: () => AsyncIterable<EachRepositoryFunctionOptions>;
+  (query: EachRepositoryQuery, callback: EachRepositoryFunction): Promise<void>;
+  iterator: (
+    query?: EachRepositoryQuery
+  ) => AsyncIterable<EachRepositoryFunctionOptions>;
 }
 
 export interface GetInstallationOctokitInterface {
