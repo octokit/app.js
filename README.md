@@ -67,7 +67,7 @@ const app = new App({
 });
 
 const { data } = await app.octokit.request("/app");
-console.log("authenticated as %s", response.data.name);
+console.log("authenticated as %s", data.name);
 
 for await (const { octokit, repository } of app.eachRepository.iterator()) {
   await octokit.request("POST /repos/{owner}/{repo}/dispatches", {
