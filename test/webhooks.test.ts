@@ -28,10 +28,11 @@ x//0u+zd/R/QRUzLOw4N72/Hu+UG6MNt5iDZFCtapRaKt6OvSBwy8w==
 -----END RSA PRIVATE KEY-----`;
 const CLIENT_ID = "0123";
 const CLIENT_SECRET = "0123secret";
+const WEBHOOK_SECRET = "webhook_secret";
 
 import { App } from "../src";
 
-describe("app.oauth", () => {
+describe("app.webhooks", () => {
   test("options.webhooks is optional", async () => {
     const options = {
       appId: APP_ID,
@@ -46,5 +47,37 @@ describe("app.oauth", () => {
     expect(() => {
       app.webhooks.on("issues", () => {});
     }).toThrow("[@octokit/app] webhooks option not set");
+  });
+
+  test('event without "installation" key', async () => {
+    expect.assertions(1);
+
+    const options = {
+      appId: APP_ID,
+      privateKey: PRIVATE_KEY,
+      oauth: {
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+      },
+      webhooks: {
+        secret: WEBHOOK_SECRET,
+      },
+    };
+    const app = new App(options);
+
+    app.webhooks.on("ping", async (event) => {
+      const authentication = await event.octokit.auth();
+
+      expect(authentication).toStrictEqual({
+        type: "unauthenticated",
+        reason: '"installation" key missing in webhook event payload',
+      });
+    });
+
+    await app.webhooks.receive({
+      id: "123",
+      name: "ping",
+      payload: {} as any,
+    });
   });
 });
