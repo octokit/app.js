@@ -1,14 +1,14 @@
 import { Octokit } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import { createUnauthenticatedAuth } from "@octokit/auth-unauthenticated";
-import { Webhooks } from "@octokit/webhooks";
+import { Webhooks, EmitterWebhookEvent } from "@octokit/webhooks";
 
 import { Options } from "./types";
 
 export function webhooks(
   appOctokit: Octokit,
   options: Required<Options>["webhooks"]
-): Webhooks {
+): Webhooks<EmitterWebhookEvent, EmitterWebhookEvent & { octokit: Octokit }> {
   return new Webhooks({
     secret: options.secret,
     path: "/api/github/webhooks",
