@@ -8,8 +8,8 @@ import { Options } from "./types";
 export function webhooks(
   appOctokit: Octokit,
   options: Required<Options>["webhooks"]
-// Explict return type for better debugability and performance,
-// see https://github.com/octokit/app.js/pull/201
+  // Explict return type for better debugability and performance,
+  // see https://github.com/octokit/app.js/pull/201
 ): Webhooks<EmitterWebhookEvent & { octokit: Octokit }> {
   return new Webhooks({
     secret: options.secret,
