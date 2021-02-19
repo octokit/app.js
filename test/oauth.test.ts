@@ -49,4 +49,19 @@ describe("app.oauth", () => {
       "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set"
     );
   });
+
+  test("options.oauth.allowSignup", async () => {
+    new App({
+      appId: APP_ID,
+      privateKey: PRIVATE_KEY,
+      webhooks: {
+        secret: WEBHOOK_SECRET,
+      },
+      oauth: {
+        clientId: "123",
+        clientSecret: "123secret",
+        allowSignup: true,
+      },
+    });
+  });
 });
