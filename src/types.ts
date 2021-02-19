@@ -10,6 +10,7 @@ export type Options = {
   oauth?: {
     clientId: string;
     clientSecret: string;
+    allowSignup?: boolean;
   };
   Octokit?: typeof Octokit;
   log?: {
