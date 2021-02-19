@@ -1,6 +1,5 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
-import { Webhooks } from "@octokit/webhooks";
 import {
   OAuthApp,
   getNodeMiddleware as oauthNodeMiddleware,
