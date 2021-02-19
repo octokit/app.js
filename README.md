@@ -237,18 +237,6 @@ Defaults to [`@octokit/core`](https://github.com/octokit/core.js).
         Sets the default value for <code>app.oauth.getAuthorizationUrl(options)</code>.
       </td>
     </tr>
-    <tr>
-      <th>
-        <code>oauth.defaultScopes</code>
-      </th>
-      <th>
-        <code>Array of strings</code>
-      </th>
-      <td>
-
-Sets the default <code>scopes</code> value for <code>app.oauth.getAuthorizationUrl(options)</code>. See [available scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes)
-
-</td></tr>
   </tbody>
 </table>
 
@@ -303,16 +291,16 @@ A middleware is a method or set of methods to handle requests for common environ
 
 By default, all middlewares expose the following routes
 
-| Route                            | Route Description                                                                                                                                                                                                                                                                         |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST /api/github/webhooks`      | Endpoint to receive GitHub Webhook Event requests                                                                                                                                                                                                                                         |
-| `GET /api/github/oauth/login`    | Redirects to GitHub's authorization endpoint. Accepts optional `?state` and `?scopes` query parameters. `?scopes` is a comma-separated list of [supported OAuth scope names](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
-| `GET /api/github/oauth/callback` | The client's redirect endpoint. This is where the `token` event gets triggered                                                                                                                                                                                                            |
-| `POST /api/github/oauth/token`   | Exchange an authorization code for an OAuth Access token. If successful, the `token` event gets triggered.                                                                                                                                                                                |
-| `GET /api/github/oauth/token`    | Check if token is valid. Must authenticate using token in `Authorization` header. Uses GitHub's [`POST /applications/{client_id}/token`](https://developer.github.com/v3/apps/oauth_applications/#check-a-token) endpoint                                                                 |
-| `PATCH /api/github/oauth/token`  | Resets a token (invalidates current one, returns new token). Must authenticate using token in `Authorization` header. Uses GitHub's [`PATCH /applications/{client_id}/token`](https://developer.github.com/v3/apps/oauth_applications/#reset-a-token) endpoint.                           |
-| `DELETE /api/github/oauth/token` | Invalidates current token, basically the equivalent of a logout. Must authenticate using token in `Authorization` header.                                                                                                                                                                 |
-| `DELETE /api/github/oauth/grant` | Revokes the user's grant, basically the equivalent of an uninstall. must authenticate using token in `Authorization` header.                                                                                                                                                              |
+| Route                            | Route Description                                                                                                                                                                                                                                               |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/github/webhooks`      | Endpoint to receive GitHub Webhook Event requests                                                                                                                                                                                                               |
+| `GET /api/github/oauth/login`    | Redirects to GitHub's authorization endpoint. Accepts optional `?state` query parameter.                                                                                                                                                                        |
+| `GET /api/github/oauth/callback` | The client's redirect endpoint. This is where the `token` event gets triggered                                                                                                                                                                                  |
+| `POST /api/github/oauth/token`   | Exchange an authorization code for an OAuth Access token. If successful, the `token` event gets triggered.                                                                                                                                                      |
+| `GET /api/github/oauth/token`    | Check if token is valid. Must authenticate using token in `Authorization` header. Uses GitHub's [`POST /applications/{client_id}/token`](https://developer.github.com/v3/apps/oauth_applications/#check-a-token) endpoint                                       |
+| `PATCH /api/github/oauth/token`  | Resets a token (invalidates current one, returns new token). Must authenticate using token in `Authorization` header. Uses GitHub's [`PATCH /applications/{client_id}/token`](https://developer.github.com/v3/apps/oauth_applications/#reset-a-token) endpoint. |
+| `DELETE /api/github/oauth/token` | Invalidates current token, basically the equivalent of a logout. Must authenticate using token in `Authorization` header.                                                                                                                                       |
+| `DELETE /api/github/oauth/grant` | Revokes the user's grant, basically the equivalent of an uninstall. must authenticate using token in `Authorization` header.                                                                                                                                    |
 
 ### `getNodeMiddleware(app, options)`
 
