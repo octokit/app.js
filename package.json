@@ -14,7 +14,7 @@
     "test": "jest --coverage",
     "validate:ts": "tsc -p tsconfig.json --noEmit"
   },
-  "repository": "https://github.com/octokit/app.js",
+  "repository": "github:octokit/app.js",
   "author": "Gregor Martynus (https://github.com/gr2m)",
   "license": "MIT",
   "dependencies": {
