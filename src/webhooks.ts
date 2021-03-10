@@ -10,7 +10,14 @@ export function webhooks(
   options: Required<Options>["webhooks"]
   // Explict return type for better debugability and performance,
   // see https://github.com/octokit/app.js/pull/201
-): Webhooks<EmitterWebhookEvent & { octokit: Octokit }> {
+): Webhooks<
+  Required<Options>["webhooks"] & {
+    path: "/api/github/webhooks";
+    transform: (
+      event: EmitterWebhookEvent
+    ) => Promise<EmitterWebhookEvent & { octokit: Octokit }>;
+  }
+> {
   return new Webhooks({
     secret: options.secret,
     path: "/api/github/webhooks",
