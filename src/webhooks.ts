@@ -36,7 +36,7 @@ export function webhooks(
       const octokit = (await appOctokit.auth({
         type: "installation",
         installationId,
-        factory: (auth: any) => {
+        factory(auth: any) {
           return new auth.octokit.constructor({
             ...auth.octokitOptions,
             authStrategy: createAppAuth,
