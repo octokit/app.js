@@ -2,7 +2,7 @@ import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import {
   OAuthApp,
-  getNodeMiddleware as oauthNodeMiddleware,
+  createNodeMiddleware as oauthNodeMiddleware,
 } from "@octokit/oauth-app";
 import { Deprecation } from "deprecation";
 
