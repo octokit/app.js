@@ -25,7 +25,7 @@ export class App<O extends Options = Options> {
   // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
   webhooks: ReturnType<typeof webhooks>;
   // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
-  oauth: OAuthApp;
+  oauth: OAuthApp<"github-app">;
   getInstallationOctokit: GetInstallationOctokitInterface;
   eachInstallation: EachInstallationInterface;
   eachRepository: EachRepositoryInterface;
