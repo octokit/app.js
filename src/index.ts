@@ -4,6 +4,7 @@ import {
   OAuthApp,
   getNodeMiddleware as oauthNodeMiddleware,
 } from "@octokit/oauth-app";
+import { Deprecation } from "deprecation";
 
 import {
   Options,
@@ -101,7 +102,20 @@ export class App<O extends Options = Options> {
   }
 }
 
+/**
+ * @deprecated use createNodeMiddleware()
+ */
 export function getNodeMiddleware(app: App) {
+  app.log.warn(
+    // @ts-expect-error
+    new Deprecation(
+      "[@octokit/app] getNodeMiddleware is deprecated. Use createNodeMiddleware instead"
+    )
+  );
+  return createNodeMiddleware(app);
+}
+
+export function createNodeMiddleware(app: App) {
   return oauthNodeMiddleware(app.oauth, {
     onUnhandledRequest: (request, response) => {
       return app.webhooks.middleware(request, response);

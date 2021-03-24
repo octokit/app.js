@@ -18,7 +18,7 @@
   - [`app.webhooks`](#appwebhooks)
   - [`app.oauth`](#appoauth)
 - [Middlewares](#middlewares)
-  - [`getNodeMiddleware(app, options)`](#getnodemiddlewareapp-options)
+  - [`createNodeMiddleware(app, options)`](#getnodemiddlewareapp-options)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -46,7 +46,7 @@ Node
 Install with `npm install @octokit/app`
 
 ```js
-const { App, getNodeMiddleware } = require("@octokit/app");
+const { App, createNodeMiddleware } = require("@octokit/app");
 ```
 
 </td></tr>
@@ -94,7 +94,7 @@ app.oauth.on("token", async ({ token, octokit }) => {
   console.log(`Token retrieved for ${data.login}`);
 });
 
-require("http").createServer(getNodeMiddleware(app)).listen(3000);
+require("http").createServer(createNodeMiddleware(app)).listen(3000);
 // can now receive requests at /api/github/*
 ```
 
@@ -302,12 +302,12 @@ By default, all middlewares expose the following routes
 | `DELETE /api/github/oauth/token` | Invalidates current token, basically the equivalent of a logout. Must authenticate using token in `Authorization` header.                                                                                                                                       |
 | `DELETE /api/github/oauth/grant` | Revokes the user's grant, basically the equivalent of an uninstall. must authenticate using token in `Authorization` header.                                                                                                                                    |
 
-### `getNodeMiddleware(app, options)`
+### `createNodeMiddleware(app, options)`
 
 Native http server middleware for Node.js
 
 ```js
-const { App, getNodeMiddleware } = require("@octokit/app");
+const { App, createNodeMiddleware } = require("@octokit/app");
 const app = new App({
   appId: 123,
   privateKey: "-----BEGIN PRIVATE KEY-----\n...",
@@ -320,7 +320,7 @@ const app = new App({
   },
 });
 
-const middleware = getNodeMiddleware(app);
+const middleware = createNodeMiddleware(app);
 
 require("http").createServer(middleware).listen(3000);
 // can now receive user authorization callbacks at /api/github/*

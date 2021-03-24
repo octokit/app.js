@@ -1,4 +1,4 @@
-import { App, getNodeMiddleware } from "../src";
+import { App, createNodeMiddleware } from "../src";
 
 describe("smoke", () => {
   it("App", () => {
@@ -23,7 +23,7 @@ describe("smoke", () => {
     expect(App.VERSION).toEqual("0.0.0-development");
   });
 
-  it("getNodeMiddleware", () => {
-    expect(typeof getNodeMiddleware).toBe("function");
+  it("createNodeMiddleware", () => {
+    expect(typeof createNodeMiddleware).toBe("function");
   });
 });
