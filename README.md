@@ -18,7 +18,7 @@
   - [`app.webhooks`](#appwebhooks)
   - [`app.oauth`](#appoauth)
 - [Middlewares](#middlewares)
-  - [`createNodeMiddleware(app, options)`](#getnodemiddlewareapp-options)
+  - [`createNodeMiddleware(app, options)`](#createnodemiddlewareapp-options)
 - [Contributing](#contributing)
 - [License](#license)
 
