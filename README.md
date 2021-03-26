@@ -8,6 +8,7 @@
 <!-- toc -->
 
 - [Usage](#usage)
+- [`App.defaults(options)`](#appdefaultsoptions)
 - [Constructor](#constructor)
 - [API](#api)
   - [`app.octokit`](#appoctokit)
@@ -96,6 +97,18 @@ app.oauth.on("token", async ({ token, octokit }) => {
 
 require("http").createServer(createNodeMiddleware(app)).listen(3000);
 // can now receive requests at /api/github/*
+```
+
+## `App.defaults(options)`
+
+Create a new `App` with custom defaults for the [constructor options](#constructor-options)
+
+```js
+const MyApp = App.defaults({
+  Octokit: MyOctokit,
+});
+const app = new MyApp({ clientId, clientSecret });
+// app.octokit is now an instance of MyOctokit
 ```
 
 ## Constructor

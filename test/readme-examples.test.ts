@@ -68,6 +68,27 @@ describe("README examples", () => {
     });
   });
 
+  test("App.defaults()", async () => {
+    const MyApp = App.defaults({
+      Octokit: Octokit.plugin((octokit) =>
+        octokit.hook.wrap("request", () => ({
+          data: { ok: true },
+          headers: {},
+          status: 1,
+          url: "",
+        }))
+      ),
+    });
+
+    const app = new MyApp({
+      appId: 1,
+      privateKey: "",
+    });
+
+    const { data } = await app.octokit.request("GET /");
+    expect(data).toStrictEqual({ ok: true });
+  });
+
   test("app.octokit.request", async () => {
     mock.getOnce(
       "path:/app",

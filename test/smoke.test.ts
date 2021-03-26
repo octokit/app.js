@@ -2,7 +2,7 @@ import { App, createNodeMiddleware } from "../src";
 
 describe("smoke", () => {
   it("App", () => {
-    expect(typeof App).toBe("function");
+    expect(App).toBeInstanceOf(Function);
   });
 
   it("new App(options)", () => {
@@ -19,11 +19,15 @@ describe("smoke", () => {
     });
   });
 
+  it("App.defaults", () => {
+    expect(App.defaults).toBeInstanceOf(Function);
+  });
+
   it("App.VERSION", () => {
     expect(App.VERSION).toEqual("0.0.0-development");
   });
 
   it("createNodeMiddleware", () => {
-    expect(typeof createNodeMiddleware).toBe("function");
+    expect(createNodeMiddleware).toBeInstanceOf(Function);
   });
 });
