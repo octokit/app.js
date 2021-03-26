@@ -18,8 +18,26 @@ import { eachInstallationFactory } from "./each-installation";
 import { eachRepositoryFactory } from "./each-repository";
 import { getInstallationOctokit } from "./get-installation-octokit";
 
+type Constructor<T> = new (...args: any[]) => T;
+
 export class App<O extends Options = Options> {
   static VERSION = VERSION;
+
+  static defaults<S extends Constructor<any>>(
+    this: S,
+    defaults: Partial<Options>
+  ) {
+    const AppWithDefaults = class extends this {
+      constructor(...args: any[]) {
+        super({
+          ...defaults,
+          ...args[0],
+        });
+      }
+    };
+
+    return AppWithDefaults;
+  }
 
   octokit: OctokitCore;
   // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
