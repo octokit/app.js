@@ -379,6 +379,19 @@ All exposed paths will be prefixed with the provided prefix. Defaults to `"/api/
 </td>
     </tr>
     <tr>
+      <td>
+        <code>log</code>
+        <em>
+          object
+        </em>
+      </td>
+      <td>
+
+Used for internal logging. Defaults to [`console`](https://developer.mozilla.org/en-US/docs/Web/API/console) with `debug` and `info` doing nothing.
+
+</td>
+    </tr>
+    <tr>
       <th>
         <code>options.onUnhandledRequest</code>
       </th>

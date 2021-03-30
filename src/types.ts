@@ -14,10 +14,10 @@ export type Options = {
   };
   Octokit?: typeof Octokit;
   log?: {
-    debug: (message: string) => unknown;
-    info: (message: string) => unknown;
-    warn: (message: string) => unknown;
-    error: (message: string) => unknown;
+    debug: (...data: any[]) => void;
+    info: (...data: any[]) => void;
+    warn: (...data: any[]) => void;
+    error: (...data: any[]) => void;
   };
 };
 
