@@ -116,4 +116,4 @@ export class App<O extends Options = Options> {
   }
 }
 
-export { createNodeMiddleware } from "./middleware/node";
+export { createNodeMiddleware } from "./middleware/node/index";
