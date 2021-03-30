@@ -1,4 +1,5 @@
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
+import { Octokit } from "@octokit/core";
 
 import { App } from "./index";
 import { EachInstallationFunction, EachInstallationInterface } from "./types";
@@ -7,12 +8,12 @@ import { getInstallationOctokit } from "./get-installation-octokit";
 export function eachInstallationFactory(app: App) {
   return Object.assign(eachInstallation.bind(null, app), {
     iterator: eachInstallationIterator.bind(null, app),
-  }) as EachInstallationInterface;
+  }) as EachInstallationInterface<Octokit>;
 }
 
 export async function eachInstallation(
   app: App,
-  callback: EachInstallationFunction
+  callback: EachInstallationFunction<Octokit>
 ) {
   const i = eachInstallationIterator(app)[Symbol.asyncIterator]();
   let result = await i.next();

@@ -1,6 +1,7 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import { OAuthApp } from "@octokit/oauth-app";
+import { Webhooks } from "@octokit/webhooks";
 
 import {
   Options,
@@ -15,6 +16,10 @@ import { eachRepositoryFactory } from "./each-repository";
 import { getInstallationOctokit } from "./get-installation-octokit";
 
 type Constructor<T> = new (...args: any[]) => T;
+
+type OctokitType<O extends Options> = O["Octokit"] extends typeof OctokitCore
+  ? InstanceType<O["Octokit"]>
+  : OctokitCore;
 
 export class App<O extends Options = Options> {
   static VERSION = VERSION;
@@ -37,12 +42,12 @@ export class App<O extends Options = Options> {
 
   octokit: OctokitCore;
   // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
-  webhooks: ReturnType<typeof webhooks>;
+  webhooks: Webhooks<{ octokit: OctokitType<O> }>;
   // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
   oauth: OAuthApp<"github-app">;
-  getInstallationOctokit: GetInstallationOctokitInterface;
-  eachInstallation: EachInstallationInterface;
-  eachRepository: EachRepositoryInterface;
+  getInstallationOctokit: GetInstallationOctokitInterface<OctokitType<O>>;
+  eachInstallation: EachInstallationInterface<OctokitType<O>>;
+  eachRepository: EachRepositoryInterface<OctokitType<O>>;
   log: {
     debug: (message: string, additionalInfo?: object) => void;
     info: (message: string, additionalInfo?: object) => void;
@@ -85,6 +90,7 @@ export class App<O extends Options = Options> {
 
     // set app.webhooks depending on whether "webhooks" option has been passed
     if (options.webhooks) {
+      // @ts-expect-error TODO: figure this out
       this.webhooks = webhooks(this.octokit, options.webhooks);
     } else {
       Object.defineProperty(this, "webhooks", {
@@ -110,9 +116,16 @@ export class App<O extends Options = Options> {
       });
     }
 
-    this.getInstallationOctokit = getInstallationOctokit.bind(null, this);
-    this.eachInstallation = eachInstallationFactory(this);
-    this.eachRepository = eachRepositoryFactory(this);
+    this.getInstallationOctokit = getInstallationOctokit.bind(
+      null,
+      this
+    ) as GetInstallationOctokitInterface<OctokitType<O>>;
+    this.eachInstallation = eachInstallationFactory(
+      this
+    ) as EachInstallationInterface<OctokitType<O>>;
+    this.eachRepository = eachRepositoryFactory(
+      this
+    ) as EachRepositoryInterface<OctokitType<O>>;
   }
 }
 
