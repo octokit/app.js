@@ -65,6 +65,7 @@ describe("README examples", () => {
           fetch: mock,
         },
       }),
+      log: console,
     });
   });
 
@@ -240,7 +241,7 @@ describe("README examples", () => {
       headers: {
         "x-github-event": "issues",
         "x-github-delivery": "event-id-123",
-        "x-hub-signature": app.webhooks.sign(data),
+        "x-hub-signature-256": app.webhooks.sign(data),
       },
       data,
     }).catch(console.error);

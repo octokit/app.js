@@ -13,7 +13,6 @@ export function webhooks(
 ): Webhooks<EmitterWebhookEvent & { octokit: Octokit }> {
   return new Webhooks({
     secret: options.secret,
-    path: "/api/github/webhooks",
     transform: async (event) => {
       if (
         !("installation" in event.payload) ||

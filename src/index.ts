@@ -1,10 +1,6 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
-import {
-  OAuthApp,
-  createNodeMiddleware as oauthNodeMiddleware,
-} from "@octokit/oauth-app";
-import { Deprecation } from "deprecation";
+import { OAuthApp } from "@octokit/oauth-app";
 
 import {
   Options,
@@ -120,10 +116,4 @@ export class App<O extends Options = Options> {
   }
 }
 
-export function createNodeMiddleware(app: App) {
-  return oauthNodeMiddleware(app.oauth, {
-    onUnhandledRequest: (request, response) => {
-      return app.webhooks.middleware(request, response);
-    },
-  });
-}
+export { createNodeMiddleware } from "./middleware/node";
