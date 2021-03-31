@@ -21,6 +21,10 @@ type OctokitType<O extends Options> = O["Octokit"] extends typeof OctokitCore
   ? InstanceType<O["Octokit"]>
   : OctokitCore;
 
+type OctokitClassType<
+  O extends Options
+> = O["Octokit"] extends typeof OctokitCore ? O["Octokit"] : OctokitCore;
+
 export class App<O extends Options = Options> {
   static VERSION = VERSION;
 
@@ -44,7 +48,7 @@ export class App<O extends Options = Options> {
   // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
   webhooks: Webhooks<{ octokit: OctokitType<O> }>;
   // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
-  oauth: OAuthApp<"github-app">;
+  oauth: OAuthApp<"github-app", OctokitClassType<O>>;
   getInstallationOctokit: GetInstallationOctokitInterface<OctokitType<O>>;
   eachInstallation: EachInstallationInterface<OctokitType<O>>;
   eachRepository: EachRepositoryInterface<OctokitType<O>>;
