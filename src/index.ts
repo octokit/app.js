@@ -106,6 +106,7 @@ export class App<O extends Options = Options> {
 
     // set app.oauth depending on whether "oauth" option has been passed
     if (options.oauth) {
+      // @ts-expect-error TODO: figure this out
       this.oauth = new OAuthApp({
         ...options.oauth,
         Octokit,
