@@ -39,6 +39,7 @@ export function createNodeMiddleware(
   return webhooksNodeMiddleware(app.webhooks, {
     path: pathPrefix + "/webhooks",
     log: logWithDefaults,
+    // @ts-expect-error TODO: figure out this error
     onUnhandledRequest: oauthNodeMiddleware(app.oauth, {
       onUnhandledRequest,
       pathPrefix: pathPrefix + "/oauth",
