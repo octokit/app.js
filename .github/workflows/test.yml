@@ -24,4 +24,4 @@ jobs:
           node-version: "${{ matrix.node_version }}"
       - run: npm ci
       - run: npm test
-      - run: npm test:typescript
+      - run: npm run test:typescript
