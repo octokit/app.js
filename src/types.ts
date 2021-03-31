@@ -21,38 +21,41 @@ export type Options = {
   };
 };
 
-export type InstallationFunctionOptions = {
-  octokit: Octokit;
+export type InstallationFunctionOptions<O> = {
+  octokit: O;
   installation: Endpoints["GET /app/installations"]["response"]["data"][0];
 };
-export type EachInstallationFunction = (
-  options: InstallationFunctionOptions
+export type EachInstallationFunction<O> = (
+  options: InstallationFunctionOptions<O>
 ) => unknown | Promise<unknown>;
 
-export interface EachInstallationInterface {
-  (callback: EachInstallationFunction): Promise<void>;
-  iterator: () => AsyncIterable<InstallationFunctionOptions>;
+export interface EachInstallationInterface<O> {
+  (callback: EachInstallationFunction<O>): Promise<void>;
+  iterator: () => AsyncIterable<InstallationFunctionOptions<O>>;
 }
 
-type EachRepositoryFunctionOptions = {
-  octokit: Octokit;
+type EachRepositoryFunctionOptions<O> = {
+  octokit: O;
   repository: Endpoints["GET /installation/repositories"]["response"]["data"]["repositories"][0];
 };
-export type EachRepositoryFunction = (
-  options: EachRepositoryFunctionOptions
+export type EachRepositoryFunction<O> = (
+  options: EachRepositoryFunctionOptions<O>
 ) => unknown | Promise<unknown>;
 export type EachRepositoryQuery = {
   installationId: number;
 };
 
-export interface EachRepositoryInterface {
-  (callback: EachRepositoryFunction): Promise<void>;
-  (query: EachRepositoryQuery, callback: EachRepositoryFunction): Promise<void>;
+export interface EachRepositoryInterface<O> {
+  (callback: EachRepositoryFunction<O>): Promise<void>;
+  (
+    query: EachRepositoryQuery,
+    callback: EachRepositoryFunction<O>
+  ): Promise<void>;
   iterator: (
     query?: EachRepositoryQuery
-  ) => AsyncIterable<EachRepositoryFunctionOptions>;
+  ) => AsyncIterable<EachRepositoryFunctionOptions<O>>;
 }
 
-export interface GetInstallationOctokitInterface {
-  (installationId: number): Promise<Octokit>;
+export interface GetInstallationOctokitInterface<O> {
+  (installationId: number): Promise<O>;
 }

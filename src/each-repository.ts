@@ -1,4 +1,5 @@
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
+import { Octokit } from "@octokit/core";
 
 import { App } from "./index";
 import {
@@ -10,13 +11,13 @@ import {
 export function eachRepositoryFactory(app: App) {
   return Object.assign(eachRepository.bind(null, app), {
     iterator: eachRepositoryIterator.bind(null, app),
-  }) as EachRepositoryInterface;
+  }) as EachRepositoryInterface<Octokit>;
 }
 
 export async function eachRepository(
   app: App,
-  queryOrCallback: EachRepositoryQuery | EachRepositoryFunction,
-  callback?: EachRepositoryFunction
+  queryOrCallback: EachRepositoryQuery | EachRepositoryFunction<Octokit>,
+  callback?: EachRepositoryFunction<Octokit>
 ) {
   const i = eachRepositoryIterator(
     app,
@@ -27,7 +28,7 @@ export async function eachRepository(
     if (callback) {
       await callback(result.value);
     } else {
-      await (queryOrCallback as EachRepositoryFunction)(result.value);
+      await (queryOrCallback as EachRepositoryFunction<Octokit>)(result.value);
     }
 
     result = await i.next();
