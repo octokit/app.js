@@ -23,7 +23,7 @@ type OctokitType<O extends Options> = O["Octokit"] extends typeof OctokitCore
 
 type OctokitClassType<
   O extends Options
-> = O["Octokit"] extends typeof OctokitCore ? O["Octokit"] : OctokitCore;
+> = O["Octokit"] extends typeof OctokitCore ? O["Octokit"] : typeof OctokitCore;
 
 export class App<O extends Options = Options> {
   static VERSION = VERSION;
@@ -41,7 +41,7 @@ export class App<O extends Options = Options> {
       }
     };
 
-    return AppWithDefaults;
+    return AppWithDefaults as typeof this;
   }
 
   octokit: OctokitCore;
@@ -106,7 +106,6 @@ export class App<O extends Options = Options> {
 
     // set app.oauth depending on whether "oauth" option has been passed
     if (options.oauth) {
-      // @ts-expect-error TODO: figure this out
       this.oauth = new OAuthApp({
         ...options.oauth,
         Octokit,
