@@ -84,4 +84,5 @@ export async function CustomOctokitFromDefaultsTest() {
   });
 
   expect<string>(app.octokit.foo);
+  expect<string>(app.oauth.octokit.foo);
 }
