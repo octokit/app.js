@@ -59,3 +59,29 @@ export async function CustomOctokitTest() {
     expect<string>(octokit.foo);
   });
 }
+
+export async function CustomOctokitFromDefaultsTest() {
+  const MyOctokit = Octokit.plugin(() => {
+    return {
+      foo: "bar",
+    };
+  });
+
+  const MyApp = App.defaults({
+    Octokit: MyOctokit,
+  });
+
+  const app = new MyApp({
+    appId: 1,
+    privateKey: "",
+    oauth: {
+      clientId: "",
+      clientSecret: "",
+    },
+    webhooks: {
+      secret: "test",
+    },
+  });
+
+  expect<string>(app.octokit.foo);
+}
