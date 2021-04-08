@@ -5,6 +5,7 @@ import { Webhooks } from "@octokit/webhooks";
 
 import {
   Options,
+  ConstructorOptions,
   EachInstallationInterface,
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
@@ -17,21 +18,25 @@ import { getInstallationOctokit } from "./get-installation-octokit";
 
 type Constructor<T> = new (...args: any[]) => T;
 
-type OctokitType<O extends Options> = O["Octokit"] extends typeof OctokitCore
-  ? InstanceType<O["Octokit"]>
+type OctokitType<
+  TOptions extends Options
+> = TOptions["Octokit"] extends typeof OctokitCore
+  ? InstanceType<TOptions["Octokit"]>
   : OctokitCore;
 
 type OctokitClassType<
-  O extends Options
-> = O["Octokit"] extends typeof OctokitCore ? O["Octokit"] : typeof OctokitCore;
+  TOptions extends Options
+> = TOptions["Octokit"] extends typeof OctokitCore
+  ? TOptions["Octokit"]
+  : typeof OctokitCore;
 
-export class App<O extends Options = Options> {
+export class App<TOptions extends Options = Options> {
   static VERSION = VERSION;
 
-  static defaults<S extends Constructor<any>>(
-    this: S,
-    defaults: Partial<Options>
-  ) {
+  static defaults<
+    TDefaults extends Options,
+    S extends Constructor<App<TDefaults>>
+  >(this: S, defaults: Partial<TDefaults>) {
     const AppWithDefaults = class extends this {
       constructor(...args: any[]) {
         super({
@@ -41,17 +46,19 @@ export class App<O extends Options = Options> {
       }
     };
 
-    return AppWithDefaults as typeof this;
+    return AppWithDefaults as typeof AppWithDefaults & typeof this;
   }
 
-  octokit: OctokitCore;
+  octokit: OctokitType<TOptions>;
   // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
-  webhooks: Webhooks<{ octokit: OctokitType<O> }>;
+  webhooks: Webhooks<{ octokit: OctokitType<TOptions> }>;
   // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
-  oauth: OAuthApp<"github-app", OctokitClassType<O>>;
-  getInstallationOctokit: GetInstallationOctokitInterface<OctokitType<O>>;
-  eachInstallation: EachInstallationInterface<OctokitType<O>>;
-  eachRepository: EachRepositoryInterface<OctokitType<O>>;
+  oauth: OAuthApp<"github-app", OctokitClassType<TOptions>>;
+  getInstallationOctokit: GetInstallationOctokitInterface<
+    OctokitType<TOptions>
+  >;
+  eachInstallation: EachInstallationInterface<OctokitType<TOptions>>;
+  eachRepository: EachRepositoryInterface<OctokitType<TOptions>>;
   log: {
     debug: (message: string, additionalInfo?: object) => void;
     info: (message: string, additionalInfo?: object) => void;
@@ -60,7 +67,7 @@ export class App<O extends Options = Options> {
     [key: string]: unknown;
   };
 
-  constructor(options: O) {
+  constructor(options: ConstructorOptions<TOptions>) {
     const Octokit = options.Octokit || OctokitCore;
 
     const authOptions = Object.assign(
@@ -80,7 +87,7 @@ export class App<O extends Options = Options> {
       authStrategy: createAppAuth,
       auth: authOptions,
       log: options.log,
-    });
+    }) as OctokitType<TOptions>;
 
     this.log = Object.assign(
       {
@@ -123,13 +130,13 @@ export class App<O extends Options = Options> {
     this.getInstallationOctokit = getInstallationOctokit.bind(
       null,
       this
-    ) as GetInstallationOctokitInterface<OctokitType<O>>;
+    ) as GetInstallationOctokitInterface<OctokitType<TOptions>>;
     this.eachInstallation = eachInstallationFactory(
       this
-    ) as EachInstallationInterface<OctokitType<O>>;
+    ) as EachInstallationInterface<OctokitType<TOptions>>;
     this.eachRepository = eachRepositoryFactory(
       this
-    ) as EachRepositoryInterface<OctokitType<O>>;
+    ) as EachRepositoryInterface<OctokitType<TOptions>>;
   }
 }
 

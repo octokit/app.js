@@ -2,8 +2,8 @@ import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
 
 export type Options = {
-  appId: number | string;
-  privateKey: string;
+  appId?: number | string;
+  privateKey?: string;
   webhooks?: {
     secret: string;
   };
@@ -19,6 +19,14 @@ export type Options = {
     warn: (...data: any[]) => void;
     error: (...data: any[]) => void;
   };
+};
+
+// workaround for https://github.com/octokit/app.js/pull/227
+// we cannot make appId & privateKey required on Options because
+// it would break inheritance of the Octokit option set via App.defaults({ Octokit })
+export type ConstructorOptions<TOptions extends Options> = TOptions & {
+  appId: number | string;
+  privateKey: string;
 };
 
 export type InstallationFunctionOptions<O> = {
