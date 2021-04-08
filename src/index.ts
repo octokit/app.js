@@ -53,7 +53,10 @@ export class App<TOptions extends Options = Options> {
   // @ts-ignore calling app.webhooks will throw a helpful error when options.webhooks is not set
   webhooks: Webhooks<{ octokit: OctokitType<TOptions> }>;
   // @ts-ignore calling app.oauth will throw a helpful error when options.oauth is not set
-  oauth: OAuthApp<"github-app", OctokitClassType<TOptions>>;
+  oauth: OAuthApp<{
+    clientType: "github-app";
+    Octokit: OctokitClassType<TOptions>;
+  }>;
   getInstallationOctokit: GetInstallationOctokitInterface<
     OctokitType<TOptions>
   >;
@@ -68,7 +71,8 @@ export class App<TOptions extends Options = Options> {
   };
 
   constructor(options: ConstructorOptions<TOptions>) {
-    const Octokit = options.Octokit || OctokitCore;
+    const Octokit = (options.Octokit ||
+      OctokitCore) as OctokitClassType<TOptions>;
 
     const authOptions = Object.assign(
       {
@@ -115,6 +119,7 @@ export class App<TOptions extends Options = Options> {
     if (options.oauth) {
       this.oauth = new OAuthApp({
         ...options.oauth,
+        clientType: "github-app",
         Octokit,
       });
     } else {
