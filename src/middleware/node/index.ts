@@ -7,7 +7,7 @@ type ServerResponse = any;
 import { createNodeMiddleware as oauthNodeMiddleware } from "@octokit/oauth-app";
 import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhooks";
 
-import { App } from "../..";
+import { App } from "../../index";
 import { onUnhandledRequestDefault } from "./on-unhandled-request-default";
 import { Options } from "../../types";
 
