@@ -31,7 +31,7 @@
     "@pika/plugin-build-node": "^0.9.1",
     "@pika/plugin-ts-standard-pkg": "^0.9.1",
     "@types/jest": "^26.0.0",
-    "@types/node": "^14.14.6",
+    "@types/node": "^14.14.37",
     "@types/node-fetch": "^2.5.8",
     "fetch-mock": "^9.10.7",
     "jest": "^26.6.1",
