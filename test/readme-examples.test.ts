@@ -82,8 +82,8 @@ describe("README examples", () => {
     });
 
     const app = new MyApp({
-      appId: 1,
-      privateKey: "",
+      appId: APP_ID,
+      privateKey: PRIVATE_KEY,
     });
 
     const { data } = await app.octokit.request("GET /");
