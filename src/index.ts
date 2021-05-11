@@ -18,17 +18,15 @@ import { getInstallationOctokit } from "./get-installation-octokit";
 
 type Constructor<T> = new (...args: any[]) => T;
 
-type OctokitType<
-  TOptions extends Options
-> = TOptions["Octokit"] extends typeof OctokitCore
-  ? InstanceType<TOptions["Octokit"]>
-  : OctokitCore;
+type OctokitType<TOptions extends Options> =
+  TOptions["Octokit"] extends typeof OctokitCore
+    ? InstanceType<TOptions["Octokit"]>
+    : OctokitCore;
 
-type OctokitClassType<
-  TOptions extends Options
-> = TOptions["Octokit"] extends typeof OctokitCore
-  ? TOptions["Octokit"]
-  : typeof OctokitCore;
+type OctokitClassType<TOptions extends Options> =
+  TOptions["Octokit"] extends typeof OctokitCore
+    ? TOptions["Octokit"]
+    : typeof OctokitCore;
 
 export class App<TOptions extends Options = Options> {
   static VERSION = VERSION;
