@@ -2,7 +2,7 @@
 
 > GitHub App toolset for Node.js
 
-[![@latest](https://img.shields.io/npm/v/@octokit/app.svg)](https://www.npmjs.com/package/@octokit/app)
+[![@latest](https://img.shields.io/npm/v/@octoher/app.svg)](https://www.npmjs.com/package/@octokit/app)
 [![Build Status](https://github.com/octokit/app.js/workflows/Test/badge.svg)](https://github.com/octokit/app.js/actions?workflow=Test)
 
 <!-- toc -->
