@@ -317,7 +317,7 @@ By default, all middlewares expose the following routes
 
 ### `createNodeMiddleware(app, options)`
 
-Native http server middleware for Node.js
+Middleware for Node's built in http server or [`express`](https://expressjs.com/).
 
 ```js
 const { App, createNodeMiddleware } = require("@octokit/app");
