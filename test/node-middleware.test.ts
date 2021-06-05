@@ -1,6 +1,9 @@
 import { createServer } from "http";
 import fetch from "node-fetch";
 
+// import without types
+const express = require("express");
+
 import { App, createNodeMiddleware } from "../src";
 
 const APP_ID = 1;
@@ -58,5 +61,164 @@ describe("createNodeMiddleware()", () => {
     );
 
     server.close();
+  });
+
+  test("express middleware no mount path 404", async () => {
+    const expressApp = express();
+
+    expressApp.use(
+      createNodeMiddleware(
+        new App({
+          appId: APP_ID,
+          privateKey: PRIVATE_KEY,
+          webhooks: {
+            secret: "mysecret",
+          },
+          oauth: {
+            clientId: "",
+            clientSecret: "",
+          },
+        })
+      )
+    );
+    expressApp.all("*", (_request: any, response: any) =>
+      response.status(404).send("Nope")
+    );
+
+    const server = expressApp.listen();
+
+    const { port } = server.address();
+
+    const response = await fetch(`http://localhost:${port}/test`, {
+      method: "POST",
+      body: "{}",
+    });
+
+    await expect(response.text()).resolves.toBe("Nope");
+    expect(response.status).toEqual(404);
+
+    server.close();
+  });
+
+  test("express middleware no mount path no next", async () => {
+    const app = express();
+
+    app.all("/foo", (_request: any, response: any) => response.end("ok\n"));
+    app.use(
+      createNodeMiddleware(
+        new App({
+          appId: APP_ID,
+          privateKey: PRIVATE_KEY,
+          webhooks: {
+            secret: "mysecret",
+          },
+          oauth: {
+            clientId: "",
+            clientSecret: "",
+          },
+        })
+      )
+    );
+
+    const server = app.listen();
+
+    const { port } = server.address();
+
+    const response = await fetch(`http://localhost:${port}/test`, {
+      method: "POST",
+      body: "{}",
+    });
+
+    await expect(response.text()).resolves.toContain("Cannot POST /test");
+    expect(response.status).toEqual(404);
+
+    const responseForFoo = await fetch(`http://localhost:${port}/foo`, {
+      method: "POST",
+      body: "{}",
+    });
+
+    await expect(responseForFoo.text()).resolves.toContain("ok\n");
+    expect(responseForFoo.status).toEqual(200);
+
+    server.close();
+  });
+
+  test("express middleware no mount path with options.pathPrefix", async () => {
+    const app = express();
+
+    app.use(
+      createNodeMiddleware(
+        new App({
+          appId: APP_ID,
+          privateKey: PRIVATE_KEY,
+          webhooks: {
+            secret: "mysecret",
+          },
+          oauth: {
+            clientId: "",
+            clientSecret: "",
+          },
+        }),
+        { pathPrefix: "/test" }
+      )
+    );
+    app.all("*", (_request: any, response: any) =>
+      response.status(404).send("Nope")
+    );
+
+    const server = app.listen();
+
+    const { port } = server.address();
+
+    const { status } = await fetch(
+      `http://localhost:${port}/test/oauth/login`,
+      {
+        redirect: "manual",
+      }
+    );
+
+    server.close();
+
+    expect(status).toEqual(302);
+  });
+
+  test("express middleware with mount path with options.pathPrefix", async () => {
+    const app = express();
+
+    app.use(
+      "/test",
+      createNodeMiddleware(
+        new App({
+          appId: APP_ID,
+          privateKey: PRIVATE_KEY,
+          webhooks: {
+            secret: "mysecret",
+          },
+          oauth: {
+            clientId: "",
+            clientSecret: "",
+          },
+        }),
+        { pathPrefix: "/test" }
+      )
+    );
+    app.all("*", (_request: any, response: any) =>
+      response.status(404).send("Nope")
+    );
+
+    const server = app.listen();
+
+    const { port } = server.address();
+
+    const { status } = await fetch(
+      `http://localhost:${port}/test/test/oauth/login`,
+      {
+        redirect: "manual",
+      }
+    );
+
+    server.close();
+
+    expect(status).toEqual(302);
   });
 });
