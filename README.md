@@ -266,7 +266,7 @@ See https://github.com/octokit/core.js#logging. Customize using the [`log` const
 ### `app.getInstallationOctokit`
 
 ```js
-const { octokit } = await app.getInstallationOctokit(123);
+const octokit = await app.getInstallationOctokit(123);
 ```
 
 ### `app.eachInstallation`
