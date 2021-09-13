@@ -179,3 +179,94 @@ describe("app.eachRepository", () => {
     expect(counter).toEqual(1);
   });
 });
+
+describe("app.eachRepository.iterator", () => {
+  let app: InstanceType<typeof App>;
+  let mock: typeof fetchMock;
+
+  beforeEach(() => {
+    MockDate.set(0);
+    mock = fetchMock.sandbox();
+
+    app = new App({
+      appId: APP_ID,
+      privateKey: PRIVATE_KEY,
+      oauth: {
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+      },
+      webhooks: {
+        secret: WEBHOOK_SECRET,
+      },
+      Octokit: Octokit.defaults({
+        request: {
+          fetch: mock,
+        },
+      }),
+    });
+  });
+
+  test("app.eachRepository.iterator()", async () => {
+    mock
+      .getOnce(
+        "path:/app/installations",
+        [
+          {
+            id: "123",
+          },
+        ],
+        {
+          headers: {
+            authorization: `bearer ${BEARER}`,
+          },
+        }
+      )
+      .postOnce(
+        "path:/app/installations/123/access_tokens",
+        {
+          token: "secret123",
+          expires_at: "1970-01-01T01:00:00.000Z",
+          permissions: {
+            metadata: "read",
+          },
+          repository_selection: "all",
+        },
+        {
+          headers: {
+            authorization: `bearer ${BEARER}`,
+          },
+        }
+      )
+      .getOnce("path:/installation/repositories", {
+        total_count: 1,
+        repositories: [
+          {
+            owner: {
+              login: "octokit",
+            },
+            name: "octokit.js",
+            full_name: "octokit/octokit.js",
+          },
+        ],
+      })
+      .postOnce("path:/repos/octokit/octokit.js/dispatches", 204, {
+        body: { event_type: "my_event", client_payload: { foo: "bar" } },
+      });
+
+    for await (const { octokit, repository } of app.eachRepository.iterator()) {
+      // https://docs.github.com/en/rest/reference/repos#create-a-repository-dispatch-event
+      await octokit.request("POST /repos/{owner}/{repo}/dispatches", {
+        owner: repository.owner.login,
+        repo: repository.name,
+        event_type: "my_event",
+        client_payload: {
+          foo: "bar",
+        },
+      });
+
+      expect(repository.full_name).toEqual("octokit/octokit.js");
+    }
+
+    expect(mock.done()).toBe(true);
+  });
+});
