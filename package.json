@@ -7,7 +7,7 @@
   "description": "GitHub Apps toolset for Node.js",
   "main": "index.js",
   "scripts": {
-    "build": "pika build",
+    "build": "pika-pack build",
     "lint": "prettier --check {src,test}/* *.md package.json",
     "lint:fix": "prettier --write {src,test}/* *.md package.json",
     "pretest": "npm run -s lint",
