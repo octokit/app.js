@@ -43,6 +43,9 @@
     "ts-jest": "^28.0.0",
     "typescript": "^4.0.5"
   },
+  "engines": {
+    "node": ">= 14"
+  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
@@ -61,7 +64,10 @@
         "@pika/plugin-ts-standard-pkg"
       ],
       [
-        "@pika/plugin-build-node"
+        "@pika/plugin-build-node",
+        {
+          "minNodeVersion": "14"
+        }
       ]
     ]
   },
