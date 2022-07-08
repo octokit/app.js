@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@octokit/auth-app": "^4.0.0",
-    "@octokit/auth-unauthenticated": "^2.0.4",
+    "@octokit/auth-unauthenticated": "^3.0.0",
     "@octokit/core": "^3.4.0",
     "@octokit/oauth-app": "^3.3.2",
     "@octokit/plugin-paginate-rest": "^2.13.3",
