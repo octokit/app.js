@@ -18,7 +18,7 @@
   "author": "Gregor Martynus (https://github.com/gr2m)",
   "license": "MIT",
   "dependencies": {
-    "@octokit/auth-app": "^3.3.0",
+    "@octokit/auth-app": "^4.0.0",
     "@octokit/auth-unauthenticated": "^2.0.4",
     "@octokit/core": "^3.4.0",
     "@octokit/oauth-app": "^3.3.2",
