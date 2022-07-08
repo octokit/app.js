@@ -267,7 +267,6 @@ describe("README examples", () => {
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET,
             code: "code123",
-            state: "state123",
           },
         }
       )
