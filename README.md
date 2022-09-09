@@ -321,6 +321,7 @@ Middleware for Node's built in http server or [`express`](https://expressjs.com/
 
 ```js
 const { App, createNodeMiddleware } = require("@octokit/app");
+
 const app = new App({
   appId: 123,
   privateKey: "-----BEGIN PRIVATE KEY-----\n...",
@@ -334,10 +335,19 @@ const app = new App({
 });
 
 const middleware = createNodeMiddleware(app);
-
-require("http").createServer(middleware).listen(3000);
+require("http")
+  .createServer(async (req, res) => {
+    // `middleware` returns `false` when `req` is unhandled (beyond `/api/github`)
+    if (await middleware(req, res)) return;
+    res.writeHead(404);
+    res.end();
+  })
+  .listen(3000);
 // can now receive user authorization callbacks at /api/github/*
 ```
+
+The middleware returned from `createNodeMiddleware` can also serve as an
+`Express.js` middleware directly.
 
 <table width="100%">
   <thead align=left>
@@ -391,31 +401,6 @@ Used for internal logging. Defaults to [`console`](https://developer.mozilla.org
 
 </td>
     </tr>
-    <tr>
-      <th>
-        <code>options.onUnhandledRequest</code>
-      </th>
-      <th>
-        <code>function</code>
-      </th>
-      <td>
-
-Defaults to
-
-```js
-function onUnhandledRequest(request, response) {
-  response.writeHead(400, {
-    "content-type": "application/json",
-  });
-  response.end(
-    JSON.stringify({
-      error: error.message,
-    })
-  );
-}
-```
-
-</td></tr>
   </tbody>
 </table>
 
