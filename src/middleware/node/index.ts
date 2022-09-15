@@ -4,20 +4,19 @@
 type IncomingMessage = any;
 type ServerResponse = any;
 
-import { createNodeMiddleware as oauthNodeMiddleware } from "@octokit/oauth-app";
+import {
+  createNodeMiddleware as oauthNodeMiddleware,
+  sendNodeResponse,
+  unknownRouteResponse,
+} from "@octokit/oauth-app";
 import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhooks";
 
 import { App } from "../../index";
-import { onUnhandledRequestDefault } from "./on-unhandled-request-default";
 import { Options } from "../../types";
 
 export type MiddlewareOptions = {
   pathPrefix?: string;
   log?: Options["log"];
-  onUnhandledRequest?: (
-    request: IncomingMessage,
-    response: ServerResponse
-  ) => void;
 };
 
 function noop() {}
@@ -37,7 +36,6 @@ export function createNodeMiddleware(
   );
 
   const optionsWithDefaults = {
-    onUnhandledRequest: onUnhandledRequestDefault,
     pathPrefix: "/api/github",
     ...options,
     log,
@@ -46,41 +44,41 @@ export function createNodeMiddleware(
   const webhooksMiddleware = webhooksNodeMiddleware(app.webhooks, {
     path: optionsWithDefaults.pathPrefix + "/webhooks",
     log,
-    onUnhandledRequest: optionsWithDefaults.onUnhandledRequest,
   });
 
   const oauthMiddleware = oauthNodeMiddleware(app.oauth, {
     pathPrefix: optionsWithDefaults.pathPrefix + "/oauth",
-    onUnhandledRequest: optionsWithDefaults.onUnhandledRequest,
   });
 
-  return middleware.bind(null, optionsWithDefaults, {
+  return middleware.bind(
+    null,
+    optionsWithDefaults.pathPrefix,
     webhooksMiddleware,
-    oauthMiddleware,
-  });
+    oauthMiddleware
+  );
 }
 
 export async function middleware(
-  options: Required<MiddlewareOptions>,
-  { webhooksMiddleware, oauthMiddleware }: any,
+  pathPrefix: string,
+  webhooksMiddleware: any,
+  oauthMiddleware: any,
   request: IncomingMessage,
   response: ServerResponse,
   next?: Function
-) {
+): Promise<boolean> {
   const { pathname } = new URL(request.url as string, "http://localhost");
 
-  if (pathname === `${options.pathPrefix}/webhooks`) {
-    return webhooksMiddleware(request, response, next);
+  if (pathname.startsWith(`${pathPrefix}/`)) {
+    if (pathname === `${pathPrefix}/webhooks`) {
+      webhooksMiddleware(request, response);
+    } else if (pathname.startsWith(`${pathPrefix}/oauth/`)) {
+      oauthMiddleware(request, response);
+    } else {
+      sendNodeResponse(unknownRouteResponse(request), response);
+    }
+    return true;
+  } else {
+    next?.();
+    return false;
   }
-  if (pathname.startsWith(`${options.pathPrefix}/oauth/`)) {
-    return oauthMiddleware(request, response, next);
-  }
-
-  const isExpressMiddleware = typeof next === "function";
-  if (isExpressMiddleware) {
-    // @ts-ignore `next` must be a function as we check two lines above
-    return next();
-  }
-
-  return options.onUnhandledRequest(request, response);
 }

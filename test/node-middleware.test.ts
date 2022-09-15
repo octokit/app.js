@@ -36,29 +36,98 @@ x//0u+zd/R/QRUzLOw4N72/Hu+UG6MNt5iDZFCtapRaKt6OvSBwy8w==
 -----END RSA PRIVATE KEY-----`;
 
 describe("createNodeMiddleware()", () => {
-  test("unknown route", async () => {
-    const app = new App({
-      appId: APP_ID,
-      privateKey: PRIVATE_KEY,
-      webhooks: {
-        secret: "mysecret",
-      },
-      oauth: {
-        clientId: "",
-        clientSecret: "",
-      },
-    });
-
-    const server = createServer(createNodeMiddleware(app)).listen();
+  test("unknown route (outside pathPrefix)", async () => {
+    const middleware = createNodeMiddleware({} as unknown as App);
+    const server = createServer(async (req, res) => {
+      if (!(await middleware(req, res))) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.write("Not found.");
+        res.end();
+      }
+    }).listen();
     // @ts-expect-error complains about { port } although it's included in returned AddressInfo interface
     const { port } = server.address();
 
     const response = await fetch(`http://localhost:${port}/unknown-route`);
 
     expect(response.status).toEqual(404);
-    await expect(response.text()).resolves.toMatch(
-      /Unknown route: GET \/unknown-route/
+    expect(response.headers.get("Content-Type")).toBe("text/plain");
+    await expect(response.text()).resolves.toBe("Not found.");
+
+    server.close();
+  });
+
+  test("unknown route (within pathPrefix)", async () => {
+    const middleware = createNodeMiddleware({} as unknown as App);
+    const server = createServer(async (req, res) => {
+      if (!(await middleware(req, res))) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.write("Not found.");
+        res.end();
+      }
+    }).listen();
+    // @ts-expect-error complains about { port } although it's included in returned AddressInfo interface
+    const { port } = server.address();
+
+    const response = await fetch(
+      `http://localhost:${port}/api/github/unknown-route`
     );
+
+    expect(response.status).toEqual(404);
+    expect(response.headers.get("Content-Type")).toBe("application/json");
+    await expect(response.json()).resolves.toEqual({
+      error: "Unknown route: GET /api/github/unknown-route",
+    });
+
+    server.close();
+  });
+
+  test("unknown route (within webhooks path)", async () => {
+    const middleware = createNodeMiddleware({} as unknown as App);
+    const server = createServer(async (req, res) => {
+      if (!(await middleware(req, res))) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.write("Not found.");
+        res.end();
+      }
+    }).listen();
+    // @ts-expect-error complains about { port } although it's included in returned AddressInfo interface
+    const { port } = server.address();
+
+    const response = await fetch(
+      `http://localhost:${port}/api/github/webhooks`
+    );
+
+    expect(response.status).toEqual(404);
+    expect(response.headers.get("Content-Type")).toBe("application/json");
+    await expect(response.json()).resolves.toEqual({
+      error: "Unknown route: GET /api/github/webhooks",
+    });
+
+    server.close();
+  });
+
+  test("unknown route (within oauth pathPrefix)", async () => {
+    const middleware = createNodeMiddleware({} as unknown as App);
+    const server = createServer(async (req, res) => {
+      if (!(await middleware(req, res))) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.write("Not found.");
+        res.end();
+      }
+    }).listen();
+    // @ts-expect-error complains about { port } although it's included in returned AddressInfo interface
+    const { port } = server.address();
+
+    const response = await fetch(
+      `http://localhost:${port}/api/github/oauth/unknown-route`
+    );
+
+    expect(response.status).toEqual(404);
+    expect(response.headers.get("Content-Type")).toBe("application/json");
+    await expect(response.json()).resolves.toEqual({
+      error: "Unknown route: GET /api/github/oauth/unknown-route",
+    });
 
     server.close();
   });
