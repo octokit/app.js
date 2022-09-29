@@ -72,7 +72,9 @@ console.log("authenticated as %s", data.name);
 for await (const { installation } of app.eachInstallation.iterator()) {
   // do something with each authenticated Octokit instance per installation
   const installationId = installation.id;
-  for await (const { octokit, repository } of app.eachRepository.iterator({ installationId })) {
+  for await (const { octokit, repository } of app.eachRepository.iterator({
+    installationId,
+  })) {
     await octokit.request("POST /repos/{owner}/{repo}/dispatches", {
       owner: repository.owner.login,
       repo: repository.name,
