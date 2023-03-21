@@ -38,7 +38,7 @@
     "jest": "^29.0.0",
     "mockdate": "^3.0.2",
     "node-fetch": "^2.6.7",
-    "prettier": "2.8.4",
+    "prettier": "2.8.6",
     "semantic-release-plugin-update-version-in-files": "^1.0.0",
     "ts-jest": "^29.0.0",
     "typescript": "^5.0.0"
