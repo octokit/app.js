@@ -24,7 +24,7 @@
     "@octokit/oauth-app": "^4.0.7",
     "@octokit/plugin-paginate-rest": "^6.0.0",
     "@octokit/types": "^9.0.0",
-    "@octokit/webhooks": "^10.0.0"
+    "@octokit/webhooks": "^10.7.3"
   },
   "devDependencies": {
     "@pika/pack": "^0.3.7",
