@@ -2,7 +2,7 @@ name: Test
 "on":
   push:
     branches:
-      - master
+      - main
   pull_request:
     types:
       - opened
@@ -17,12 +17,14 @@ jobs:
           - 16
           - 18
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@9f3a02bbd17adc05b078145bb8f676c84be77e89
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
           cache: npm
+      - run: npm install --global npm
+        if: ${{ matrix.node_version == 14 }}
       - run: npm ci
       - run: npm test
   test:
@@ -31,7 +33,7 @@ jobs:
     steps:
       - run: exit 1
         if: ${{ needs.test_matrix.result != 'success' }}
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      - uses: actions/checkout@v3
       - run: npm ci
       - run: npm run test:typescript
       - run: npm run lint
