@@ -1,5 +1,4 @@
 import { createServer } from "http";
-import fetch from "node-fetch";
 
 // import without types
 const express = require("express");
