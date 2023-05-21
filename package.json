@@ -44,7 +44,7 @@
     "typescript": "^5.0.0"
   },
   "engines": {
-    "node": ">= 14"
+    "node": ">= 18"
   },
   "jest": {
     "preset": "ts-jest",
@@ -66,7 +66,7 @@
       [
         "@pika/plugin-build-node",
         {
-          "minNodeVersion": "14"
+          "minNodeVersion": 18
         }
       ]
     ]
