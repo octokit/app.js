@@ -27,7 +27,7 @@
     "@octokit/webhooks": "^10.0.0"
   },
   "devDependencies": {
-    "@octokit/tsconfig": "^2.0.0",
+    "@octokit/tsconfig": "^1.0.2",
     "@types/jest": "^29.0.0",
     "@types/node": "^18.0.0",
     "@types/node-fetch": "^2.5.8",
@@ -47,14 +47,7 @@
     "node": ">= 14"
   },
   "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx)$": [
-        "ts-jest",
-        {
-          "tsconfig": "test/tsconfig.test.json"
-        }
-      ]
-    },
+    "preset": "ts-jest",
     "testEnvironment": "node",
     "coverageThreshold": {
       "global": {

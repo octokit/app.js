@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import type { Endpoints } from "@octokit/types";
+import { Endpoints } from "@octokit/types";
 
 export type Options = {
   appId?: number | string;

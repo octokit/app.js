@@ -2,7 +2,7 @@ import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 import { Octokit } from "@octokit/core";
 
 import { App } from "./index";
-import type {
+import {
   EachRepositoryFunction,
   EachRepositoryInterface,
   EachRepositoryQuery,

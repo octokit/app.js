@@ -2,10 +2,7 @@ import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 import { Octokit } from "@octokit/core";
 
 import { App } from "./index";
-import type {
-  EachInstallationFunction,
-  EachInstallationInterface,
-} from "./types";
+import { EachInstallationFunction, EachInstallationInterface } from "./types";
 import { getInstallationOctokit } from "./get-installation-octokit";
 
 export function eachInstallationFactory(app: App) {
