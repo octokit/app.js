@@ -9,7 +9,7 @@ import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhook
 
 import { App } from "../../index";
 import { onUnhandledRequestDefault } from "./on-unhandled-request-default";
-import { Options } from "../../types";
+import type { Options } from "../../types";
 
 export type MiddlewareOptions = {
   pathPrefix?: string;
