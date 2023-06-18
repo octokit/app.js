@@ -3,7 +3,7 @@ import { createAppAuth } from "@octokit/auth-app";
 import { OAuthApp } from "@octokit/oauth-app";
 import { Webhooks } from "@octokit/webhooks";
 
-import {
+import type {
   Options,
   ConstructorOptions,
   EachInstallationInterface,

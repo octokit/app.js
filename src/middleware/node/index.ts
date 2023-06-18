@@ -12,7 +12,7 @@ import {
 import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhooks";
 
 import { App } from "../../index";
-import { Options } from "../../types";
+import type { Options } from "../../types";
 
 export type MiddlewareOptions = {
   pathPrefix?: string;

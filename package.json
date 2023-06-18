@@ -27,10 +27,10 @@
     "@octokit/webhooks": "^11.0.0"
   },
   "devDependencies": {
-    "@octokit/tsconfig": "^1.0.2",
+    "@octokit/tsconfig": "^2.0.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^18.0.0",
-    "esbuild": "^0.17.16",
+    "esbuild": "^0.18.0",
     "express": "^4.17.1",
     "fetch-mock": "^9.10.7",
     "glob": "^10.0.0",
@@ -45,7 +45,14 @@
     "node": ">= 18"
   },
   "jest": {
-    "preset": "ts-jest",
+    "transform": {
+      "^.+\\.(ts|tsx)$": [
+        "ts-jest",
+        {
+          "tsconfig": "test/tsconfig.test.json"
+        }
+      ]
+    },
     "testEnvironment": "node",
     "coverageThreshold": {
       "global": {
