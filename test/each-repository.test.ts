@@ -78,7 +78,7 @@ describe("app.eachRepository", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .postOnce(
         "path:/app/installations/123/access_tokens",
@@ -94,7 +94,7 @@ describe("app.eachRepository", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .getOnce("path:/installation/repositories", {
         total_count: 1,
@@ -120,7 +120,7 @@ describe("app.eachRepository", () => {
             login: "octokit",
           },
           name: "app.js",
-        })
+        }),
       );
       counter++;
     });
@@ -143,7 +143,7 @@ describe("app.eachRepository", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .getOnce("path:/installation/repositories", {
         total_count: 1,
@@ -171,10 +171,10 @@ describe("app.eachRepository", () => {
               login: "octokit",
             },
             name: "app.js",
-          })
+          }),
         );
         counter++;
-      }
+      },
     );
     expect(counter).toEqual(1);
   });
@@ -219,7 +219,7 @@ describe("app.eachRepository.iterator", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .postOnce(
         "path:/app/installations/123/access_tokens",
@@ -235,7 +235,7 @@ describe("app.eachRepository.iterator", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .getOnce("path:/installation/repositories", {
         total_count: 1,

@@ -57,7 +57,7 @@ describe("createNodeMiddleware()", () => {
 
     expect(response.status).toEqual(404);
     await expect(response.text()).resolves.toMatch(
-      /Unknown route: GET \/unknown-route/
+      /Unknown route: GET \/unknown-route/,
     );
 
     server.close();
@@ -78,11 +78,11 @@ describe("createNodeMiddleware()", () => {
             clientId: "",
             clientSecret: "",
           },
-        })
-      )
+        }),
+      ),
     );
     expressApp.all("*", (_request: any, response: any) =>
-      response.status(404).send("Nope")
+      response.status(404).send("Nope"),
     );
 
     const server = expressApp.listen();
@@ -116,8 +116,8 @@ describe("createNodeMiddleware()", () => {
             clientId: "",
             clientSecret: "",
           },
-        })
-      )
+        }),
+      ),
     );
 
     const server = app.listen();
@@ -159,11 +159,11 @@ describe("createNodeMiddleware()", () => {
             clientSecret: "",
           },
         }),
-        { pathPrefix: "/test" }
-      )
+        { pathPrefix: "/test" },
+      ),
     );
     app.all("*", (_request: any, response: any) =>
-      response.status(404).send("Nope")
+      response.status(404).send("Nope"),
     );
 
     const server = app.listen();
@@ -174,7 +174,7 @@ describe("createNodeMiddleware()", () => {
       `http://localhost:${port}/test/oauth/login`,
       {
         redirect: "manual",
-      }
+      },
     );
 
     server.close();
@@ -199,11 +199,11 @@ describe("createNodeMiddleware()", () => {
             clientSecret: "",
           },
         }),
-        { pathPrefix: "/test" }
-      )
+        { pathPrefix: "/test" },
+      ),
     );
     app.all("*", (_request: any, response: any) =>
-      response.status(404).send("Nope")
+      response.status(404).send("Nope"),
     );
 
     const server = app.listen();
@@ -214,7 +214,7 @@ describe("createNodeMiddleware()", () => {
       `http://localhost:${port}/test/test/oauth/login`,
       {
         redirect: "manual",
-      }
+      },
     );
 
     server.close();

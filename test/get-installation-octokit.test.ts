@@ -81,7 +81,7 @@ describe("app.getInstallationOctokit", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .getOnce(
         "path:/repos/octokit/app.js",
@@ -90,7 +90,7 @@ describe("app.getInstallationOctokit", () => {
           headers: {
             authorization: `token secret123`,
           },
-        }
+        },
       );
 
     const octokit = await app.getInstallationOctokit(123);

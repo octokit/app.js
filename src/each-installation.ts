@@ -16,7 +16,7 @@ export function eachInstallationFactory(app: App) {
 
 export async function eachInstallation(
   app: App,
-  callback: EachInstallationFunction<Octokit>
+  callback: EachInstallationFunction<Octokit>,
 ) {
   const i = eachInstallationIterator(app)[Symbol.asyncIterator]();
   let result = await i.next();
@@ -32,14 +32,14 @@ export function eachInstallationIterator(app: App) {
     async *[Symbol.asyncIterator]() {
       const iterator = composePaginateRest.iterator(
         app.octokit,
-        "GET /app/installations"
+        "GET /app/installations",
       );
 
       for await (const { data: installations } of iterator) {
         for (const installation of installations) {
           const installationOctokit = await getInstallationOctokit(
             app,
-            installation.id
+            installation.id,
           );
 
           yield { octokit: installationOctokit, installation };

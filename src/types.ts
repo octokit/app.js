@@ -34,7 +34,7 @@ export type InstallationFunctionOptions<O> = {
   installation: Endpoints["GET /app/installations"]["response"]["data"][0];
 };
 export type EachInstallationFunction<O> = (
-  options: InstallationFunctionOptions<O>
+  options: InstallationFunctionOptions<O>,
 ) => unknown | Promise<unknown>;
 
 export interface EachInstallationInterface<O> {
@@ -47,7 +47,7 @@ type EachRepositoryFunctionOptions<O> = {
   repository: Endpoints["GET /installation/repositories"]["response"]["data"]["repositories"][0];
 };
 export type EachRepositoryFunction<O> = (
-  options: EachRepositoryFunctionOptions<O>
+  options: EachRepositoryFunctionOptions<O>,
 ) => unknown | Promise<unknown>;
 export type EachRepositoryQuery = {
   installationId: number;
@@ -57,10 +57,10 @@ export interface EachRepositoryInterface<O> {
   (callback: EachRepositoryFunction<O>): Promise<void>;
   (
     query: EachRepositoryQuery,
-    callback: EachRepositoryFunction<O>
+    callback: EachRepositoryFunction<O>,
   ): Promise<void>;
   iterator: (
-    query?: EachRepositoryQuery
+    query?: EachRepositoryQuery,
   ) => AsyncIterable<EachRepositoryFunctionOptions<O>>;
 }
 

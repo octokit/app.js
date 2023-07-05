@@ -17,11 +17,11 @@ export function eachRepositoryFactory(app: App) {
 export async function eachRepository(
   app: App,
   queryOrCallback: EachRepositoryQuery | EachRepositoryFunction<Octokit>,
-  callback?: EachRepositoryFunction<Octokit>
+  callback?: EachRepositoryFunction<Octokit>,
 ) {
   const i = eachRepositoryIterator(
     app,
-    callback ? (queryOrCallback as EachRepositoryQuery) : undefined
+    callback ? (queryOrCallback as EachRepositoryQuery) : undefined,
   )[Symbol.asyncIterator]();
   let result = await i.next();
   while (!result.done) {
@@ -54,7 +54,7 @@ export function eachRepositoryIterator(app: App, query?: EachRepositoryQuery) {
       for await (const { octokit } of iterator) {
         const repositoriesIterator = composePaginateRest.iterator(
           octokit,
-          "GET /installation/repositories"
+          "GET /installation/repositories",
         );
 
         for await (const { data: repositories } of repositoriesIterator) {
