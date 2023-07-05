@@ -89,7 +89,7 @@ app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
       repo: payload.repository.name,
       issue_number: payload.issue.number,
       body: "Hello World!",
-    }
+    },
   );
 });
 
@@ -413,7 +413,7 @@ function onUnhandledRequest(request, response) {
   response.end(
     JSON.stringify({
       error: error.message,
-    })
+    }),
   );
 }
 ```
