@@ -46,7 +46,7 @@ export async function CustomOctokitTest() {
     expect<string>(octokit.foo);
   }
   await app.eachRepository({ installationId: 1 }, ({ octokit }) =>
-    expect<string>(octokit.foo)
+    expect<string>(octokit.foo),
   );
 
   app.webhooks.on("push", ({ octokit }) => {

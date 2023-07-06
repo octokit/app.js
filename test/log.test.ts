@@ -87,8 +87,8 @@ describe("app.log", () => {
         {
           log: logOption,
         },
-        options
-      )
+        options,
+      ),
     );
 
     app.log.debug("test");

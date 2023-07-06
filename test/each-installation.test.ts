@@ -78,7 +78,7 @@ describe("app.eachInstallation", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .postOnce(
         "path:/app/installations/123/access_tokens",
@@ -94,7 +94,7 @@ describe("app.eachInstallation", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       );
 
     let counter = 0;
