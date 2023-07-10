@@ -404,6 +404,7 @@ Used for internal logging. Defaults to [`console`](https://developer.mozilla.org
 
       </td>
     </tr>
+
   </tbody>
 </table>
 

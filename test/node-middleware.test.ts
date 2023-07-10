@@ -69,7 +69,7 @@ describe("createNodeMiddleware()", () => {
     const { port } = server.address();
 
     const response = await fetch(
-      `http://localhost:${port}/api/github/unknown-route`
+      `http://localhost:${port}/api/github/unknown-route`,
     );
 
     expect(response.status).toEqual(404);
@@ -94,7 +94,7 @@ describe("createNodeMiddleware()", () => {
     const { port } = server.address();
 
     const response = await fetch(
-      `http://localhost:${port}/api/github/webhooks`
+      `http://localhost:${port}/api/github/webhooks`,
     );
 
     expect(response.status).toEqual(404);
@@ -119,7 +119,7 @@ describe("createNodeMiddleware()", () => {
     const { port } = server.address();
 
     const response = await fetch(
-      `http://localhost:${port}/api/github/oauth/unknown-route`
+      `http://localhost:${port}/api/github/oauth/unknown-route`,
     );
 
     expect(response.status).toEqual(404);
