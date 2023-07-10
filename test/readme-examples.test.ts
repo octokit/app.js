@@ -219,7 +219,7 @@ describe("README examples", () => {
     // @ts-ignore
     const { port } = server.address();
     const url = `http://localhost:${port}/api/github/webhooks`;
-    const data = {
+    const data = JSON.stringify({
       action: "opened",
       installation: {
         id: 123,
@@ -233,7 +233,7 @@ describe("README examples", () => {
       issue: {
         number: 456,
       },
-    };
+    });
 
     await request({
       method: "POST",
