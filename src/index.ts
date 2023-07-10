@@ -33,7 +33,7 @@ export class App<TOptions extends Options = Options> {
 
   static defaults<
     TDefaults extends Options,
-    S extends Constructor<App<TDefaults>>
+    S extends Constructor<App<TDefaults>>,
   >(this: S, defaults: Partial<TDefaults>) {
     const AppWithDefaults = class extends this {
       constructor(...args: any[]) {
@@ -82,7 +82,7 @@ export class App<TOptions extends Options = Options> {
             clientId: options.oauth.clientId,
             clientSecret: options.oauth.clientSecret,
           }
-        : {}
+        : {},
     );
 
     this.octokit = new Octokit({
@@ -98,7 +98,7 @@ export class App<TOptions extends Options = Options> {
         warn: console.warn.bind(console),
         error: console.error.bind(console),
       },
-      options.log
+      options.log,
     );
 
     // set app.webhooks depending on whether "webhooks" option has been passed
@@ -124,7 +124,7 @@ export class App<TOptions extends Options = Options> {
       Object.defineProperty(this, "oauth", {
         get() {
           throw new Error(
-            "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set"
+            "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set",
           );
         },
       });
@@ -132,13 +132,13 @@ export class App<TOptions extends Options = Options> {
 
     this.getInstallationOctokit = getInstallationOctokit.bind(
       null,
-      this
+      this,
     ) as GetInstallationOctokitInterface<OctokitType<TOptions>>;
     this.eachInstallation = eachInstallationFactory(
-      this
+      this,
     ) as EachInstallationInterface<OctokitType<TOptions>>;
     this.eachRepository = eachRepositoryFactory(
-      this
+      this,
     ) as EachRepositoryInterface<OctokitType<TOptions>>;
   }
 }

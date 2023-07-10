@@ -67,8 +67,8 @@ describe("app.octokit", () => {
             },
           }),
         },
-        options
-      )
+        options,
+      ),
     );
   });
 
@@ -86,7 +86,7 @@ describe("app.octokit", () => {
         headers: {
           authorization: `bearer ${BEARER}`,
         },
-      }
+      },
     );
 
     const octokit = await app.getInstallationOctokit(123);
@@ -105,8 +105,8 @@ describe("app.octokit", () => {
         {
           log: logOption,
         },
-        options
-      )
+        options,
+      ),
     );
 
     app.octokit.log.debug("test");

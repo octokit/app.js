@@ -89,7 +89,7 @@ app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
       repo: payload.repository.name,
       issue_number: payload.issue.number,
       body: "Hello World!",
-    }
+    },
   );
 });
 
@@ -402,7 +402,7 @@ All exposed paths will be prefixed with the provided prefix. Defaults to `"/api/
 
 Used for internal logging. Defaults to [`console`](https://developer.mozilla.org/en-US/docs/Web/API/console) with `debug` and `info` doing nothing.
 
-</td>
+      </td>
     </tr>
   </tbody>
 </table>

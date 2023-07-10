@@ -44,7 +44,7 @@ describe("app.oauth", () => {
     expect(() => {
       app.oauth.checkToken({ token: "token123" });
     }).toThrow(
-      "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set"
+      "[@octokit/app] oauth.clientId / oauth.clientSecret options are not set",
     );
   });
 

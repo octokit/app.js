@@ -77,7 +77,7 @@ describe("README examples", () => {
           headers: {},
           status: 1,
           url: "",
-        }))
+        })),
       ),
     });
 
@@ -100,7 +100,7 @@ describe("README examples", () => {
         headers: {
           authorization: `bearer ${BEARER}`,
         },
-      }
+      },
     );
 
     const { data } = await app.octokit.request("/app");
@@ -120,7 +120,7 @@ describe("README examples", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .postOnce(
         "path:/app/installations/123/access_tokens",
@@ -136,7 +136,7 @@ describe("README examples", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .getOnce("path:/installation/repositories", {
         total_count: 1,
@@ -158,7 +158,7 @@ describe("README examples", () => {
           body: {
             event_type: "my_event",
           },
-        }
+        },
       );
 
     for await (const { octokit, repository } of app.eachRepository.iterator()) {
@@ -186,7 +186,7 @@ describe("README examples", () => {
           headers: {
             authorization: `bearer ${BEARER}`,
           },
-        }
+        },
       )
       .postOnce(
         "path:/repos/octokit/app.js/issues/456/comments",
@@ -197,7 +197,7 @@ describe("README examples", () => {
           body: {
             body: "Hello World!",
           },
-        }
+        },
       );
 
     app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
@@ -208,7 +208,7 @@ describe("README examples", () => {
           repo: payload.repository.name,
           issue_number: payload.issue.number,
           body: "Hello World!",
-        }
+        },
       );
     });
 
@@ -268,7 +268,7 @@ describe("README examples", () => {
             client_secret: CLIENT_SECRET,
             code: "code123",
           },
-        }
+        },
       )
       .getOnce(
         "path:/user",
@@ -277,7 +277,7 @@ describe("README examples", () => {
           headers: {
             authorization: `token secret123`,
           },
-        }
+        },
       );
 
     app.oauth.on("token", async ({ octokit }) => {
