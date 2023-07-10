@@ -20,7 +20,7 @@
   "dependencies": {
     "@octokit/auth-app": "^5.0.4",
     "@octokit/auth-unauthenticated": "^4.0.1",
-    "@octokit/core": "^5.0.0-beta.3",
+    "@octokit/core": "^5.0.0",
     "@octokit/oauth-app": "^5.0.0-beta.8",
     "@octokit/plugin-paginate-rest": "^7.0.0",
     "@octokit/types": "^10.0.0",
