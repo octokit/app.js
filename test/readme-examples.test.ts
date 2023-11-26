@@ -1,4 +1,4 @@
-import { createServer } from "http";
+import { createServer } from "node:http";
 
 import { Octokit } from "@octokit/core";
 import { request } from "@octokit/request";
