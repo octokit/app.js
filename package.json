@@ -61,6 +61,10 @@
         "functions": 100,
         "lines": 100
       }
+    },
+    "moduleNameMapper": {
+      "ipaddr.js": "<rootDir>/node_modules/ipaddr.js/lib/ipaddr.js",
+      "^(.+)\\.jsx?$": "$1"
     }
   },
   "release": {

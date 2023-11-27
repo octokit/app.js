@@ -1,4 +1,4 @@
-import { App, createNodeMiddleware } from "../src";
+import { App, createNodeMiddleware } from "../src/index.ts";
 
 describe("smoke", () => {
   it("App", () => {

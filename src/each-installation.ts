@@ -1,12 +1,12 @@
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 import { Octokit } from "@octokit/core";
 
-import { App } from "./index";
+import type { App } from "./index.js";
 import type {
   EachInstallationFunction,
   EachInstallationInterface,
-} from "./types";
-import { getInstallationOctokit } from "./get-installation-octokit";
+} from "./types.js";
+import { getInstallationOctokit } from "./get-installation-octokit.js";
 
 export function eachInstallationFactory(app: App) {
   return Object.assign(eachInstallation.bind(null, app), {

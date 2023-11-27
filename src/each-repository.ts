@@ -1,12 +1,12 @@
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
 import { Octokit } from "@octokit/core";
 
-import { App } from "./index";
+import type { App } from "./index.js";
 import type {
   EachRepositoryFunction,
   EachRepositoryInterface,
   EachRepositoryQuery,
-} from "./types";
+} from "./types.js";
 
 export function eachRepositoryFactory(app: App) {
   return Object.assign(eachRepository.bind(null, app), {

@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 // import without types
 const express = require("express");
 
-import { App, createNodeMiddleware } from "../src";
+import { App, createNodeMiddleware } from "../src/index.ts";
 
 const APP_ID = 1;
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----

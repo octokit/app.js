@@ -9,12 +9,12 @@ import type {
   EachInstallationInterface,
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
-} from "./types";
-import { VERSION } from "./version";
-import { webhooks } from "./webhooks";
-import { eachInstallationFactory } from "./each-installation";
-import { eachRepositoryFactory } from "./each-repository";
-import { getInstallationOctokit } from "./get-installation-octokit";
+} from "./types.js";
+import { VERSION } from "./version.js";
+import { webhooks } from "./webhooks.js";
+import { eachInstallationFactory } from "./each-installation.js";
+import { eachRepositoryFactory } from "./each-repository.js";
+import { getInstallationOctokit } from "./get-installation-octokit.js";
 
 type Constructor<T> = new (...args: any[]) => T;
 

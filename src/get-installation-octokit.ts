@@ -1,7 +1,7 @@
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/core";
 
-import { App } from "./index";
+import type { App } from "./index.js";
 
 export async function getInstallationOctokit(app: App, installationId: number) {
   return app.octokit.auth({
