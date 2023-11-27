@@ -1,4 +1,4 @@
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import { createUnauthenticatedAuth } from "@octokit/auth-unauthenticated";
 import { Webhooks, type EmitterWebhookEvent } from "@octokit/webhooks";

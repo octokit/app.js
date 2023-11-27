@@ -1,5 +1,5 @@
 import { createAppAuth } from "@octokit/auth-app";
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 
 import type { App } from "./index.js";
 

@@ -1,5 +1,5 @@
 import { composePaginateRest } from "@octokit/plugin-paginate-rest";
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 
 import type { App } from "./index.js";
 import type {
