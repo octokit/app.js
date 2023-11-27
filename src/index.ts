@@ -1,7 +1,7 @@
 import { Octokit as OctokitCore } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import { OAuthApp } from "@octokit/oauth-app";
-import { Webhooks } from "@octokit/webhooks";
+import type { Webhooks } from "@octokit/webhooks";
 
 import type {
   Options,
