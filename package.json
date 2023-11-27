@@ -12,7 +12,7 @@
     "lint:fix": "prettier --write {src,test}/* *.md package.json",
     "pretest": "npm run -s lint",
     "test": "jest --coverage",
-    "test:typescript": "npx tsc --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2020 --moduleResolution node test/typescript-validate.ts"
+    "test:typescript": "npx tsc --allowImportingTsExtensions --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2020 --moduleResolution node16 --module node16 test/typescript-validate.ts"
   },
   "repository": "github:octokit/app.js",
   "author": "Gregor Martynus (https://github.com/gr2m)",
@@ -61,6 +61,10 @@
         "functions": 100,
         "lines": 100
       }
+    },
+    "moduleNameMapper": {
+      "ipaddr.js": "<rootDir>/node_modules/ipaddr.js/lib/ipaddr.js",
+      "^(.+)\\.jsx?$": "$1"
     }
   },
   "release": {

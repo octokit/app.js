@@ -28,7 +28,7 @@ x//0u+zd/R/QRUzLOw4N72/Hu+UG6MNt5iDZFCtapRaKt6OvSBwy8w==
 -----END RSA PRIVATE KEY-----`;
 const WEBHOOK_SECRET = "secret";
 
-import { App } from "../src";
+import { App } from "../src/index.ts";
 
 describe("app.oauth", () => {
   test("options.oauth is optional", async () => {

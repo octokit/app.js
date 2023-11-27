@@ -1,6 +1,6 @@
 // remove type imports from http for Deno compatibility
 // see https://github.com/octokit/octokit.js/issues/24#issuecomment-817361886
-// import { IncomingMessage, ServerResponse } from "http";
+// import { IncomingMessage, ServerResponse } from "node:http";
 type IncomingMessage = any;
 type ServerResponse = any;
 
@@ -11,8 +11,8 @@ import {
 } from "@octokit/oauth-app";
 import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhooks";
 
-import { App } from "../../index";
-import type { Options } from "../../types";
+import type { App } from "../../index.js";
+import type { Options } from "../../types.js";
 
 export type MiddlewareOptions = {
   pathPrefix?: string;
@@ -23,7 +23,7 @@ function noop() {}
 
 export function createNodeMiddleware(
   app: App,
-  options: MiddlewareOptions = {}
+  options: MiddlewareOptions = {},
 ) {
   const log = Object.assign(
     {
@@ -32,7 +32,7 @@ export function createNodeMiddleware(
       warn: console.warn.bind(console),
       error: console.error.bind(console),
     },
-    options.log
+    options.log,
   );
 
   const optionsWithDefaults = {
@@ -54,7 +54,7 @@ export function createNodeMiddleware(
     null,
     optionsWithDefaults.pathPrefix,
     webhooksMiddleware,
-    oauthMiddleware
+    oauthMiddleware,
   );
 }
 
@@ -64,7 +64,7 @@ export async function middleware(
   oauthMiddleware: any,
   request: IncomingMessage,
   response: ServerResponse,
-  next?: Function
+  next?: Function,
 ): Promise<boolean> {
   const { pathname } = new URL(request.url as string, "http://localhost");
 
