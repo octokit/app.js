@@ -30,6 +30,7 @@ const CLIENT_ID = "0123";
 const CLIENT_SECRET = "0123secret";
 const WEBHOOK_SECRET = "secret";
 
+import { jest } from "@jest/globals";
 import { App } from "../src/index.ts";
 
 describe("app.log", () => {
