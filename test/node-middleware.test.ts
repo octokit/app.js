@@ -1,7 +1,8 @@
 import { createServer } from "node:http";
 
 // import without types
-const express = require("express");
+// @ts-ignore
+const express = (await import("express")).default as any;
 
 import { App, createNodeMiddleware } from "../src/index.ts";
 
