@@ -1,7 +1,8 @@
 {
   "name": "@octokit/app",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "type": "module",
   "version": "0.0.0-development",
