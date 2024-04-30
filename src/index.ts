@@ -10,6 +10,16 @@ import type {
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
 } from "./types.js";
+
+// Export types required for the App class
+// This is in order to fix a TypeScript error in downstream projects:
+// The inferred type of 'App' cannot be named without a reference to '../node_modules/@octokit/app/dist-types/types.js'. This is likely not portable. A type annotation is necessary.
+export type {
+  EachInstallationInterface,
+  EachRepositoryInterface,
+  GetInstallationOctokitInterface,
+} from "./types.js";
+
 import { VERSION } from "./version.js";
 import { webhooks } from "./webhooks.js";
 import { eachInstallationFactory } from "./each-installation.js";
