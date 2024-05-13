@@ -22,6 +22,6 @@ export function getInstallationUrlFactory(app: App) {
 
     const installationUrlWithState = new URL(installationUrl);
     installationUrlWithState.searchParams.append("state", state);
-    return installationUrlWithState.toString();
+    return installationUrlWithState.href;
   };
 }
