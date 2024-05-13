@@ -9,7 +9,6 @@ export function getInstallationUrlFactory(app: App) {
     }
 
     const { data: appInfo } = await app.octokit.request("GET /app");
-    console.log({ appInfo });
     if (!appInfo) {
       throw new Error("[@octokit/app] unable to fetch info for app");
     }
