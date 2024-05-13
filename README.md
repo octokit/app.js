@@ -299,6 +299,13 @@ for await (const { octokit, repository } of app.eachRepository.iterator({ instal
 await app.eachRepository({ installationId }, ({ octokit, repository }) => /* ... */)
 ```
 
+### `app.getInstallationUrl`
+
+```js
+const installationUrl = await app.getInstallationUrl();
+return res.redirect(installationUrl);
+```
+
 ### `app.webhooks`
 
 An [`@octokit/webhooks` instance](https://github.com/octokit/webhooks.js/#readme)
