@@ -62,7 +62,7 @@ describe("app.getInstallationUrl", () => {
     });
   });
 
-  test("app.getInstallationUrl() throws when response is null", async () => {
+  test("throws when response is null", async () => {
     mock.getOnce("path:/app", {
       body: "null",
       headers: { "Content-Type": "application/json" },
@@ -75,12 +75,11 @@ describe("app.getInstallationUrl", () => {
     expect(mock.done()).toBe(true);
   });
 
-  test("app.getInstallationUrl() returns correct url", async () => {
+  test("returns correct url", async () => {
     mock.getOnce("path:/app", {
       html_url: "https://github.com/apps/octokit",
     });
 
-    await app.getInstallationUrl();
     await expect(app.getInstallationUrl()).resolves.toEqual(
       "https://github.com/apps/octokit/installations/new",
     );
@@ -88,7 +87,7 @@ describe("app.getInstallationUrl", () => {
     expect(mock.done()).toBe(true);
   });
 
-  test("app.getInstallationUrl() caches url", async () => {
+  test("caches url", async () => {
     mock.getOnce("path:/app", {
       html_url: "https://github.com/apps/octokit",
     });
@@ -102,6 +101,37 @@ describe("app.getInstallationUrl", () => {
     expect(urls).toEqual(
       new Array(3).fill("https://github.com/apps/octokit/installations/new"),
     );
+    expect(mock.done()).toBe(true);
+  });
+
+  test("does not cache state", async () => {
+    mock.getOnce("path:/app", {
+      html_url: "https://github.com/apps/octokit",
+    });
+    const state = "abc123";
+
+    const urlWithoutState = await app.getInstallationUrl();
+    const urlWithState = await app.getInstallationUrl(state);
+
+    expect(urlWithoutState).toEqual(
+      "https://github.com/apps/octokit/installations/new",
+    );
+    expect(urlWithState).toEqual(
+      `https://github.com/apps/octokit/installations/new?state=${state}`,
+    );
+    expect(mock.done()).toBe(true);
+  });
+
+  test("adds the url-encoded state string to the url", async () => {
+    mock.getOnce("path:/app", {
+      html_url: "https://github.com/apps/octokit",
+    });
+    const state = "abc123%/{";
+
+    await expect(app.getInstallationUrl(state)).resolves.toEqual(
+      `https://github.com/apps/octokit/installations/new?state=${encodeURIComponent(state)}`,
+    );
+
     expect(mock.done()).toBe(true);
   });
 });

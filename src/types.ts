@@ -69,5 +69,5 @@ export interface GetInstallationOctokitInterface<O> {
 }
 
 export interface GetInstallationUrlInterface {
-  (): Promise<string>;
+  (state?: string): Promise<string>;
 }
