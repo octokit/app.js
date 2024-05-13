@@ -1,18 +1,22 @@
 import type { App } from "./index.js";
 
 export function getInstallationUrlFactory(app: App) {
-  let installationUrl: string | undefined;
+  let installationUrlPromise: Promise<string> | undefined;
 
-  return async function getInstallationUrl() {
-    if (installationUrl) {
-      return installationUrl;
+  return function getInstallationUrl() {
+    if (installationUrlPromise) {
+      return installationUrlPromise;
     }
 
-    const { data: appInfo } = await app.octokit.request("GET /app");
-    if (!appInfo) {
-      throw new Error("[@octokit/app] unable to fetch info for app");
-    }
-    installationUrl = `${appInfo.html_url}/installations/new`;
-    return installationUrl;
+    installationUrlPromise = app.octokit
+      .request("GET /app")
+      .then(({ data: appInfo }) => {
+        if (!appInfo) {
+          throw new Error("[@octokit/app] unable to fetch info for app");
+        }
+
+        return `${appInfo.html_url}/installations/new`;
+      });
+    return installationUrlPromise;
   };
 }

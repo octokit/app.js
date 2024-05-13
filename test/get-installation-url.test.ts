@@ -93,13 +93,15 @@ describe("app.getInstallationUrl", () => {
       html_url: "https://github.com/apps/octokit",
     });
 
-    await expect(app.getInstallationUrl()).resolves.toEqual(
-      "https://github.com/apps/octokit/installations/new",
-    );
-    await expect(app.getInstallationUrl()).resolves.toEqual(
-      "https://github.com/apps/octokit/installations/new",
-    );
+    const urls = await Promise.all([
+      app.getInstallationUrl(),
+      app.getInstallationUrl(),
+      app.getInstallationUrl(),
+    ]);
 
+    expect(urls).toEqual(
+      new Array(3).fill("https://github.com/apps/octokit/installations/new"),
+    );
     expect(mock.done()).toBe(true);
   });
 });
