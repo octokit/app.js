@@ -8,6 +8,9 @@ export async function getInstallationUrl(app: App) {
   }
 
   const { data: appInfo } = await app.octokit.request("GET /app");
+  if (!appInfo) {
+    throw new Error('[@octokit/app] unable to fetch info for app');
+  }
   installationUrl = `${appInfo.html_url}/installations/new`;
   return installationUrl;
 }
