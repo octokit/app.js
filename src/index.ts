@@ -27,6 +27,7 @@ import { webhooks } from "./webhooks.js";
 import { eachInstallationFactory } from "./each-installation.js";
 import { eachRepositoryFactory } from "./each-repository.js";
 import { getInstallationOctokit } from "./get-installation-octokit.js";
+import { getInstallationUrlFactory } from "./get-installation-url.js";
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -153,7 +154,7 @@ export class App<TOptions extends Options = Options> {
     this.eachRepository = eachRepositoryFactory(
       this,
     ) as EachRepositoryInterface<OctokitType<TOptions>>;
-    this.getInstallationUrl = this.getInstallationUrl.bind(this);
+    this.getInstallationUrl = getInstallationUrlFactory(this);
   }
 }
 
