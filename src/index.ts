@@ -9,6 +9,7 @@ import type {
   EachInstallationInterface,
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
+  GetInstallationUrlInterface,
 } from "./types.js";
 
 // Export types required for the App class
@@ -18,6 +19,7 @@ export type {
   EachInstallationInterface,
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
+  GetInstallationUrlInterface,
 } from "./types.js";
 
 import { VERSION } from "./version.js";
@@ -70,6 +72,7 @@ export class App<TOptions extends Options = Options> {
   >;
   eachInstallation: EachInstallationInterface<OctokitType<TOptions>>;
   eachRepository: EachRepositoryInterface<OctokitType<TOptions>>;
+  getInstallationUrl: GetInstallationUrlInterface;
   log: {
     debug: (message: string, additionalInfo?: object) => void;
     info: (message: string, additionalInfo?: object) => void;
@@ -150,6 +153,7 @@ export class App<TOptions extends Options = Options> {
     this.eachRepository = eachRepositoryFactory(
       this,
     ) as EachRepositoryInterface<OctokitType<TOptions>>;
+    this.getInstallationUrl = this.getInstallationUrl.bind(this);
   }
 }
 

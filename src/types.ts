@@ -67,3 +67,7 @@ export interface EachRepositoryInterface<O> {
 export interface GetInstallationOctokitInterface<O> {
   (installationId: number): Promise<O>;
 }
+
+export interface GetInstallationUrlInterface {
+  (): Promise<string>;
+}
