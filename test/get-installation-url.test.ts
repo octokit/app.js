@@ -134,4 +134,33 @@ describe("app.getInstallationUrl", () => {
     );
     expect(mock.done()).toBe(true);
   });
+
+  test("appends /permissions to the url when target_id present", async () => {
+    mock.getOnce("path:/app", {
+      html_url: "https://github.com/apps/octokit",
+    });
+    const target_id = 456;
+
+    const url = await app.getInstallationUrl({ target_id });
+
+    expect(url).toEqual(
+      `https://github.com/apps/octokit/installations/new/permissions?target_id=${target_id}`,
+    );
+    expect(mock.done()).toBe(true);
+  });
+
+  test("adds both state and target_id to the url", async () => {
+    mock.getOnce("path:/app", {
+      html_url: "https://github.com/apps/octokit",
+    });
+    const state = "abc123";
+    const target_id = 456;
+
+    const url = await app.getInstallationUrl({ state, target_id });
+
+    expect(url).toEqual(
+      `https://github.com/apps/octokit/installations/new/permissions?target_id=${target_id}&state=${state}`,
+    );
+    expect(mock.done()).toBe(true);
+  });
 });
