@@ -68,6 +68,11 @@ export interface GetInstallationOctokitInterface<O> {
   (installationId: number): Promise<O>;
 }
 
+export interface GetInstallationUrlOptions {
+  state?: string;
+  target_id?: number;
+}
+
 export interface GetInstallationUrlInterface {
-  (state?: string): Promise<string>;
+  (options: GetInstallationUrlOptions): Promise<string>;
 }

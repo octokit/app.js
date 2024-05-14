@@ -68,8 +68,8 @@ describe("app.getInstallationUrl", () => {
       headers: { "Content-Type": "application/json" },
     });
 
-    await expect(app.getInstallationUrl()).rejects.toThrow(
-      "[@octokit/app] unable to fetch info for app",
+    await expect(app.getInstallationUrl({})).rejects.toThrow(
+      "[@octokit/app] unable to fetch metadata for app",
     );
 
     expect(mock.done()).toBe(true);
@@ -80,10 +80,9 @@ describe("app.getInstallationUrl", () => {
       html_url: "https://github.com/apps/octokit",
     });
 
-    await expect(app.getInstallationUrl()).resolves.toEqual(
-      "https://github.com/apps/octokit/installations/new",
-    );
+    const url = await app.getInstallationUrl({});
 
+    expect(url).toEqual("https://github.com/apps/octokit/installations/new");
     expect(mock.done()).toBe(true);
   });
 
@@ -93,9 +92,9 @@ describe("app.getInstallationUrl", () => {
     });
 
     const urls = await Promise.all([
-      app.getInstallationUrl(),
-      app.getInstallationUrl(),
-      app.getInstallationUrl(),
+      app.getInstallationUrl({}),
+      app.getInstallationUrl({}),
+      app.getInstallationUrl({}),
     ]);
 
     expect(urls).toEqual(
@@ -110,8 +109,8 @@ describe("app.getInstallationUrl", () => {
     });
     const state = "abc123";
 
-    const urlWithoutState = await app.getInstallationUrl();
-    const urlWithState = await app.getInstallationUrl(state);
+    const urlWithoutState = await app.getInstallationUrl({});
+    const urlWithState = await app.getInstallationUrl({ state });
 
     expect(urlWithoutState).toEqual(
       "https://github.com/apps/octokit/installations/new",
@@ -128,10 +127,11 @@ describe("app.getInstallationUrl", () => {
     });
     const state = "abc123%/{";
 
-    await expect(app.getInstallationUrl(state)).resolves.toEqual(
+    const url = await app.getInstallationUrl({ state });
+
+    expect(url).toEqual(
       `https://github.com/apps/octokit/installations/new?state=${encodeURIComponent(state)}`,
     );
-
     expect(mock.done()).toBe(true);
   });
 });
