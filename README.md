@@ -302,7 +302,7 @@ await app.eachRepository({ installationId }, ({ octokit, repository }) => /* ...
 ### `app.getInstallationUrl`
 
 ```js
-const installationUrl = await app.getInstallationUrl(state);
+const installationUrl = await app.getInstallationUrl({ state });
 return res.redirect(installationUrl);
 ```
 

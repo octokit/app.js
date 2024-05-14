@@ -13,11 +13,11 @@ export function getInstallationUrlFactory(app: App) {
     const installationUrl = new URL(installationUrlBase);
 
     if (options.target_id !== undefined) {
+      installationUrl.pathname += "/permissions";
       installationUrl.searchParams.append(
         "target_id",
         options.target_id.toFixed(),
       );
-      installationUrl.pathname += "/permissions";
     }
 
     if (options.state !== undefined) {
