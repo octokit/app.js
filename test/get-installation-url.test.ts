@@ -68,7 +68,7 @@ describe("app.getInstallationUrl", () => {
       headers: { "Content-Type": "application/json" },
     });
 
-    await expect(app.getInstallationUrl({})).rejects.toThrow(
+    await expect(app.getInstallationUrl()).rejects.toThrow(
       "[@octokit/app] unable to fetch metadata for app",
     );
 
@@ -80,7 +80,7 @@ describe("app.getInstallationUrl", () => {
       html_url: "https://github.com/apps/octokit",
     });
 
-    const url = await app.getInstallationUrl({});
+    const url = await app.getInstallationUrl();
 
     expect(url).toEqual("https://github.com/apps/octokit/installations/new");
     expect(mock.done()).toBe(true);
@@ -92,9 +92,9 @@ describe("app.getInstallationUrl", () => {
     });
 
     const urls = await Promise.all([
-      app.getInstallationUrl({}),
-      app.getInstallationUrl({}),
-      app.getInstallationUrl({}),
+      app.getInstallationUrl(),
+      app.getInstallationUrl(),
+      app.getInstallationUrl(),
     ]);
 
     expect(urls).toEqual(
@@ -109,7 +109,7 @@ describe("app.getInstallationUrl", () => {
     });
     const state = "abc123";
 
-    const urlWithoutState = await app.getInstallationUrl({});
+    const urlWithoutState = await app.getInstallationUrl();
     const urlWithState = await app.getInstallationUrl({ state });
 
     expect(urlWithoutState).toEqual(

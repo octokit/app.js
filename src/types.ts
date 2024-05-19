@@ -74,5 +74,5 @@ export interface GetInstallationUrlOptions {
 }
 
 export interface GetInstallationUrlInterface {
-  (options: GetInstallationUrlOptions): Promise<string>;
+  (options?: GetInstallationUrlOptions): Promise<string>;
 }

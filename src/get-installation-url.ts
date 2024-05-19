@@ -4,7 +4,9 @@ import type { GetInstallationUrlOptions } from "./types.js";
 export function getInstallationUrlFactory(app: App) {
   let installationUrlBasePromise: Promise<string> | undefined;
 
-  return async function getInstallationUrl(options: GetInstallationUrlOptions) {
+  return async function getInstallationUrl(
+    options: GetInstallationUrlOptions = {},
+  ) {
     if (!installationUrlBasePromise) {
       installationUrlBasePromise = getInstallationUrlBase(app);
     }
