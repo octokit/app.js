@@ -9,6 +9,7 @@ import type {
   EachInstallationInterface,
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
+  GetInstallationUrlInterface,
 } from "./types.js";
 
 // Export types required for the App class
@@ -18,6 +19,7 @@ export type {
   EachInstallationInterface,
   EachRepositoryInterface,
   GetInstallationOctokitInterface,
+  GetInstallationUrlInterface,
 } from "./types.js";
 
 import { VERSION } from "./version.js";
@@ -25,6 +27,7 @@ import { webhooks } from "./webhooks.js";
 import { eachInstallationFactory } from "./each-installation.js";
 import { eachRepositoryFactory } from "./each-repository.js";
 import { getInstallationOctokit } from "./get-installation-octokit.js";
+import { getInstallationUrlFactory } from "./get-installation-url.js";
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -70,6 +73,7 @@ export class App<TOptions extends Options = Options> {
   >;
   eachInstallation: EachInstallationInterface<OctokitType<TOptions>>;
   eachRepository: EachRepositoryInterface<OctokitType<TOptions>>;
+  getInstallationUrl: GetInstallationUrlInterface;
   log: {
     debug: (message: string, additionalInfo?: object) => void;
     info: (message: string, additionalInfo?: object) => void;
@@ -150,6 +154,7 @@ export class App<TOptions extends Options = Options> {
     this.eachRepository = eachRepositoryFactory(
       this,
     ) as EachRepositoryInterface<OctokitType<TOptions>>;
+    this.getInstallationUrl = getInstallationUrlFactory(this);
   }
 }
 

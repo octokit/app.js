@@ -16,6 +16,7 @@
   - [`app.getInstallationOctokit`](#appgetinstallationoctokit)
   - [`app.eachInstallation`](#appeachinstallation)
   - [`app.eachRepository`](#appeachrepository)
+  - [`app.getInstallationUrl`](#appgetinstallationurl)
   - [`app.webhooks`](#appwebhooks)
   - [`app.oauth`](#appoauth)
 - [Middlewares](#middlewares)
@@ -297,6 +298,22 @@ Optionally pass installation ID to iterate through all repositories in one insta
 ```js
 for await (const { octokit, repository } of app.eachRepository.iterator({ installationId })) { /* ... */ }
 await app.eachRepository({ installationId }, ({ octokit, repository }) => /* ... */)
+```
+
+### `app.getInstallationUrl`
+
+```js
+const installationUrl = await app.getInstallationUrl();
+return res.redirect(installationUrl);
+```
+
+Optionally pass the ID of a GitHub organization or user to request installation on that specific target.
+
+If the user will be sent to a redirect URL after installation (such as if you request user authorization during installation), you can also supply a `state` string that will be included in the query of the post-install redirect.
+
+```js
+const installationUrl = await app.getInstallationUrl({ state, target_id });
+return res.redirect(installationUrl);
 ```
 
 ### `app.webhooks`
