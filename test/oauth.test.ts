@@ -28,6 +28,7 @@ x//0u+zd/R/QRUzLOw4N72/Hu+UG6MNt5iDZFCtapRaKt6OvSBwy8w==
 -----END RSA PRIVATE KEY-----`;
 const WEBHOOK_SECRET = "secret";
 
+import { describe, expect, test } from "vitest";
 import { App } from "../src/index.ts";
 
 describe("app.oauth", () => {

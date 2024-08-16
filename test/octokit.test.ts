@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/core";
 import fetchMock from "fetch-mock";
 import MockDate from "mockdate";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 const APP_ID = 1;
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
@@ -38,7 +39,6 @@ const BEARER =
   "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOi0zMCwiZXhwIjo1NzAsImlzcyI6MX0.q3foRa78U3WegM5PrWLEh5N0bH1SD62OqW66ZYzArp95JBNiCbo8KAlGtiRENCIfBZT9ibDUWy82cI4g3F09mdTq3bD1xLavIfmTksIQCz5EymTWR5v6gL14LSmQdWY9lSqkgUG0XCFljWUglEP39H4yeHbFgdjvAYg3ifDS12z9oQz2ACdSpvxPiTuCC804HkPVw8Qoy0OSXvCkFU70l7VXCVUxnuhHnk8-oCGcKUspmeP6UdDnXk-Aus-eGwDfJbU2WritxxaXw6B4a3flTPojkYLSkPBr6Pi0H2-mBsW_Nvs0aLPVLKobQd4gqTkosX3967DoAG8luUMhrnxe8Q";
 
 import { App } from "../src/index.ts";
-import { jest } from "@jest/globals";
 
 describe("app.octokit", () => {
   let app: InstanceType<typeof App>;
@@ -96,10 +96,10 @@ describe("app.octokit", () => {
 
   test("app.octokit.log inherits from log option", async () => {
     const logOption = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     };
     const app = new App(
       Object.assign(

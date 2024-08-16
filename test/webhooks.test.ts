@@ -30,6 +30,7 @@ const CLIENT_ID = "0123";
 const CLIENT_SECRET = "0123secret";
 const WEBHOOK_SECRET = "webhook_secret";
 
+import { describe, expect, test } from "vitest";
 import { App } from "../src/index.ts";
 
 describe("app.webhooks", () => {
