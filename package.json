@@ -13,7 +13,7 @@
     "lint": "prettier --check {src,test}/* *.md package.json",
     "lint:fix": "prettier --write {src,test}/* *.md package.json",
     "pretest": "npm run -s lint",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage",
+    "test": "vitest run --coverage",
     "test:typescript": "npx tsc --allowImportingTsExtensions --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2022 --moduleResolution node16 --module node16 test/typescript-validate.ts"
   },
   "repository": "github:octokit/app.js",
@@ -30,48 +30,20 @@
   },
   "devDependencies": {
     "@octokit/tsconfig": "^3.0.0",
-    "@types/jest": "^29.0.0",
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^2.0.5",
     "esbuild": "^0.23.0",
     "express": "^4.17.1",
-    "fetch-mock": "npm:@gr2m/fetch-mock@9.11.0-pull-request-644.1",
+    "fetch-mock": "^11.1.1",
     "glob": "^11.0.0",
-    "jest": "^29.0.0",
     "mockdate": "^3.0.2",
     "prettier": "3.3.3",
     "semantic-release-plugin-update-version-in-files": "^1.0.0",
-    "ts-jest": "^29.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.5"
   },
   "engines": {
     "node": ">= 18"
-  },
-  "jest": {
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": [
-        "ts-jest",
-        {
-          "tsconfig": "test/tsconfig.test.json",
-          "useESM": true
-        }
-      ]
-    },
-    "testEnvironment": "node",
-    "coverageThreshold": {
-      "global": {
-        "statements": 100,
-        "branches": 100,
-        "functions": 100,
-        "lines": 100
-      }
-    },
-    "moduleNameMapper": {
-      "ipaddr.js": "<rootDir>/node_modules/ipaddr.js/lib/ipaddr.js",
-      "^(.+)\\.jsx?$": "$1"
-    }
   },
   "release": {
     "branches": [

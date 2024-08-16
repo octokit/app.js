@@ -1,3 +1,5 @@
+import { describe, it } from "vitest";
+
 describe("deprecations", () => {
   it("no deprecations at this point", () => {});
 

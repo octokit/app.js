@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { App, createNodeMiddleware } from "../src/index.ts";
 
 describe("smoke", () => {

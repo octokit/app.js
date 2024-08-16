@@ -30,7 +30,7 @@ const CLIENT_ID = "0123";
 const CLIENT_SECRET = "0123secret";
 const WEBHOOK_SECRET = "secret";
 
-import { jest } from "@jest/globals";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { App } from "../src/index.ts";
 
 describe("app.log", () => {
@@ -48,10 +48,10 @@ describe("app.log", () => {
   };
 
   beforeEach(() => {
-    console.debug = jest.fn();
-    console.info = jest.fn();
-    console.warn = jest.fn();
-    console.error = jest.fn();
+    console.debug = vi.fn();
+    console.info = vi.fn();
+    console.warn = vi.fn();
+    console.error = vi.fn();
 
     app = new App(options);
   });
@@ -78,10 +78,10 @@ describe("app.log", () => {
 
   test("custom log", () => {
     const logOption = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     };
     const app = new App(
       Object.assign(
