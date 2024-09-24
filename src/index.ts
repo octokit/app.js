@@ -1,4 +1,4 @@
-import { Octokit as OctokitCore } from "@octokit/core";
+import { Octokit as OctokitCore, type OctokitOptions } from "@octokit/core";
 import { createAppAuth } from "@octokit/auth-app";
 import { OAuthApp } from "@octokit/oauth-app";
 import type { Webhooks } from "@octokit/webhooks";
@@ -99,11 +99,16 @@ export class App<TOptions extends Options = Options> {
         : {},
     );
 
-    this.octokit = new Octokit({
+    const octokitOptions: OctokitOptions = {
       authStrategy: createAppAuth,
       auth: authOptions,
-      log: options.log,
-    }) as OctokitType<TOptions>;
+    };
+
+    if ("log" in options && typeof options.log !== "undefined") {
+      octokitOptions.log = options.log;
+    }
+
+    this.octokit = new Octokit(octokitOptions) as OctokitType<TOptions>;
 
     this.log = Object.assign(
       {

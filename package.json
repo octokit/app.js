@@ -14,7 +14,7 @@
     "lint:fix": "prettier --write {src,test}/* *.md package.json",
     "pretest": "npm run -s lint",
     "test": "vitest run --coverage",
-    "test:typescript": "npx tsc --allowImportingTsExtensions --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2022 --moduleResolution node16 --module node16 test/typescript-validate.ts"
+    "test:typescript": "npx tsc --allowImportingTsExtensions --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2022 --moduleResolution node16 --module node16 --exactOptionalPropertyTypes test/typescript-validate.ts"
   },
   "repository": "github:octokit/app.js",
   "author": "Gregor Martynus (https://github.com/gr2m)",
