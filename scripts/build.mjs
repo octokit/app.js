@@ -87,7 +87,7 @@ async function main() {
               import: "./dist-node/index.js",
             },
             browser: {
-              types: "./dist-types/web.d.ts",
+              types: "./dist-types/index.d.ts",
               import: "./dist-web/index.js",
             },
             default: {
