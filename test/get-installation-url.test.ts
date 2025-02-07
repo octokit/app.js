@@ -43,7 +43,7 @@ describe("app.getInstallationUrl", () => {
 
   beforeEach(() => {
     MockDate.set(0);
-    mock = fetchMock.sandbox();
+    mock = fetchMock.createInstance();
 
     app = new App({
       appId: APP_ID,
@@ -57,7 +57,7 @@ describe("app.getInstallationUrl", () => {
       },
       Octokit: Octokit.defaults({
         request: {
-          fetch: mock,
+          fetch: mock.fetchHandler,
         },
       }),
     });
@@ -73,7 +73,7 @@ describe("app.getInstallationUrl", () => {
       "[@octokit/app] unable to fetch metadata for app",
     );
 
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test("returns correct url", async () => {
@@ -84,7 +84,7 @@ describe("app.getInstallationUrl", () => {
     const url = await app.getInstallationUrl();
 
     expect(url).toEqual("https://github.com/apps/octokit/installations/new");
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test("caches url", async () => {
@@ -101,7 +101,7 @@ describe("app.getInstallationUrl", () => {
     expect(urls).toEqual(
       new Array(3).fill("https://github.com/apps/octokit/installations/new"),
     );
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test("does not cache state", async () => {
@@ -119,7 +119,7 @@ describe("app.getInstallationUrl", () => {
     expect(urlWithState).toEqual(
       `https://github.com/apps/octokit/installations/new?state=${state}`,
     );
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test("adds the url-encoded state string to the url", async () => {
@@ -133,7 +133,7 @@ describe("app.getInstallationUrl", () => {
     expect(url).toEqual(
       `https://github.com/apps/octokit/installations/new?state=${encodeURIComponent(state)}`,
     );
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test("appends /permissions to the url when target_id present", async () => {
@@ -147,7 +147,7 @@ describe("app.getInstallationUrl", () => {
     expect(url).toEqual(
       `https://github.com/apps/octokit/installations/new/permissions?target_id=${target_id}`,
     );
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test("adds both state and target_id to the url", async () => {
@@ -162,6 +162,6 @@ describe("app.getInstallationUrl", () => {
     expect(url).toEqual(
       `https://github.com/apps/octokit/installations/new/permissions?target_id=${target_id}&state=${state}`,
     );
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 });

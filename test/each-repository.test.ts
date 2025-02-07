@@ -46,7 +46,7 @@ describe("app.eachRepository", () => {
 
   beforeEach(() => {
     MockDate.set(0);
-    mock = fetchMock.sandbox();
+    mock = fetchMock.createInstance();
 
     app = new App({
       appId: APP_ID,
@@ -60,7 +60,7 @@ describe("app.eachRepository", () => {
       },
       Octokit: Octokit.defaults({
         request: {
-          fetch: mock,
+          fetch: mock.fetchHandler,
         },
       }),
     });
@@ -187,7 +187,7 @@ describe("app.eachRepository.iterator", () => {
 
   beforeEach(() => {
     MockDate.set(0);
-    mock = fetchMock.sandbox();
+    mock = fetchMock.createInstance();
 
     app = new App({
       appId: APP_ID,
@@ -201,7 +201,7 @@ describe("app.eachRepository.iterator", () => {
       },
       Octokit: Octokit.defaults({
         request: {
-          fetch: mock,
+          fetch: mock.fetchHandler,
         },
       }),
     });
@@ -268,6 +268,6 @@ describe("app.eachRepository.iterator", () => {
       expect(repository.full_name).toEqual("octokit/octokit.js");
     }
 
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 });
