@@ -57,14 +57,14 @@ describe("app.octokit", () => {
 
   beforeEach(() => {
     MockDate.set(0);
-    mock = fetchMock.sandbox();
+    mock = fetchMock.createInstance();
 
     app = new App(
       Object.assign(
         {
           Octokit: Octokit.defaults({
             request: {
-              fetch: mock,
+              fetch: mock.fetchHandler,
             },
           }),
         },

@@ -49,7 +49,7 @@ describe("README examples", () => {
 
   beforeEach(() => {
     MockDate.set(0);
-    mock = fetchMock.sandbox();
+    mock = fetchMock.createInstance();
 
     app = new App({
       appId: APP_ID,
@@ -63,7 +63,7 @@ describe("README examples", () => {
       },
       Octokit: Octokit.defaults({
         request: {
-          fetch: mock,
+          fetch: mock.fetchHandler,
         },
       }),
       log: console,
@@ -249,7 +249,7 @@ describe("README examples", () => {
 
     server.close();
 
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 
   test('app.oauth.on("token", handler)', async () => {
@@ -300,6 +300,6 @@ describe("README examples", () => {
 
     server.close();
 
-    expect(mock.done()).toBe(true);
+    expect(mock.callHistory.done()).toBe(true);
   });
 });

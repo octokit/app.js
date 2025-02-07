@@ -46,7 +46,7 @@ describe("app.getInstallationOctokit", () => {
 
   beforeEach(() => {
     MockDate.set(0);
-    mock = fetchMock.sandbox();
+    mock = fetchMock.createInstance();
 
     app = new App({
       appId: APP_ID,
@@ -60,7 +60,7 @@ describe("app.getInstallationOctokit", () => {
       },
       Octokit: Octokit.defaults({
         request: {
-          fetch: mock,
+          fetch: mock.fetchHandler,
         },
       }),
     });
