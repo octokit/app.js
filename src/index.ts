@@ -164,3 +164,4 @@ export class App<TOptions extends Options = Options> {
 }
 
 export { createNodeMiddleware } from "./middleware/node/index.js";
+export { createWebMiddleware } from "./middleware/web/index.js";

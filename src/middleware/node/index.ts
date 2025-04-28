@@ -12,12 +12,7 @@ import {
 import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhooks";
 
 import type { App } from "../../index.js";
-import type { Options } from "../../types.js";
-
-export type MiddlewareOptions = {
-  pathPrefix?: string;
-  log?: Options["log"];
-};
+import type { MiddlewareOptions } from "../types.js";
 
 function noop() {}
 

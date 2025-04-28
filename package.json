@@ -26,7 +26,7 @@
     "@octokit/oauth-app": "^7.1.6",
     "@octokit/plugin-paginate-rest": "^12.0.0",
     "@octokit/types": "^14.0.0",
-    "@octokit/webhooks": "^13.6.1"
+    "@octokit/webhooks": "^13.7.0"
   },
   "devDependencies": {
     "@octokit/tsconfig": "^4.0.0",
