@@ -4,9 +4,13 @@ import { createWebMiddleware as webhooksWebMiddleware } from "@octokit/webhooks"
 import type { App } from "../../index.js";
 import type { MiddlewareOptions } from "../types.js";
 
+/* v8 ignore next */
 function noop() {}
 
-export function createWebMiddleware(app: App, options: MiddlewareOptions = {}) {
+export function createWebMiddleware(
+  app: App,
+  options: MiddlewareOptions = {},
+): (request: Request) => Promise<Response | undefined> {
   const log = Object.assign(
     {
       debug: noop,
