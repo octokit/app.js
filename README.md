@@ -433,7 +433,7 @@ Used for internal logging. Defaults to [`console`](https://developer.mozilla.org
 
 ### `createWebMiddleware(app, options)`
 
-Middleware for environments using standard Web API [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects, such as Deno, Bun, Cloudflare Workers, AWS Lambda, or Node.js with Fetch API.
+Middleware for environments using standard Web API [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects, such as Deno, Bun, Cloudflare Workers, AWS Lambda.
 
 ```js
 import { App, createWebMiddleware } from "@octokit/app";
