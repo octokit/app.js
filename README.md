@@ -431,6 +431,97 @@ Used for internal logging. Defaults to [`console`](https://developer.mozilla.org
   </tbody>
 </table>
 
+### `createWebMiddleware(app, options)`
+
+Middleware for environments using standard Web API [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects, such as Deno, Bun, Cloudflare Workers, AWS Lambda.
+
+```js
+import { App, createWebMiddleware } from "@octokit/app";
+
+const app = new App({
+  appId: 123,
+  privateKey: "-----BEGIN PRIVATE KEY-----\n...",
+  oauth: {
+    clientId: "0123",
+    clientSecret: "0123secret",
+  },
+  webhooks: {
+    secret: "secret",
+  },
+});
+
+const middleware = createWebMiddleware(app);
+// Example with a Fetch handler (Deno / Bun / Node with Fetch API)
+async function handler(request) {
+  const response = await middleware(request);
+  if (response) return response;
+
+  // If middleware returns undefined, the route was not handled
+  return new Response("Not Found", { status: 404 });
+}
+
+Deno.serve(handler);
+// can now receive user authorization callbacks at /api/github/*
+```
+
+The middleware returned from `createWebMiddleware` returns a `Response` if the request matches, or `undefined` otherwise.
+
+<table width="100%">
+  <thead align=left>
+    <tr>
+      <th width=150>
+        name
+      </th>
+      <th width=70>
+        type
+      </th>
+      <th>
+        description
+      </th>
+    </tr>
+  </thead>
+  <tbody align=left valign=top>
+    <tr>
+      <th>
+        <code>app</code>
+      </th>
+      <th>
+        <code>App instance</code>
+      </th>
+      <td>
+        <strong>Required</strong>.
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>options.pathPrefix</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+
+All exposed paths will be prefixed with the provided prefix. Defaults to `"/api/github"`
+
+</td>
+    </tr>
+    <tr>
+      <td>
+        <code>log</code>
+        <em>
+          object
+        </em>
+      </td>
+      <td>
+
+Used for internal logging. Defaults to [`console`](https://developer.mozilla.org/en-US/docs/Web/API/console) with `debug` and `info` doing nothing.
+
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)

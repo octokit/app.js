@@ -1,25 +1,16 @@
-// remove type imports from http for Deno compatibility
-// see https://github.com/octokit/octokit.js/issues/24#issuecomment-817361886
-// import { IncomingMessage, ServerResponse } from "node:http";
-type IncomingMessage = any;
-type ServerResponse = any;
-
-import {
-  createNodeMiddleware as oauthNodeMiddleware,
-  sendNodeResponse,
-  unknownRouteResponse,
-} from "@octokit/oauth-app";
-import { createNodeMiddleware as webhooksNodeMiddleware } from "@octokit/webhooks";
+import { createWebWorkerHandler as oauthWebMiddleware } from "@octokit/oauth-app";
+import { createWebMiddleware as webhooksWebMiddleware } from "@octokit/webhooks";
 
 import type { App } from "../../index.js";
 import type { MiddlewareOptions } from "../types.js";
 
+/* v8 ignore next */
 function noop() {}
 
-export function createNodeMiddleware(
+export function createWebMiddleware(
   app: App,
   options: MiddlewareOptions = {},
-) {
+): (request: Request) => Promise<Response | undefined> {
   const log = Object.assign(
     {
       debug: noop,
@@ -36,12 +27,12 @@ export function createNodeMiddleware(
     log,
   };
 
-  const webhooksMiddleware = webhooksNodeMiddleware(app.webhooks, {
+  const webhooksMiddleware = webhooksWebMiddleware(app.webhooks, {
     path: optionsWithDefaults.pathPrefix + "/webhooks",
     log,
   });
 
-  const oauthMiddleware = oauthNodeMiddleware(app.oauth, {
+  const oauthMiddleware = oauthWebMiddleware(app.oauth, {
     pathPrefix: optionsWithDefaults.pathPrefix + "/oauth",
   });
 
@@ -52,28 +43,33 @@ export function createNodeMiddleware(
     oauthMiddleware,
   );
 }
-
 export async function middleware(
   pathPrefix: string,
-  webhooksMiddleware: any,
-  oauthMiddleware: any,
-  request: IncomingMessage,
-  response: ServerResponse,
-  next?: Function,
-): Promise<boolean> {
+  webhooksMiddleware: ReturnType<typeof webhooksWebMiddleware>,
+  oauthMiddleware: ReturnType<typeof oauthWebMiddleware>,
+  request: Request,
+): Promise<Response | undefined> {
   const { pathname } = new URL(request.url as string, "http://localhost");
 
   if (pathname.startsWith(`${pathPrefix}/`)) {
     if (pathname === `${pathPrefix}/webhooks`) {
-      webhooksMiddleware(request, response);
+      return webhooksMiddleware(request);
     } else if (pathname.startsWith(`${pathPrefix}/oauth/`)) {
-      oauthMiddleware(request, response);
+      return oauthMiddleware(request);
     } else {
-      sendNodeResponse(unknownRouteResponse(request), response);
+      return new Response(
+        JSON.stringify({
+          error: `Unknown route: ${request.method} ${request.url}`,
+        }),
+        {
+          status: 404,
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      );
     }
-    return true;
   } else {
-    next?.();
-    return false;
+    return undefined;
   }
 }
