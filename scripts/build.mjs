@@ -46,7 +46,7 @@ async function main() {
       outdir: "pkg/dist-node",
       bundle: true,
       platform: "node",
-      target: "node18",
+      target: "node20",
       format: "esm",
       ...sharedOptions,
     }),
@@ -99,8 +99,8 @@ async function main() {
         sideEffects: false,
       },
       null,
-      2
-    )
+      2,
+    ),
   );
 }
 main();
