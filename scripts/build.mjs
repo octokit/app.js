@@ -1,7 +1,7 @@
 // @ts-check
 import esbuild from "esbuild";
 import { copyFile, readFile, writeFile, rm } from "node:fs/promises";
-import { glob } from "glob";
+import { glob } from "tinyglobby";
 
 /**
  * @type {esbuild.BuildOptions}
@@ -46,7 +46,7 @@ async function main() {
       outdir: "pkg/dist-node",
       bundle: true,
       platform: "node",
-      target: "node18",
+      target: "node20",
       format: "esm",
       ...sharedOptions,
     }),
@@ -99,8 +99,8 @@ async function main() {
         sideEffects: false,
       },
       null,
-      2
-    )
+      2,
+    ),
   );
 }
 main();
