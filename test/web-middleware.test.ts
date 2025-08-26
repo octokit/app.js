@@ -114,7 +114,7 @@ describe("createWebMiddleware()", () => {
     expect(response.status).toEqual(404);
     expect(response.headers.get("Content-Type")).toBe("application/json");
     await expect(response.json()).resolves.toEqual({
-      error: `Unknown route: GET http://localhost:${port}/api/github/webhooks`,
+      error: `Unknown route: GET /api/github/webhooks`,
     });
 
     server.close();
