@@ -25,7 +25,7 @@
     "@octokit/core": "^7.0.2",
     "@octokit/oauth-app": "^8.0.1",
     "@octokit/plugin-paginate-rest": "^13.0.0",
-    "@octokit/types": "^14.0.0",
+    "@octokit/types": "^15.0.0",
     "@octokit/webhooks": "^14.0.0"
   },
   "devDependencies": {
