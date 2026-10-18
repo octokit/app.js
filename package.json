@@ -14,7 +14,7 @@
     "lint:fix": "prettier --write {src,test}/* *.md package.json",
     "pretest": "npm run -s lint",
     "test": "vitest run --coverage",
-    "test:typescript": "npx tsc --allowImportingTsExtensions --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2022 --moduleResolution node16 --module node16 --exactOptionalPropertyTypes test/typescript-validate.ts"
+    "test:typescript": "npx tsc --allowImportingTsExtensions --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2022 --moduleResolution node16 --module node18 --exactOptionalPropertyTypes --ignoreConfig test/typescript-validate.ts"
   },
   "repository": "github:octokit/app.js",
   "author": "Gregor Martynus (https://github.com/gr2m)",
@@ -39,7 +39,7 @@
     "prettier": "3.7.4",
     "semantic-release-plugin-update-version-in-files": "^2.0.0",
     "tinyglobby": "^0.2.13",
-    "typescript": "^5.0.0",
+    "typescript": "^7.0.0",
     "vitest": "^4.0.0"
   },
   "engines": {
